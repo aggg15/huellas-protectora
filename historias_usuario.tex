@@ -1,0 +1,367 @@
+% Documento autónomo y editable. Codificación UTF-8.
+% Recompilar dos veces con pdflatex para actualizar el número total de páginas.
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+% OT1 evita depender de mapas de fuentes T1 de la vista previa.
+\usepackage[OT1]{fontenc}
+\usepackage[spanish,es-nodecimaldot]{babel}
+% Latin Modern proporciona fuentes vectoriales sin generar mapas de bits locales.
+\usepackage{lmodern}
+\usepackage[a4paper,top=21mm,bottom=20mm,left=21mm,right=21mm,headheight=14pt]{geometry}
+\usepackage{xcolor}
+\usepackage{array,tabularx,booktabs}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\definecolor{verde}{HTML}{21635C}
+\definecolor{gris}{HTML}{52636A}
+\definecolor{suave}{HTML}{EDF4F2}
+\hypersetup{pdftitle={Huellas: ocho historias de usuario},pdfauthor={Práctica Grupal - Ingeniería de Requisitos},pdfsubject={Definición inicial de historias según SI-30 y guía SDD, parte I}}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{verde}\textbf{HUELLAS} \enspace / \enspace Historias de usuario}
+\fancyhead[R]{\small\color{gris}SDD · Parte I}
+\fancyfoot[L]{\footnotesize\color{gris}Ingeniería de Requisitos · 15 de octubre de 2026}
+\fancyfoot[R]{\footnotesize\thepage\ / \pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+\makeatletter
+\newcommand{\cabecera}{\@startsection{section}{1}{\z@}{0pt}{7pt}{\normalfont\Large\bfseries\color{verde}}*}
+\newcommand{\apartado}{\@startsection{subsection}{2}{\z@}{7pt}{3pt}{\normalfont\normalsize\bfseries\color{verde}}*}
+\makeatother
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\setlist[itemize]{leftmargin=15pt,itemsep=2pt,topsep=2pt,parsep=0pt}
+\setlist[enumerate]{leftmargin=17pt,itemsep=3pt,topsep=2pt,parsep=0pt}
+\newenvironment{criterios}{\begin{description}[style=nextline,leftmargin=0pt,labelsep=0pt,font=\bfseries\color{verde},itemsep=5pt,topsep=3pt,parsep=0pt]}{\end{description}}
+\newcommand{\historia}[1]{\begingroup\setlength{\fboxsep}{10pt}\colorbox{suave}{\parbox{\dimexpr\linewidth-20pt\relax}{#1}}\endgroup}
+\newcommand{\traza}[1]{{\footnotesize\color{gris}Traza: SI-30, #1.}}
+% Identificadores indivisibles, con letras y cifras literales.
+\newcommand{\HU}[1]{\mbox{HU-#1}}
+\begin{document}
+{\small\color{gris}PROYECTO GRUPAL · SISTEMA DE INFORMACIÓN 30}
+\vspace{8pt}
+\cabecera{Huellas: ocho historias de usuario}
+{\large Gestión de adopciones en una protectora de animales}
+
+\vspace{8pt}
+\historia{\textbf{Propósito.} Convertir la narrativa de Huellas en ocho historias identificadas como \HU{01} a \HU{08}, con alcance inicial, criterios verificables y cuestiones pendientes, como base para la revisión conjunta del equipo.}
+
+\apartado{Alcance de este documento}
+Corresponde al paso 1 de la guía: obtener las ocho historias. Los criterios concretan las necesidades descritas; las consecuencias necesarias para mantener la coherencia se señalan como derivadas. Las preguntas de \texttt{clarify} son decisiones abiertas, no acuerdos adoptados. Cada historia tiene su ficha en una carpeta independiente.
+
+\apartado{Mapa de historias}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{@{}l l X@{}}
+\toprule
+\textbf{Historia} & \textbf{Carpeta} & \textbf{Necesidad cubierta} \\
+\midrule
+\HU{01} & \texttt{spec-001} & Registrar un animal y gestionar su cuarentena \\
+\HU{02} & \texttt{spec-002} & Consultar y filtrar el catálogo público de adopción \\
+\HU{03} & \texttt{spec-003} & Enviar una solicitud de adopción completa \\
+\HU{04} & \texttt{spec-004} & Evaluar solicitudes, entrevistar y reservar el animal \\
+\HU{05} & \texttt{spec-005} & Formalizar la adopción y programar los seguimientos \\
+\HU{06} & \texttt{spec-006} & Gestionar casas de acogida y la evolución del animal \\
+\HU{07} & \texttt{spec-007} & Inscribirse en turnos y detectar falta de voluntarios \\
+\HU{08} & \texttt{spec-008} & Apadrinar un animal y recibir sus novedades \\
+\bottomrule
+\end{tabularx}
+
+\apartado{Fuentes y continuidad académica}
+\begin{itemize}
+\item \textbf{[SI-30]} \texttt{SI-30-protectora-animales-descripcion.pdf}, pp. 1-2: única fuente de las necesidades del sistema en este documento.
+\item \textbf{[GUÍA]} \texttt{guia\_proyecto\_SDD\_parte\_I.pdf}, pp. 1-2: organización del grupo y secuencia de trabajo.
+\item \textbf{[GENERAL]} \texttt{Practica-SDD-enunciado IR.pdf}, pp. 1-7: objetivos, metodología y evidencias del refinamiento.
+\item \textbf{Práctica 1:} referencia metodológica para criterios verificables, trazabilidad y evidencias. Sus reglas del HIS y su tecnología no se trasladan al dominio de Huellas.
+\end{itemize}
+
+\apartado{Pila propuesta en la narrativa}
+Symfony + Twig + Hotwire (Turbo y Stimulus), Doctrine, PostgreSQL y Bulma. Su desarrollo técnico corresponde al plan compartido posterior.
+
+\newpage
+\cabecera{Acuerdos que deben preceder al desarrollo}
+\apartado{Orden exigido por la guía}
+\begin{enumerate}
+\item \textbf{Historias:} revisar conjuntamente \HU{01} a \HU{08} y sus límites.
+\item \textbf{Constitution:} acordar calidad, organización del código y colaboración.
+\item \textbf{specify:} proporcionar la narrativa y las ocho historias; proponer y acordar cuatro historias por persona; desarrollar las ocho especificaciones.
+\item \textbf{plan:} acordar una base técnica coherente, con plan y modelo de datos compartidos entre las ocho specs.
+\item \textbf{GitHub:} crear el grupo y repositorio, subir la base común a \texttt{main} y crear las ramas \texttt{spec-001} a \texttt{spec-008}, registrando responsables.
+\item \textbf{Trabajo por historia:} aplicar \texttt{specify}, \texttt{clarify}, \texttt{plan}, \texttt{tasks}, \texttt{analyze}, \texttt{implement} y \texttt{converge}; repetir los pasos necesarios hasta cumplir la aceptación, verificar y actualizar la documentación.
+\end{enumerate}
+Las ocho carpetas organizan los documentos; no equivalen a ramas Git. Este trabajo no asigna responsables, no crea ramas y no presenta las historias como especificaciones completas. Tampoco acredita la ejecución de comandos de Spec Kit.
+
+\apartado{Discrepancia detectada en el enunciado general}
+El documento [GENERAL] fija cuatro historias por persona en el apartado 4, pero conserva referencias a dos en otros pasajes. Se mantiene el criterio inequívoco de [GUÍA]: ocho historias y cuatro por integrante. Sus apartados 5.1 a 5.4 exigen repetir la aclaración, el análisis, la convergencia y la verificación sobre la primera versión funcional; el ciclo previo de la guía no sustituye ese refinamiento ni sus evidencias.
+
+\apartado{Relaciones que requieren una base común}
+\begin{itemize}
+\item \textbf{Animal y visibilidad:} ficha, cuarentena, disponibilidad, reserva y adopción deben conservar el mismo significado en todas las historias.
+\item \textbf{Acogida:} expresa dónde vive temporalmente un animal; es compatible con buscar familia, pero no elimina las restricciones de cuarentena, reserva o adopción.
+\item \textbf{Solicitudes y personas:} el límite de dos solicitudes necesita una identificación coherente y una definición compartida de qué estados cuentan como abiertos.
+\item \textbf{Fechas:} deben acordarse el cómputo de cuarentena, los plazos de seguimiento y el destacado de turnos a cuarenta y ocho horas.
+\item \textbf{Efectos de la adopción:} deben coordinarse catálogo, solicitudes en espera, acogida activa y continuidad de apadrinamientos.
+\end{itemize}
+Estas relaciones señalan dependencias funcionales; el modelo de datos y la arquitectura se decidirán en \texttt{plan}. Un cambio común debe acordarse entre ambos integrantes y reflejarse en las specs afectadas.
+
+\apartado{Límites del encargo}
+La narrativa excluye expresamente la contabilidad general y las campañas de recogida de pienso. No prescribe pasarelas de pago, servicios externos de mensajería, firma electrónica ni un historial clínico completo. El acceso sin registro está fijado para la consulta pública; la identificación y los permisos del resto del sistema deben aclararse.
+
+\apartado{Estado y trazabilidad}
+Versión inicial de historias, pendiente de revisión conjunta. Los criterios se identifican como \texttt{CA-XX-YY}: \texttt{XX} es la historia y \texttt{YY} el criterio. Cada criterio indica su origen en SI-30. Las preguntas pendientes no deben convertirse en reglas de negocio sin resolución documentada.
+
+\newpage
+\cabecera{\HU{01} · Registrar un animal y gestionar su cuarentena}
+{\small\color{gris}\texttt{spec-001} · Historia inicial · Responsable pendiente de acuerdo}
+
+\historia{Como voluntario que recibe animales, quiero abrir la ficha de cada animal y reflejar su cuarentena y revisión veterinaria para conservar su información y ofrecerlo en adopción cuando haya pasado el periodo establecido.}
+\apartado{Alcance}
+\begin{itemize}
+\item Ficha con código propio, especie, edad aproximada, procedencia y fotografías.
+\item Cuarentena inicial de diez días y revisión por el veterinario colaborador durante ese periodo.
+\item Disponibilidad para adopción al finalizar la cuarentena; durante ella el animal permanece fuera de la web pública.
+\end{itemize}
+\apartado{Criterios de aceptación iniciales}
+\begin{criterios}
+\item[CA-01-01] Dados los datos de un animal recién llegado, cuando el voluntario abre su ficha, entonces quedan registrados su código propio, especie, edad aproximada, procedencia y fotografías.\par\traza{p. 1: recepción y ficha del animal}
+\item[CA-01-02] Dado un animal recién llegado, cuando se registra su entrada, entonces queda en cuarentena y no se ofrece en adopción durante los diez días establecidos.\par\traza{p. 1: cuarentena de diez días}
+\item[CA-01-03] Dado un animal en cuarentena, cuando se consulta el catálogo público o su ficha pública, entonces no se muestra al visitante.\par\traza{p. 1: exclusión de la web durante la cuarentena}
+\item[CA-01-04] Dado un animal en cuarentena, cuando se registra la revisión realizada por el veterinario colaborador, entonces la revisión queda asociada a su ficha. Los datos mínimos del registro se concretarán en clarify.\par\traza{p. 1: revisión veterinaria; registro propuesto para hacerla verificable}
+\item[CA-01-05] Dado un animal que ha completado la cuarentena, cuando finaliza ese periodo, entonces queda disponible para adopción. El mecanismo de transición se concretará en clarify.\par\traza{p. 1: disponibilidad tras la cuarentena}
+\end{criterios}
+\apartado{Dependencias y coordinación}
+Proporciona la ficha y la situación del animal que utilizan \HU{02} a \HU{06} y \HU{08}.
+\apartado{Cuestiones pendientes para \texttt{clarify}}
+\begin{enumerate}
+\item \textquestiondown{}Los diez días se cuentan por días naturales o por periodos de veinticuatro horas desde la entrada? \textquestiondown{}El paso a disponible es automático o lo confirma una persona?
+\item \textquestiondown{}Qué información mínima se registra de la revisión veterinaria? Si no se ha realizado al finalizar los diez días, \textquestiondown{}cómo se resuelve esa situación? La narrativa no define ese caso.
+\item \textquestiondown{}Cómo se genera el código propio y cómo se recoge el tamaño que necesitará el filtro público de \HU{02}?
+\end{enumerate}
+\apartado{Límites}
+Esta historia no define un historial clínico completo ni tratamientos veterinarios.
+
+{\footnotesize\color{gris}\textbf{Fuente:} SI-30, p. 1: párrafo de recepción, ficha, cuarentena y revisión veterinaria.}
+
+\newpage
+\cabecera{\HU{02} · Consultar y filtrar el catálogo público de adopción}
+{\small\color{gris}\texttt{spec-002} · Historia inicial · Responsable pendiente de acuerdo}
+
+\historia{Como persona interesada en adoptar, quiero consultar sin registrarme los animales que buscan hogar y filtrarlos por especie, tamaño y edad para encontrar uno que encaje con mi situación.}
+\apartado{Alcance}
+\begin{itemize}
+\item Consulta pública de los animales que están realmente disponibles para adopción.
+\item Filtros por especie, tamaño y edad.
+\item Visibilidad de los animales en acogida que siguen buscando familia, con indicación de esa situación.
+\end{itemize}
+\apartado{Criterios de aceptación iniciales}
+\begin{criterios}
+\item[CA-02-01] Dada una persona sin registro, cuando accede a la web pública, entonces puede consultar los animales disponibles para adopción.\par\traza{p. 1: web pública sin registro}
+\item[CA-02-02] Dados animales con distintas especies, tamaños y edades, cuando la persona aplica un filtro por cualquiera de esos atributos, entonces se muestran los animales disponibles que cumplen el filtro.\par\traza{p. 1: filtros por especie, tamaño y edad}
+\item[CA-02-03] Dados animales en cuarentena, reservados o adoptados, cuando se consulta el catálogo o su ficha pública, entonces esos animales no se presentan como disponibles ni se incluyen entre los animales en adopción.\par\traza{p. 1: solo animales realmente en adopción}
+\item[CA-02-04] Dado un animal en acogida que sigue disponible para adopción, cuando se consulta el catálogo y su ficha, entonces continúa visible y se indica que está en acogida.\par\traza{p. 1: acogida compatible con visibilidad pública}
+\end{criterios}
+\apartado{Dependencias y coordinación}
+Usa la ficha y la cuarentena de \HU{01}, la reserva de \HU{04}, la adopción de \HU{05} y la acogida de \HU{06}. Da paso a \HU{03}.
+\apartado{Cuestiones pendientes para \texttt{clarify}}
+\begin{enumerate}
+\item \textquestiondown{}Qué categorías de tamaño y qué rangos de edad se utilizarán? \textquestiondown{}Cómo se combinan los filtros?
+\item \textquestiondown{}Qué información y fotografías de la ficha se muestran públicamente, además de la indicación de acogida?
+\end{enumerate}
+\apartado{Límites}
+No se exige registro para consultar. Las cuentas, si fueran necesarias para otros procesos, se decidirán en la base común.
+
+{\footnotesize\color{gris}\textbf{Fuente:} SI-30, p. 1: párrafo de la web pública y párrafo de las casas de acogida.}
+
+\newpage
+\cabecera{\HU{03} · Enviar una solicitud de adopción completa}
+{\small\color{gris}\texttt{spec-003} · Historia inicial · Responsable pendiente de acuerdo}
+
+\historia{Como persona que quiere adoptar un animal, quiero enviar una solicitud con un cuestionario completo sobre mi vivienda, experiencia y disponibilidad para que la protectora pueda valorar mi candidatura.}
+\apartado{Alcance}
+\begin{itemize}
+\item Solicitud vinculada a la persona solicitante y al animal elegido.
+\item Cuestionario completo sobre vivienda, experiencia y disponibilidad.
+\item Límite de dos solicitudes abiertas por persona.
+\end{itemize}
+\apartado{Criterios de aceptación iniciales}
+\begin{criterios}
+\item[CA-03-01] Dada una persona con menos de dos solicitudes abiertas y un animal disponible, cuando envía el cuestionario completo, entonces se registra una solicitud asociada a esa persona y a ese animal.\par\traza{p. 1: solicitud para un animal y límite por persona}
+\item[CA-03-02] Dado un cuestionario con información obligatoria sin completar, cuando se intenta enviar, entonces no se admite la solicitud a medias y se indican los datos pendientes.\par\traza{p. 1: no se admite un cuestionario incompleto}
+\item[CA-03-03] Dada una persona con dos solicitudes abiertas, cuando intenta enviar otra, entonces se rechaza la nueva solicitud y se conservan las dos existentes.\par\traza{p. 1: máximo de dos solicitudes abiertas}
+\item[CA-03-04] Dada una solicitud admitida, cuando la coordinadora consulta las candidaturas recibidas, entonces puede acceder a la solicitud y a su cuestionario completo.\par\traza{p. 1: las solicitudes llegan a la coordinadora}
+\end{criterios}
+\apartado{Dependencias y coordinación}
+Parte del animal mostrado en \HU{02} y entrega la candidatura a \HU{04}. Comparte la identidad de la persona y la definición de solicitud abierta con \HU{04} y \HU{05}.
+\apartado{Cuestiones pendientes para \texttt{clarify}}
+\begin{enumerate}
+\item \textquestiondown{}Cómo se identifica de forma consistente a una misma persona para aplicar el límite de dos solicitudes? La consulta pública sin registro no resuelve la identificación al solicitar.
+\item \textquestiondown{}Qué estados cuentan como solicitud abierta, en particular las solicitudes en espera y la candidatura aprobada mientras no se formalice la adopción?
+\item \textquestiondown{}Qué preguntas y campos exactos son obligatorios en el cuestionario? \textquestiondown{}Se permite más de una solicitud de la misma persona para el mismo animal?
+\end{enumerate}
+\apartado{Límites}
+No se añaden listas de favoritos, recomendaciones automáticas ni un proceso de registro no definido en la narrativa.
+
+{\footnotesize\color{gris}\textbf{Fuente:} SI-30, p. 1: solicitud, cuestionario completo y máximo de dos solicitudes abiertas.}
+
+\newpage
+\cabecera{\HU{04} · Evaluar solicitudes, entrevistar y reservar el animal}
+{\small\color{gris}\texttt{spec-004} · Historia inicial · Responsable pendiente de acuerdo}
+
+\historia{Como coordinadora de adopciones, quiero revisar las solicitudes, concertar entrevistas y decidir sobre las candidaturas para reservar cada animal a una familia y conservar las alternativas en espera.}
+\apartado{Alcance}
+\begin{itemize}
+\item Revisión de las solicitudes y concertación de entrevistas con los candidatos.
+\item Decisión de aprobación o rechazo, con motivo obligatorio al rechazar.
+\item Reserva del animal para la familia aprobada y paso a espera de las demás solicitudes sobre ese animal.
+\end{itemize}
+\apartado{Criterios de aceptación iniciales}
+\begin{criterios}
+\item[CA-04-01] Dada una solicitud recibida, cuando la coordinadora la revisa, entonces puede consultar el cuestionario y dejar concertada una entrevista con los candidatos.\par\traza{p. 1: revisión y entrevista}
+\item[CA-04-02] Dada una solicitud que se decide rechazar, cuando no se aporta el motivo, entonces no se admite el rechazo; cuando se aporta, entonces queda registrado junto con la decisión.\par\traza{p. 1: rechazo con motivo escrito}
+\item[CA-04-03] Dada una solicitud aprobada, cuando se confirma la decisión, entonces el animal queda reservado para esa familia.\par\traza{p. 1: aprobación y reserva}
+\item[CA-04-04] Dadas otras solicitudes sobre el mismo animal, cuando se aprueba una candidatura, entonces las demás quedan en espera y no se rechazan por esa aprobación.\par\traza{p. 1: otras solicitudes en espera}
+\item[CA-04-05] Dado un animal reservado para una familia, cuando se intenta aprobar otra candidatura para ese mismo animal, entonces no se generan dos reservas incompatibles. La forma de resolver el intento se concretará en clarify.\par\traza{p. 1: reserva para una familia; coherencia derivada}
+\end{criterios}
+\apartado{Dependencias y coordinación}
+Recibe solicitudes de \HU{03}, actualiza la disponibilidad que consume \HU{02} y proporciona la reserva a \HU{05}. Comparte con \HU{03} los estados de las solicitudes.
+\apartado{Cuestiones pendientes para \texttt{clarify}}
+\begin{enumerate}
+\item \textquestiondown{}Qué datos mínimos se necesitan para concertar la entrevista y cómo se registra que se ha realizado?
+\item Si la adopción no llega a formalizarse, \textquestiondown{}quién libera la reserva y cómo se retoman las solicitudes en espera?
+\item \textquestiondown{}Se admiten nuevas solicitudes mientras el animal está reservado? \textquestiondown{}Qué sucede con las solicitudes en espera cuando la adopción se formaliza?
+\end{enumerate}
+\apartado{Límites}
+No se establece una puntuación automática de candidatos ni una agenda externa de entrevistas.
+
+{\footnotesize\color{gris}\textbf{Fuente:} SI-30, p. 1: actuación de Nuria, entrevistas, decisiones, reserva y espera.}
+
+\newpage
+\cabecera{\HU{05} · Formalizar la adopción y programar los seguimientos}
+{\small\color{gris}\texttt{spec-005} · Historia inicial · Responsable pendiente de acuerdo}
+
+\historia{Como coordinadora de adopciones, quiero formalizar la entrega mediante el contrato y el abono de la cuota y dejar programados los dos seguimientos para registrar la adopción y mantener la atención posterior al animal.}
+\apartado{Alcance}
+\begin{itemize}
+\item Formalización de la adopción el día de la entrega: generación del contrato y constancia del abono de la cuota.
+\item Cambio del animal a adoptado.
+\item Programación de dos seguimientos: uno al mes y otro a los seis meses de la adopción.
+\end{itemize}
+\apartado{Criterios de aceptación iniciales}
+\begin{criterios}
+\item[CA-05-01] Dado un animal reservado para una familia, cuando se formaliza su entrega, entonces se genera un contrato vinculado al animal y a la familia adoptante.\par\traza{p. 1: contrato el día de la entrega}
+\item[CA-05-02] Dada la formalización de una adopción, cuando se completa, entonces consta el abono de la cuota y el animal figura como adoptado desde esa entrega.\par\traza{p. 1: abono de cuota y condición de adoptado}
+\item[CA-05-03] Dada una adopción formalizada, cuando se consulta su planificación, entonces existen dos seguimientos vinculados a ella: uno al mes y otro a los seis meses desde la entrega.\par\traza{p. 1: dos seguimientos posteriores}
+\item[CA-05-04] Dado un animal adoptado, cuando se consulta la web pública de adopciones, entonces ya no aparece entre los animales disponibles.\par\traza{p. 1: solo animales realmente en adopción}
+\item[CA-05-05] Dado un animal adoptado con padrinos, cuando se actualiza su situación, entonces esa adopción queda disponible para el proceso de propuesta de otro animal o finalización de \HU{08}.\par\traza{p. 2: opciones del padrino cuando el animal es adoptado}
+\end{criterios}
+\apartado{Dependencias y coordinación}
+Parte de la reserva de \HU{04} y la ficha de \HU{01}. Comunica la adopción a \HU{02} y \HU{08}. Debe coordinar con \HU{06} la situación de una acogida que siga activa.
+\apartado{Cuestiones pendientes para \texttt{clarify}}
+\begin{enumerate}
+\item \textquestiondown{}Qué datos y formato debe contener el contrato? \textquestiondown{}Cuál es la cuota de adopción y cómo se deja constancia de su abono?
+\item \textquestiondown{}Cómo se calculan las fechas al mes y a los seis meses cuando no existe el mismo día en el mes de destino? \textquestiondown{}Quién se responsabiliza de esos seguimientos?
+\item \textquestiondown{}Qué se considera necesario para cerrar la formalización y cómo se actualizan las solicitudes en espera y una posible acogida activa?
+\end{enumerate}
+\apartado{Límites}
+Se programa el seguimiento; no se añade un módulo de visitas, una pasarela de pago, firma electrónica ni contabilidad general.
+
+{\footnotesize\color{gris}\textbf{Fuente:} SI-30, p. 1: entrega, contrato, cuota y seguimientos; p. 2: efecto en el apadrinamiento.}
+
+\newpage
+\cabecera{\HU{06} · Gestionar casas de acogida y la evolución del animal}
+{\small\color{gris}\texttt{spec-006} · Historia inicial · Responsable pendiente de acuerdo}
+
+\historia{Como familia de acogida, quiero indicar mi disponibilidad y capacidad, y registrar las novedades de los animales que acojo para prestarles cuidados temporales mientras siguen buscando una familia definitiva.}
+\apartado{Alcance}
+\begin{itemize}
+\item Información de cada casa de acogida: disponibilidad y número máximo de animales que puede atender.
+\item Vinculación del animal con su acogida temporal, respetando disponibilidad y capacidad.
+\item Anotaciones de la familia sobre el carácter y la evolución; mantenimiento de la oferta de adopción cuando corresponda.
+\end{itemize}
+\apartado{Criterios de aceptación iniciales}
+\begin{criterios}
+\item[CA-06-01] Dada una casa de acogida, cuando la familia informa de sus condiciones, entonces quedan recogidos sus periodos de disponibilidad y el número máximo de animales que puede atender.\par\traza{p. 1: disponibilidad y capacidad de cada casa}
+\item[CA-06-02] Dada una casa disponible y con capacidad, cuando se registra una acogida, entonces el animal queda vinculado a esa casa durante la acogida.\par\traza{p. 1: estancia temporal en familias}
+\item[CA-06-03] Dada una casa no disponible para el periodo solicitado o cuya capacidad se superaría, cuando se intenta registrar una acogida, entonces no se confirma esa asignación.\par\traza{p. 1: disponibilidad y máximo; restricción derivada}
+\item[CA-06-04] Dado un animal en acogida disponible para adopción, cuando se consulta la web pública, entonces sigue visible con la indicación de que está en acogida. La acogida no elimina la cuarentena ni cambia por sí sola una reserva o adopción.\par\traza{p. 1: acogida y adopción; coherencia con cuarentena y reserva}
+\item[CA-06-05] Dada una familia que cuida a un animal en acogida, cuando anota novedades sobre su carácter o evolución, entonces esas novedades quedan asociadas al animal.\par\traza{p. 1: novedades anotadas por la familia}
+\end{criterios}
+\apartado{Dependencias y coordinación}
+Comparte el animal de \HU{01} y coordina su visibilidad con \HU{02}. Usa la reserva de \HU{04} y la adopción de \HU{05} para mantener coherentes las situaciones. Las novedades se coordinan con \HU{08}.
+\apartado{Cuestiones pendientes para \texttt{clarify}}
+\begin{enumerate}
+\item \textquestiondown{}Quién autoriza, inicia y finaliza cada acogida? \textquestiondown{}Cómo se representan los periodos de disponibilidad y se calcula la ocupación cuando varias acogidas coinciden?
+\item \textquestiondown{}Qué ocurre si cambia la disponibilidad de una casa con animales acogidos? \textquestiondown{}Cómo se cierra la acogida al producirse una adopción?
+\item \textquestiondown{}Qué novedades son públicas y cuáles se comparten con los padrinos?
+\end{enumerate}
+\apartado{Límites}
+La acogida es temporal y no convierte al animal en adoptado. No se añaden compensaciones económicas a las familias.
+
+{\footnotesize\color{gris}\textbf{Fuente:} SI-30, p. 1: casas de acogida, disponibilidad, capacidad, visibilidad y novedades.}
+
+\newpage
+\cabecera{\HU{07} · Inscribirse en turnos y detectar falta de voluntarios}
+{\small\color{gris}\texttt{spec-007} · Historia inicial · Responsable pendiente de acuerdo}
+
+\historia{Como voluntario del refugio, quiero consultar los turnos de paseo y limpieza e inscribirme en los que tienen plazas para contribuir al trabajo diario y detectar con antelación los turnos que necesitan más personas.}
+\apartado{Alcance}
+\begin{itemize}
+\item Turnos de paseo y limpieza con fecha, hora, mínimo y máximo de personas.
+\item Inscripción libre de voluntarios respetando el máximo de cada turno.
+\item Destacado de los turnos que no cubren el mínimo cuando faltan cuarenta y ocho horas.
+\end{itemize}
+\apartado{Criterios de aceptación iniciales}
+\begin{criterios}
+\item[CA-07-01] Dado un turno de paseo o limpieza, cuando se consulta, entonces se conocen su fecha y hora, el mínimo necesario, el máximo admitido y las inscripciones registradas.\par\traza{p. 1: turnos con mínimos y máximos; fecha y hora derivadas del aviso}
+\item[CA-07-02] Dado un turno con plazas, cuando un voluntario se apunta, entonces su inscripción queda asociada al turno y se actualiza el número de personas inscritas.\par\traza{p. 1: inscripción libre}
+\item[CA-07-03] Dado un turno que ya alcanza el máximo, cuando otro voluntario intenta apuntarse, entonces no se admite una inscripción que supere ese máximo.\par\traza{p. 1: máximo para no estorbarse}
+\item[CA-07-04] Dado un turno con menos personas inscritas que su mínimo, cuando faltan cuarenta y ocho horas para su inicio, entonces aparece destacado como insuficientemente cubierto.\par\traza{pp. 1-2: destacado con cuarenta y ocho horas de antelación}
+\item[CA-07-05] Dado un turno que alcanza su mínimo de personas, cuando se consulta su cobertura, entonces no se presenta como un turno con falta de voluntarios.\par\traza{pp. 1-2: condición de mínimo no cubierto}
+\end{criterios}
+\apartado{Dependencias y coordinación}
+Comparte la identidad del voluntario que se acuerde en la base común. No depende del proceso de adopción; requiere acordar el criterio temporal para el aviso.
+\apartado{Cuestiones pendientes para \texttt{clarify}}
+\begin{enumerate}
+\item \textquestiondown{}Quién crea y modifica los turnos y sus mínimos y máximos? \textquestiondown{}Puede un voluntario darse de baja de un turno?
+\item \textquestiondown{}El destacado se mantiene durante las cuarenta y ocho horas previas mientras falten personas? \textquestiondown{}Qué zona horaria se usa?
+\item \textquestiondown{}Se permiten inscripciones en turnos coincidentes y cómo se evita que una misma persona cuente dos veces en un turno?
+\end{enumerate}
+\apartado{Límites}
+La narrativa pide un destacado visual. No se añaden recordatorios por correo, control de asistencia, sanciones ni cancelación automática de turnos.
+
+{\footnotesize\color{gris}\textbf{Fuente:} SI-30, pp. 1-2: turnos de paseo y limpieza, inscripción, mínimos, máximos y aviso.}
+
+\newpage
+\cabecera{\HU{08} · Apadrinar un animal y recibir sus novedades}
+{\small\color{gris}\texttt{spec-008} · Historia inicial · Responsable pendiente de acuerdo}
+
+\historia{Como padrino o madrina, quiero apoyar a un animal concreto con una aportación mensual y recibir sus novedades para ayudar a su cuidado y decidir cómo continuar mi colaboración cuando sea adoptado.}
+\apartado{Alcance}
+\begin{itemize}
+\item Apadrinamiento vinculado a un animal concreto y a una aportación mensual mínima de diez euros.
+\item Recepción de novedades del animal apadrinado.
+\item Propuesta de otro animal o finalización de la colaboración cuando el animal encuentra familia.
+\end{itemize}
+\apartado{Criterios de aceptación iniciales}
+\begin{criterios}
+\item[CA-08-01] Dada una persona que desea apadrinar, cuando establece una aportación mensual de al menos diez euros para un animal, entonces queda registrado el vínculo entre la persona, el animal y la aportación.\par\traza{p. 2: animal concreto y aportación mensual mínima}
+\item[CA-08-02] Dada una aportación mensual inferior a diez euros, cuando se intenta establecer el apadrinamiento, entonces no se admite con ese importe.\par\traza{p. 2: mínimo de diez euros}
+\item[CA-08-03] Dado un apadrinamiento y nuevas noticias del animal, cuando esas novedades están disponibles para compartir, entonces el padrino las recibe por el mecanismo que se acuerde en clarify.\par\traza{p. 2: recepción de novedades}
+\item[CA-08-04] Dado un animal apadrinado que ha sido adoptado, cuando se trata la continuidad del apadrinamiento, entonces se ofrece al padrino apoyar a otro animal o terminar su colaboración.\par\traza{p. 2: opciones tras la adopción}
+\item[CA-08-05] Dada esa propuesta de continuidad, cuando el padrino elige otro animal o finalizar, entonces queda reflejada su elección sin asignarle otro animal de forma unilateral.\par\traza{p. 2: elección del padrino}
+\end{criterios}
+\apartado{Dependencias y coordinación}
+Usa la ficha de \HU{01} y la adopción de \HU{05}. Comparte con \HU{06} el tratamiento de las novedades de acogida, sin asumir que todas son públicas.
+\apartado{Cuestiones pendientes para \texttt{clarify}}
+\begin{enumerate}
+\item \textquestiondown{}Por qué canal reciben los padrinos las novedades y quién las prepara o valida? La narrativa no concreta el mecanismo de entrega.
+\item \textquestiondown{}Cómo se gestiona la aportación mensual y qué constancia debe guardar el sistema, sin convertirlo en contabilidad general?
+\item \textquestiondown{}Qué animales pueden ser apadrinados y se permite más de un padrino por animal o más de un animal por padrino? \textquestiondown{}Qué ocurre con la aportación mientras se decide la continuidad tras una adopción?
+\end{enumerate}
+\apartado{Límites}
+No se prescribe un servicio externo de cobro o mensajería. La contabilidad general y las campañas de recogida de pienso quedan fuera del encargo.
+
+{\footnotesize\color{gris}\textbf{Fuente:} SI-30, p. 2: padrinos, aportación, novedades y continuidad tras la adopción.}
+
+\label{LastPage}\end{document}

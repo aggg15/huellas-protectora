@@ -1,0 +1,37 @@
+# Archivos del sistema y temporales
+.DS_Store
+._*
+*~
+*.swp
+*.swo
+tmp/
+
+# Secretos y configuración local; conservar ejemplos sin credenciales
+.env
+.env.*
+!.env.example
+!.env.*.example
+auth.json
+
+# Dependencias y cachés de la futura aplicación Symfony
+/vendor/
+/node_modules/
+/var/
+/public/bundles/
+.phpunit.cache/
+.phpunit.result.cache
+
+# Archivos auxiliares de LaTeX; conservar fuentes .tex y PDF entregables
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.nav
+*.snm
+*.vrb
+missfont.log
