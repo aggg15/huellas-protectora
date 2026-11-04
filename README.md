@@ -4,9 +4,18 @@ Definición inicial de las ocho historias de la Práctica Grupal, a partir de la
 
 ## Repositorio y colaboración
 
-El proyecto dispone de un repositorio Git local con rama principal `main`. La base documental
-incluye las ocho historias, la Constitution, las fuentes del enunciado, el informe de revisión
-y el documento centralizado en LaTeX y PDF. La publicación en GitHub está pendiente de completar.
+Repositorio público: [aggg15/huellas-protectora](https://github.com/aggg15/huellas-protectora).
+La rama principal es `main` y el remoto local `origin` apunta a
+`https://github.com/aggg15/huellas-protectora.git`. La base documental incluye las ocho historias,
+la Constitution, las fuentes del enunciado, el informe de revisión y el documento centralizado
+en LaTeX y PDF.
+
+Para obtener una copia del proyecto:
+
+```sh
+git clone https://github.com/aggg15/huellas-protectora.git
+cd huellas-protectora
+```
 
 Las ramas `spec-001` a `spec-008` se crearán al preparar la base común de especificaciones y
 acordar el reparto de cuatro historias por persona, conforme a la guía. Las carpetas existentes
@@ -62,7 +71,7 @@ El [informe de revisión](docs/revision_enunciado_general.md) contrasta las ocho
 
 ## Estado dentro de la guía
 
-Se ha realizado la definición inicial de historias (paso 1), preparado la Constitution (paso 2.1), ambas para revisión conjunta, e inicializado el repositorio Git local en `main`. Estas fichas no son las especificaciones funcionales completas. Siguen pendientes el trabajo con `specify`, el reparto acordado de cuatro historias por persona, el plan y el modelo de datos compartidos, la publicación en GitHub y las ramas por historia. Las carpetas `spec-001` a `spec-008` son organización documental; no se han creado las ramas por spec ni se han asignado responsables.
+Se ha realizado la definición inicial de historias (paso 1), preparado la Constitution (paso 2.1), ambas para revisión conjunta, y publicado la base documental en GitHub con rama principal `main`. Estas fichas no son las especificaciones funcionales completas. Siguen pendientes el trabajo con `specify`, el reparto acordado de cuatro historias por persona, el plan y el modelo de datos compartidos y las ramas por historia. Las carpetas `spec-001` a `spec-008` son organización documental; no se han creado las ramas por spec ni se han asignado responsables.
 
 Cada historia deberá seguir `specify → clarify → plan → tasks → analyze → implement → converge`, repitiendo los pasos necesarios y verificando los criterios de aceptación. Las dudas se han conservado explícitas para no atribuir a la narrativa decisiones que no contiene. No se presenta este trabajo como ejecución de comandos de Spec Kit.
 
