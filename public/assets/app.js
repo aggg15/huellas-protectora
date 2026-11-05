@@ -18,3 +18,12 @@ application.register('photos', class extends Controller {
   }
   disconnect() { this.urls.forEach(url => URL.revokeObjectURL(url)); }
 });
+
+application.register('questionnaire', class extends Controller {
+  static targets = ['status'];
+  connect() { this.update(); }
+  update() {
+    const answered = [...this.element.querySelectorAll('textarea')].filter(field => field.value.trim()).length;
+    this.statusTarget.textContent = `${answered} de 3 respuestas completadas. Si no tienes experiencia previa, indícalo.`;
+  }
+});

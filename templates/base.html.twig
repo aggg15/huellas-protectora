@@ -12,6 +12,8 @@
   <a class="brand" href="{{ path('home') }}"><span class="brand-icon" aria-hidden="true">✿</span> huellas<span class="brand-caption">PROTECTORA DE ANIMALES</span></a>
   <div class="nav-links"><a href="{{ path('home') }}">Buscar un compañero</a>
   {% if is_granted('ROLE_STAFF') %}<a href="{{ path('admin_animals') }}">Refugio</a>{% endif %}
+  {% if is_granted('ROLE_COORDINATOR') %}<a href="{{ path('review_list') }}">Adopciones</a>{% endif %}
+  {% if app.user %}<a href="{{ path('my_applications') }}">Mis solicitudes</a>{% endif %}
   {% if app.user %}<span class="user-name">{{ app.user.name }}</span><form method="post" action="{{ path('logout') }}"><input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}"><button class="button is-small is-light">Salir</button></form>
   {% else %}<a class="button is-small is-primary is-outlined" href="{{ path('login') }}">Acceder</a>{% endif %}</div>
 </nav></header>

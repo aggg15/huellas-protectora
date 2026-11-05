@@ -6,4 +6,4 @@
 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 <div class="field"><label class="label" for="email">Email</label><input class="input" type="email" id="email" name="_username" value="{{ last_email }}" autocomplete="username" required></div>
 <div class="field"><label class="label" for="password">Contraseña</label><input class="input" type="password" id="password" name="_password" autocomplete="current-password" required></div>
-<button class="button is-primary is-fullwidth">Acceder</button></form></section>{% endblock %}
+<button class="button is-primary is-fullwidth">Acceder</button></form><p class="mt-4">¿Primera visita? <a href="{{ path('register') }}">Crea tu cuenta</a>.</p></section>{% endblock %}

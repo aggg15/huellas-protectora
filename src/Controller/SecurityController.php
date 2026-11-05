@@ -15,4 +15,9 @@ class SecurityController extends AbstractController
     }
     #[Route('/salir', name: 'logout', methods: ['POST'])]
     public function logout(): never { throw new \LogicException('Gestionado por Symfony Security.'); }
+    #[Route('/acceso/completado', name: 'after_login', methods: ['GET'])]
+    public function afterLogin(): Response
+    {
+        return $this->redirectToRoute($this->isGranted('ROLE_STAFF') ? 'admin_animals' : 'my_applications');
+    }
 }
