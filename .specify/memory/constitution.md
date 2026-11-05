@@ -22,8 +22,8 @@ Constitution no resuelve por sí sola las preguntas pendientes de las historias.
 
 Quedan fuera la contabilidad general y las campañas de recogida de pienso. No se incorporarán
 integraciones, módulos o automatismos ajenos a las necesidades descritas sin justificar su encaje
-en el alcance. La Práctica 1 aporta el rigor de especificación, trazabilidad y verificación; sus
-reglas del HIS, exclusiones de permisos y tecnologías no se trasladan automáticamente a Huellas.
+en el alcance. El contexto de esta iteración se limita exclusivamente a la Práctica Grupal; no se usan
+las entregas de otros proyectos como fuente operativa o funcional.
 
 ### II. Especificación previa, criterios verificables y trazabilidad
 
@@ -103,8 +103,9 @@ sean públicas. No se afirmará aptitud para producción ni cumplimiento normati
 ## Organización del código y la documentación
 
 - `.specify/memory/constitution.md` es la única fuente de estas reglas comunes.
-- Cada carpeta `spec-001` a `spec-008` conserva su `historia.md` y alojará su `spec.md` y `tasks.md`
-  cuando se elaboren en las fases correspondientes. Los documentos identificarán responsable,
+- Las carpetas `spec-001` a `spec-008` conservan las historias iniciales. Conforme al enunciado v1,
+  los resultados del ciclo se alojan en `specs/spec-001` a `specs/spec-008`, con `spec.md` y `tasks.md`
+  y los informes de cada fase cuando se elaboren. Los documentos identificarán responsable,
   criterios, dependencias y estado real del trabajo.
 - El `plan.md` común definirá la arquitectura, el modelo de datos, los contratos y las convenciones
   de todo el sistema. Los detalles por historia, si se documentan aparte, deberán referenciar esa
@@ -166,8 +167,10 @@ historias. Su ausencia no se sustituye por datos inventados en esta propuesta.
 
 - `SI-30-protectora-animales-descripcion.pdf`, páginas 1-2: dominio, alcance y pila propuesta.
 - `guia_proyecto_SDD_parte_I.pdf`, páginas 1-2: Constitution, colaboración y secuencia de trabajo.
-- `Practica-SDD-enunciado IR.pdf`, apartados 3-7: responsabilidad, refinamiento y entregables.
+- `Practica-SDD-enunciado_v1_IR.pdf`, apartados 3-7: responsabilidad, refinamiento y entregables.
 - Las ocho fichas `spec-001/historia.md` a `spec-008/historia.md`: contexto y preguntas pendientes.
-- Práctica 1: continuidad del método SDD y rigor académico, sin trasladar reglas del HIS.
+- `docs/decisiones.md`: interpretación de las contradicciones del enunciado vigente y decisiones de esta iteración.
 
-**Versión:** 1.0.0 | **Ratificación:** pendiente de revisión conjunta | **Última modificación:** 2026-10-29
+**Versión:** 1.1.0 | **Ratificación:** pendiente de revisión conjunta | **Última modificación:** 2026-11-05
+
+Cambio 1.1.0: actualización de fuentes y ubicación specs/ por el enunciado vigente; el usuario autoriza el desarrollo de HU-01 a HU-04. La revisión conjunta y el reparto nominal no se atribuyen como realizados.
