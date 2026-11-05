@@ -174,3 +174,7 @@ historias. Su ausencia no se sustituye por datos inventados en esta propuesta.
 **Versión:** 1.1.0 | **Ratificación:** pendiente de revisión conjunta | **Última modificación:** 2026-11-05
 
 Cambio 1.1.0: actualización de fuentes y ubicación specs/ por el enunciado vigente; el usuario autoriza el desarrollo de HU-01 a HU-04. La revisión conjunta y el reparto nominal no se atribuyen como realizados.
+
+Actualización de alcance del 2026-11-05: después de consultar al profesor, el usuario indica retirar
+la publicación de HU-02 a HU-04 y publicar únicamente HU-01 / spec-001. Se conserva el trabajo
+posterior en local. No cambia el requisito de revisión del compañero antes de integrar en main.

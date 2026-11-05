@@ -9,3 +9,10 @@
 Responsable académico y revisor: pendientes de identificación; desarrollo asistido por Codex a solicitud del usuario. No se atribuye revisión humana realizada.
 
 Resultado T104: 7 pruebas / 32 aserciones correctas. Véase ../../docs/evidencias/spec-001-phpunit.txt. La revisión humana queda pendiente.
+
+- [x] T106: limitar la publicación a spec-001 por la corrección de alcance del usuario tras consultar
+  al profesor; actualizar README, plan y responsabilidades, y repetir las comprobaciones sobre
+  una base de pruebas nueva sin modificar los datos anteriores.
+
+Resultado T106: 7 pruebas / 32 aserciones, validadores de contenedor y Twig correctos y esquema
+Doctrine sincronizado. Véase ../../docs/evidencias/spec-001-alcance-corregido.txt.

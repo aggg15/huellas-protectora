@@ -1,7 +1,8 @@
 # Plan común de Huellas
 
-Fecha: 2026-11-05. Alcance de esta iteración: HU-01 a HU-04, en ese orden. Las otras cuatro
-historias conservan su especificación inicial y sus puntos de integración, sin implementarse.
+Fecha: 2026-11-05. Alcance vigente: únicamente HU-01 (spec-001), tras la indicación del usuario
+después de consultar al profesor. Las otras siete historias conservan su documentación de
+planificación y sus puntos de integración, sin formar parte de esta implementación publicada.
 
 ## Arquitectura y pila
 

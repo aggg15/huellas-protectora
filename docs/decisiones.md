@@ -1,8 +1,12 @@
-# Clarificaciones de la iteración HU-01 a HU-04
+# Clarificaciones y alcance vigente de spec-001
 
 Fecha: 2026-11-05. El usuario ha aceptado como base catálogo público, cuentas con email/contraseña,
 roles internos y diez periodos de 24 horas de cuarentena. Las precisiones restantes son decisiones
 de implementación documentadas, no frases atribuidas al enunciado ni acuerdos inventados del compañero.
+
+Después de consultar al profesor, el usuario limita esta publicación a **spec-001**. Las decisiones
+de HU-02 a HU-04 se conservan como planificación futura, sin publicar su implementación. Se retiran
+sus ramas remotas y se cierran sus PR; el trabajo posterior se conserva únicamente en local.
 
 | ID | Decisión | Motivo / historias |
 |---|---|---|
@@ -25,7 +29,7 @@ Las cuentas de personal se crean por comando; las credenciales locales se excluy
 ## Reparto y material vigente
 
 El nuevo enunciado v1 mezcla cuatro integrantes/dos historias con dos integrantes/cuatro historias.
-Se conserva la guía específica de dos personas; este encargo cubre las cuatro primeras historias.
+Se conserva la guía específica de dos personas; el encargo vigente cubre únicamente la primera historia.
 Los nombres y la revisión cruzada siguen pendientes; no se bloquea el desarrollo autorizado por ello.
 La nueva fuente es Practica-SDD-enunciado_v1_IR.pdf y sustituye al archivo anterior retirado por el
 usuario. El informe de octubre y el PDF de historias son antecedentes fechados, no evidencia de la
@@ -33,4 +37,4 @@ implementación actual. La revisión actual deja de usar Práctica 1 como fuente
 
 El enunciado v1 requiere specs/ y docs/agrupamiento.md y docs/memoria.md, además de dos ZIP finales
 (proyecto y vídeo, máximo conjunto 100 MB). Esta iteración prepara la aplicación y documentación
-de las cuatro historias; no declara terminadas las otras cuatro ni la demo final.
+de la primera historia; no declara terminadas las otras siete ni la demo final.
