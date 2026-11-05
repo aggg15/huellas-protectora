@@ -17,6 +17,11 @@ Composer fija las versiones PHP en composer.lock; npm fija los recursos frontend
 Docker Compose proporciona PostgreSQL persistente; PHP puede ejecutarse localmente para desarrollar
 y también habrá un servicio web en Compose para reproducir el arranque.
 
+Convenciones: namespaces PSR-4 bajo App, clases PascalCase, métodos y variables camelCase,
+tipado estricto e indentación de cuatro espacios en PHP. Las vistas heredan base.html.twig y
+usan componentes de Bulma. Las claves técnicas se mantienen consistentes en inglés y las
+etiquetas, formularios y mensajes de usuario se presentan en español.
+
 ## Estructura
 
 - src/Entity: User, Animal, AnimalPhoto, VeterinaryReview y posteriormente AdoptionApplication.

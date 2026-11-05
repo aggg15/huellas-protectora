@@ -5,8 +5,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity]
-#[ORM\UniqueConstraint(name: 'one_approved_per_animal', columns: ['animal_id'], options: ['where' => "status = 'approved'"])]
-#[ORM\UniqueConstraint(name: 'one_open_per_applicant_animal', columns: ['applicant_id','animal_id'], options: ['where' => "status IN ('pending','waiting','approved')"])]
+#[ORM\UniqueConstraint(name: 'one_approved_per_animal', columns: ['animal_id'], options: ['where' => "((status)::text = 'approved'::text)"])]
+#[ORM\UniqueConstraint(name: 'one_open_per_applicant_animal', columns: ['applicant_id','animal_id'], options: ['where' => "((status)::text = ANY ((ARRAY['pending'::character varying, 'waiting'::character varying, 'approved'::character varying])::text[]))"])]
 class AdoptionApplication
 {
     public const OPEN = ['pending','waiting','approved'];
@@ -22,6 +22,8 @@ class AdoptionApplication
     #[ORM\Column(type: 'datetime_immutable', nullable: true)] public ?\DateTimeImmutable $interviewAt = null;
     #[ORM\Column(type: 'text')] public string $interviewNotes = '';
     #[ORM\Column(type: 'text')] public string $reason = '';
+    #[ORM\ManyToOne] public ?User $decidedBy = null;
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)] public ?\DateTimeImmutable $decidedAt = null;
     #[ORM\Column(type: 'integer'), ORM\Version] public int $version = 1;
     public function __construct(Animal $animal, User $applicant, array $answers, \DateTimeImmutable $now)
     {

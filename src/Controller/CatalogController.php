@@ -18,7 +18,7 @@ class CatalogController extends AbstractController
         $filters=[];$errors=[];
         foreach (['species'=>['dog','cat'],'size'=>['small','medium','large'],'age'=>['young','adult','senior']] as $key=>$allowed) {
             $value=$request->query->all()[$key] ?? '';
-            if (!is_string($value) || ($value!=='' && !in_array($value,$allowed,true))) { $errors[$key]='El filtro de '.$key.' no es válido.'; $value=''; }
+            if (!is_string($value) || ($value!=='' && !in_array($value,$allowed,true))) { $errors[$key]='El filtro de '.['species'=>'especie','size'=>'tamaño','age'=>'edad'][$key].' no es válido.'; $value=''; }
             $filters[$key]=$value;
         }
         $qb=$this->em->createQueryBuilder()->select('a')->from(Animal::class,'a')->where('a.status = :status')->setParameter('status','available')->orderBy('a.receivedAt','ASC');

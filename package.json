@@ -2,6 +2,15 @@
   "name": "huellas-protectora",
   "private": true,
   "type": "module",
-  "scripts": {"build": "node tools/copy-assets.mjs"},
-  "dependencies": {"@hotwired/stimulus": "^3.2.2", "@hotwired/turbo": "^8.0.0", "bulma": "^1.0.0"}
+  "scripts": {
+    "build": "node tools/copy-assets.mjs"
+  },
+  "dependencies": {
+    "@hotwired/stimulus": "^3.2.2",
+    "@hotwired/turbo": "^8.0.0",
+    "bulma": "^1.0.0"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
 }

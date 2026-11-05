@@ -22,6 +22,7 @@ class ApplicationService
         return $this->em->wrapInTransaction(function () use ($user,$animalId,$answers): AdoptionApplication {
             $applicant=$this->em->find(User::class,$user->id,LockMode::PESSIMISTIC_WRITE);
             $animal=$this->em->find(Animal::class,$animalId,LockMode::PESSIMISTIC_WRITE);
+            if ($animal) { $this->em->refresh($animal,LockMode::PESSIMISTIC_WRITE); }
             if (!$animal || $animal->status!=='available') { throw new ValidationError(['conflict'=>'El animal ya no está disponible. Vuelve al catálogo.']); }
             $repo=$this->em->getRepository(AdoptionApplication::class);
             if ($repo->count(['applicant'=>$applicant,'status'=>AdoptionApplication::OPEN])>=2) {

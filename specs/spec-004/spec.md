@@ -70,3 +70,7 @@ Ver ../../plan.md (desde la raíz: plan.md), data-model.md y docs/decisiones.md.
 ## Requisitos de calidad y permisos
 
 Validación en servidor; formularios CSRF; datos ficticios; errores sin cambios parciales. Catálogo sin cuenta, operaciones internas según los roles del plan común. La verificación incluye caso normal, datos inválidos y permisos o estado.
+
+## Reglas concretadas para aceptación
+
+Solo ROLE_COORDINATOR decide. La entrevista tiene fecha/hora desde la presentación y notas. Para aprobar debe constar una entrevista no futura, una candidatura pendiente y un animal disponible. La aprobación cambia a reservado y pasa las otras pendientes a espera, conservando las rechazadas. El rechazo exige motivo y no borra registros. El formulario incluye versión: una ventana obsoleta recibe 409 sin sobrescribir. Una reserva fallida se libera con motivo, cancela la candidatura elegida y devuelve las esperas a pendientes. Todas las decisiones bloquean el animal y registran coordinadora y momento. Un índice parcial impide más de una aprobada por animal.

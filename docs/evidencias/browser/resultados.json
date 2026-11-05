@@ -1,0 +1,50 @@
+{
+  "base": "http://127.0.0.1:8087",
+  "results": [
+    {
+      "name": "CA-01-01/02: alta real con foto, Stimulus y cuarentena",
+      "result": "correcto"
+    },
+    {
+      "name": "CA-01-04: revisión veterinaria por su rol",
+      "result": "correcto"
+    },
+    {
+      "name": "CA-02-01/03: catálogo anónimo y exclusión de cuarentena",
+      "result": "correcto"
+    },
+    {
+      "name": "CA-02-02/04: filtros AND y acogida visible",
+      "result": "correcto"
+    },
+    {
+      "name": "Interfaz móvil sin desbordamiento horizontal",
+      "result": "correcto"
+    },
+    {
+      "name": "CA-03-01/02: cuestionario completo con contador Stimulus",
+      "result": "correcto"
+    },
+    {
+      "name": "CA-03-03: tercera solicitud rechazada desde navegador",
+      "result": "correcto"
+    },
+    {
+      "name": "CA-03-04/CA-04-01: coordinación lee y registra entrevista",
+      "result": "correcto"
+    },
+    {
+      "name": "CA-04-03: aprobación con confirmación y reserva",
+      "result": "correcto"
+    },
+    {
+      "name": "CA-04-02: rechazo motivado y consulta del solicitante",
+      "result": "correcto"
+    },
+    {
+      "name": "Ningún error JavaScript en Turbo/Stimulus",
+      "result": "correcto"
+    }
+  ],
+  "javascriptErrors": []
+}

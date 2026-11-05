@@ -11,7 +11,8 @@ class SecurityController extends AbstractController
     #[Route('/acceso', name: 'login')]
     public function login(AuthenticationUtils $auth): Response
     {
-        return $this->render('security/login.html.twig', ['last_email'=>$auth->getLastUsername(), 'error'=>$auth->getLastAuthenticationError()]);
+        $error=$auth->getLastAuthenticationError();
+        return $this->render('security/login.html.twig', ['last_email'=>$auth->getLastUsername(), 'error'=>$error]);
     }
     #[Route('/salir', name: 'logout', methods: ['POST'])]
     public function logout(): never { throw new \LogicException('Gestionado por Symfony Security.'); }

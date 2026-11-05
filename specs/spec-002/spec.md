@@ -64,3 +64,7 @@ Ver ../../plan.md (desde la raíz: plan.md), data-model.md y docs/decisiones.md.
 ## Requisitos de calidad y permisos
 
 Validación en servidor; formularios CSRF; datos ficticios; errores sin cambios parciales. Catálogo sin cuenta, operaciones internas según los roles del plan común. La verificación incluye caso normal, datos inválidos y permisos o estado.
+
+## Reglas concretadas para aceptación
+
+Filtros combinados con AND. Edad: menos de 12 meses, de 12 a 83 y desde 84. Un filtro desconocido o compuesto no se ignora: devuelve formulario con error 422. Solo status available aparece en catálogo y ficha pública. Cuarentena, reservado y adoptado devuelven 404 también por URL directa de foto para usuarios anónimos. La acogida se representa con un indicador de datos; no se implementa su gestión en esta historia.

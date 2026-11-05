@@ -70,3 +70,7 @@ Ver ../../plan.md (desde la raíz: plan.md), data-model.md y docs/decisiones.md.
 ## Requisitos de calidad y permisos
 
 Validación en servidor; formularios CSRF; datos ficticios; errores sin cambios parciales. Catálogo sin cuenta, operaciones internas según los roles del plan común. La verificación incluye caso normal, datos inválidos y permisos o estado.
+
+## Reglas concretadas para aceptación
+
+Las fechas se guardan en UTC y se muestran en Madrid. La liberación ocurre a las 240 horas exactas y no modifica reservas/adopciones. Especie perro/gato; tamaño pequeño/mediano/grande; edad entera de 0 a 600 meses; procedencia obligatoria hasta 1000 caracteres. Se adjuntan de una a seis imágenes reales JPEG/PNG/WebP de hasta 5 MiB. Identidad UUID y código HUE únicos, sin entrada manual. Revisión con veterinario, fecha real entre recepción y ahora y notas de hasta 5000 caracteres. Solo voluntario/coordinadora registran animales y solo veterinario registra revisiones. No se publica el origen ni las notas veterinarias.

@@ -9,7 +9,7 @@ de entidades públicas son UUID. Las restricciones se mantienen también en Post
 | Animal | id, código, especie, edad aproximada en meses, tamaño, procedencia, recepción, estado, enAcogida | Código único; perro/gato; edad no negativa; estados cuarentena/disponible/reservado/adoptado. |
 | AnimalPhoto | id, animal FK, nombre interno, tipo MIME | No contiene rutas aportadas por el usuario; eliminación ligada al animal. |
 | VeterinaryReview | id, animal FK, veterinario FK, fecha, notas | Fecha entre recepción y momento actual; notas no vacías; conservación de autoría. |
-| AdoptionApplication (HU-03) | id, animal FK, solicitante FK, vivienda, experiencia, disponibilidad, estado, entrevista, motivo, versión | Cuestionario completo; estados pendiente/en_espera/aprobada/rechazada/cancelada. Máximo dos abiertas por cuenta bajo bloqueo de fila. |
+| AdoptionApplication (HU-03) | id, animal FK, solicitante FK, vivienda, experiencia, disponibilidad, estado, entrevista, motivo, versión, coordinadora y momento de decisión | Cuestionario completo; estados pendiente/en_espera/aprobada/rechazada/cancelada. Máximo dos abiertas por cuenta bajo bloqueo de fila. |
 
 La reserva deriva de una única solicitud aprobada por animal. Un índice parcial impedirá dos
 aprobadas incluso ante fallos de concurrencia. Las demás solicitudes activas pasan a espera.

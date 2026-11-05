@@ -1,0 +1,17 @@
+.git
+.env
+.env.*
+!.env.example
+vendor
+node_modules
+var
+public/vendor
+docs
+specs
+spec-*
+output
+*.pdf
+*.tex
+.DS_Store
+.phpunit.cache
+config/reference.php

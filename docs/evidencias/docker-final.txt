@@ -1,0 +1,14 @@
+$ docker compose --env-file .env.local ps
+NAME                 IMAGE                COMMAND                  SERVICE    CREATED             STATUS                       PORTS
+huellas-database-1   postgres:16-alpine   "docker-entrypoint.s…"   database   About an hour ago   Up About an hour (healthy)   127.0.0.1:55439->5432/tcp
+huellas-web-1        huellas-web          "docker-php-entrypoi…"   web        25 seconds ago      Up 20 seconds (healthy)      127.0.0.1:8086->8000/tcp
+
+$ docker compose --env-file .env.local exec -T web id
+uid=82(www-data) gid=82(www-data) groups=82(www-data)
+
+$ docker compose --env-file .env.local exec -T web php -r echo "PHP=".PHP_VERSION." upload=".ini_get("upload_max_filesize")." post=".ini_get("post_max_size")." max_files=".ini_get("max_file_uploads")." env=".getenv("APP_ENV")."\n";
+PHP=8.3.36 upload=5M post=32M max_files=20 env=prod
+
+HTTP catálogo Docker: 200.
+
+HTTP 404 Docker: página de error en español correcta.

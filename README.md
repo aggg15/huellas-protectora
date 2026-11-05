@@ -1,89 +1,134 @@
 # Huellas · Gestión de adopciones
 
-Definición inicial de las ocho historias de la Práctica Grupal, a partir de la narrativa SI-30 y de la guía SDD, parte I. Fecha: 15 de octubre de 2026.
+Proyecto SDD de Ingeniería de Requisitos. Esta iteración implementa **spec-001 a spec-004**:
+registro y cuarentena, catálogo público, solicitudes y decisiones de adopción. HU-05 a HU-08
+conservan su especificación inicial y no se presentan como implementadas.
 
-## Repositorio y colaboración
+Repositorio: [aggg15/huellas-protectora](https://github.com/aggg15/huellas-protectora).
+Los hitos se conservan en las ramas `spec-001`, `spec-002`, `spec-003` y `spec-004`, con dependencias acumulativas. La integración en `main` y la revisión del
+compañero siguen pendientes. El repositorio es público por decisión expresa del usuario;
+los secretos y datos de ejecución se excluyen de Git.
 
-Repositorio público: [aggg15/huellas-protectora](https://github.com/aggg15/huellas-protectora).
-La rama principal es `main` y el remoto local `origin` apunta a
-`https://github.com/aggg15/huellas-protectora.git`. La base documental incluye las ocho historias,
-la Constitution, las fuentes del enunciado, el informe de revisión y el documento centralizado
-en LaTeX y PDF.
+## Documentación vigente
 
-Para obtener una copia del proyecto:
+- [Constitution 1.1.0](.specify/memory/constitution.md), [plan común](plan.md) y [modelo de datos](data-model.md).
+- [Decisiones y clarificaciones](docs/decisiones.md), [agrupamiento](docs/agrupamiento.md).
+- [Memoria](docs/memoria.md), [trazabilidad](docs/trazabilidad.md) y [verificación](docs/verificacion.md).
+- Fuentes: `SI-30-protectora-animales-descripcion.pdf`, `guia_proyecto_SDD_parte_I.pdf` y
+  **`Practica-SDD-enunciado_v1_IR.pdf`**. Se usa exclusivamente el contexto de Práctica Grupal.
 
-```sh
-git clone https://github.com/aggg15/huellas-protectora.git
-cd huellas-protectora
-```
+El enunciado v1 mezcla dos/cuatro integrantes; se mantiene la guía específica de dos personas y
+cuatro historias por persona, sin inventar nombres, ratificación ni revisión del compañero.
 
-Las ramas `spec-001` a `spec-008` se crearán al preparar la base común de especificaciones y
-acordar el reparto de cuatro historias por persona, conforme a la guía. Las carpetas existentes
-organizan la documentación y no sustituyen esas ramas.
-
-El archivo `.gitignore` excluye secretos, dependencias, cachés y auxiliares de LaTeX; las fuentes
-`.tex` y los PDF entregables se versionan. La Constitution define la revisión entre compañeros
-y la trazabilidad de los cambios.
-
-## Constitution
-
-La [Constitution de Huellas](.specify/memory/constitution.md), versión 1.0.0 preparada el
-29 de octubre de 2026, define los principios de alcance, trazabilidad, diseño compartido,
-colaboración y calidad. Incluye la organización documental, el flujo SDD y las reglas para
-modificar los acuerdos. Está preparada para la revisión conjunta de los dos integrantes;
-la ratificación y el reparto nominal siguen pendientes. Su redacción no acredita haber
-ejecutado `/speckit.constitution` ni haber inicializado la integración de Spec Kit.
-
-## Historias
-
-| Historia | Contenido | Documento |
+| Spec | Necesidad | Estado |
 |---|---|---|
-| HU-01 | Registrar un animal y gestionar su cuarentena | [spec-001/historia.md](spec-001/historia.md) |
-| HU-02 | Consultar y filtrar el catálogo público de adopción | [spec-002/historia.md](spec-002/historia.md) |
-| HU-03 | Enviar una solicitud de adopción completa | [spec-003/historia.md](spec-003/historia.md) |
-| HU-04 | Evaluar solicitudes, entrevistar y reservar el animal | [spec-004/historia.md](spec-004/historia.md) |
-| HU-05 | Formalizar la adopción y programar los seguimientos | [spec-005/historia.md](spec-005/historia.md) |
-| HU-06 | Gestionar casas de acogida y la evolución del animal | [spec-006/historia.md](spec-006/historia.md) |
-| HU-07 | Inscribirse en turnos y detectar falta de voluntarios | [spec-007/historia.md](spec-007/historia.md) |
-| HU-08 | Apadrinar un animal y recibir sus novedades | [spec-008/historia.md](spec-008/historia.md) |
+| [spec-001](specs/spec-001/spec.md) | Ficha, fotos, cuarentena y veterinario | Implementada y validada. |
+| [spec-002](specs/spec-002/spec.md) | Catálogo público y filtros | Implementada y validada. |
+| [spec-003](specs/spec-003/spec.md) | Cuestionario y dos solicitudes como máximo | Implementada y validada. |
+| [spec-004](specs/spec-004/spec.md) | Entrevistas, decisiones, reserva y espera | Implementada y validada. |
+| [spec-005](specs/spec-005/spec.md) | Formalización y seguimientos | Pendiente. |
+| [spec-006](specs/spec-006/spec.md) | Acogidas y novedades | Pendiente. |
+| [spec-007](specs/spec-007/spec.md) | Turnos | Pendiente. |
+| [spec-008](specs/spec-008/spec.md) | Apadrinamientos | Pendiente. |
 
-## Documento centralizado
+Las carpetas `spec-001/` a `spec-008/` de la raíz conservan las fichas iniciales de octubre.
+El [LaTeX](historias_usuario.tex), [PDF](output/pdf/historias_usuario.pdf) y el
+[informe inicial](docs/revision_enunciado_general.md) son antecedentes fechados. Los resultados
+actuales del ciclo están en `specs/`, conforme al enunciado vigente.
 
-- PDF: [output/pdf/historias_usuario.pdf](output/pdf/historias_usuario.pdf).
-- LaTeX editable y autónomo: [historias_usuario.tex](historias_usuario.tex). Contiene las ocho historias completas y no necesita archivos auxiliares del proyecto.
+## Arranque con Docker
 
-Cada ficha y el documento común incluyen la misma historia, alcance, criterios de aceptación, dependencias, dudas para `clarify` y límites. Los criterios `CA-XX-YY` identifican la historia y el criterio, y señalan su origen en la narrativa. Si se modifica una historia en Markdown o en LaTeX, debe reflejarse el cambio en la otra representación antes de volver a distribuir el PDF.
-
-Para regenerar el PDF desde la raíz del proyecto, con una distribución LaTeX instalada, ejecutar dos veces:
+Requisitos: Docker Desktop y PHP 8.3 para generar la configuración local. También puede crearse
+`.env` y `.env.local` manualmente desde `.env.example`, sustituyendo los valores de ejemplo.
 
 ```sh
-pdflatex -interaction=nonstopmode -halt-on-error -output-directory=output/pdf historias_usuario.tex
-pdflatex -interaction=nonstopmode -halt-on-error -output-directory=output/pdf historias_usuario.tex
+php tools/configure.php
+docker compose --env-file .env.local up -d --build --wait
 ```
 
-El editor LaTeX integrado de Codex también permite editar el documento y previsualizar su compilación.
+Abre **http://127.0.0.1:8086**. Las migraciones se aplican automáticamente. No se cargan cuentas
+ni animales de demostración. PostgreSQL y las fotos se conservan en volúmenes separados. Cambia
+`APP_HTTP_PORT` en `.env.local` para elegir otro puerto.
 
-El LaTeX utiliza fuentes OT1/Latin Modern, `\textquestiondown{}` para los signos de apertura de interrogación y la macro `\HU{08}` (análoga para las demás historias) para mostrar identificadores indivisibles como HU-08.
+Si el generador de compilación de Compose falla por las tildes de la ruta, la alternativa
+comprobada es:
 
-## Revisión frente al enunciado general
+```sh
+docker build -t huellas-web .
+docker compose --env-file .env.local up -d --wait --no-build
+```
 
-El [informe de revisión](docs/revision_enunciado_general.md) contrasta las ocho historias con la narrativa, la guía y los entregables del enunciado general. Distingue lo preparado para esta fase de lo pendiente para completar la práctica, documenta la discrepancia del reparto y recoge las comprobaciones de la corrección tipográfica.
+Las cuentas internas se crean por comando, que solicita una contraseña oculta:
 
-## Estado dentro de la guía
+```sh
+docker compose --env-file .env.local exec web php bin/console app:create-user voluntario@example.test "Voluntario ficticio" --role=ROLE_VOLUNTEER
+docker compose --env-file .env.local exec web php bin/console app:create-user veterinario@example.test "Veterinario ficticio" --role=ROLE_VET
+docker compose --env-file .env.local exec web php bin/console app:create-user coordinadora@example.test "Coordinadora ficticia" --role=ROLE_COORDINATOR
+```
 
-Se ha realizado la definición inicial de historias (paso 1), preparado la Constitution (paso 2.1), ambas para revisión conjunta, y publicado la base documental en GitHub con rama principal `main`. Estas fichas no son las especificaciones funcionales completas. Siguen pendientes el trabajo con `specify`, el reparto acordado de cuatro historias por persona, el plan y el modelo de datos compartidos y las ramas por historia. Las carpetas `spec-001` a `spec-008` son organización documental; no se han creado las ramas por spec ni se han asignado responsables.
+Los solicitantes crean su cuenta en `/registro`; no pueden elegir roles internos. Usa solo datos
+ficticios. `docker compose --env-file .env.local stop` detiene la aplicación; `down` conserva los
+volúmenes. No uses `down -v` si quieres conservar datos.
 
-Cada historia deberá seguir `specify → clarify → plan → tasks → analyze → implement → converge`, repitiendo los pasos necesarios y verificando los criterios de aceptación. Las dudas se han conservado explícitas para no atribuir a la narrativa decisiones que no contiene. No se presenta este trabajo como ejecución de comandos de Spec Kit.
+## Desarrollo con PHP local
 
-## Discrepancia documental detectada
+Requisitos: PHP 8.3 con las extensiones exigidas por Composer (incluidas PDO PostgreSQL y GD),
+Composer, Node.js y Docker para PostgreSQL.
 
-`Practica-SDD-enunciado IR.pdf` establece cuatro historias por integrante en el apartado 4, pero conserva referencias a dos en otros pasajes. Se mantiene el criterio explícito y coherente de la guía específica: ocho historias, cuatro por persona. Los apartados 5.1 a 5.4 del enunciado general exigen además repetir el refinamiento sobre la primera versión funcional, con decisiones justificadas, informes, trazabilidad, evidencias del antes y el después y revisión entre compañeros. El ciclo previo de la guía no sustituye ese trabajo posterior.
+```sh
+php tools/configure.php --test
+composer install
+npm ci
+npm run build
+docker compose --env-file .env.local up -d --wait database
+php bin/console doctrine:migrations:migrate --no-interaction
+php -d upload_max_filesize=5M -d post_max_size=32M -d max_file_uploads=20 -S 127.0.0.1:8086 -t public public/router.php
+```
 
-## Fuentes
+Si Docker ya ocupa el puerto 8086, usa otro para PHP. Los recursos Turbo, Stimulus y Bulma se
+sirven localmente; no se necesita una CDN durante la ejecución.
 
-- `SI-30-protectora-animales-descripcion.pdf`: necesidades y pila propuesta (Symfony, Twig, Hotwire, Doctrine, PostgreSQL y Bulma).
-- `guia_proyecto_SDD_parte_I.pdf`: metodología, ocho historias, reparto y colaboración.
-- `Practica-SDD-enunciado IR.pdf`: objetivos generales, entregables y evidencias del refinamiento.
-- Práctica 1: contexto académico sobre especificación previa, trazabilidad y verificación; sin trasladar al nuevo dominio sus reglas del HIS ni su pila tecnológica.
+## Verificación reproducible
 
-La contabilidad general de la asociación y las campañas de recogida de pienso están fuera del encargo.
+Las pruebas usan una base separada terminada en `_test`. Los scripts impiden limpiar la base
+normal de la aplicación.
+
+```sh
+php tools/configure.php --test
+php bin/console doctrine:database:create --env=test --if-not-exists
+php bin/console doctrine:migrations:migrate --env=test --no-interaction
+vendor/bin/phpunit --testdox
+php bin/console doctrine:schema:validate
+php bin/console lint:container
+php bin/console lint:twig templates
+```
+
+Para el recorrido de navegador:
+
+```sh
+npx playwright install chromium
+php tools/prepare-browser.php
+APP_ENV=e2e APP_DEBUG=1 php -S 127.0.0.1:8087 -t public public/router.php
+```
+
+En otra terminal ejecuta `node tests/browser.cjs`. El entorno `e2e` usa la base de pruebas y
+sesiones HTTP nativas; `test` usa sesiones simuladas de PHPUnit. No ejecutes ambas suites a la
+vez: preparan la misma base. Los datos y cuentas de `tools/prepare-browser.php` son ficticios y
+exclusivos de `_test`. Las ilustraciones de sus fichas son imágenes de prueba generadas por código.
+El navegador guarda capturas y `resultados.json` en `docs/evidencias/browser/`.
+
+## Recorrido de las cuatro historias
+
+1. El voluntario registra un animal con fotos, procedencia, especie, edad, tamaño y recepción.
+   Se muestran los diez días de cuarentena; una recepción de hace más de diez días ya puede
+   estar disponible. El veterinario registra la revisión desde su propia cuenta.
+2. Cualquier persona consulta y filtra el catálogo por especie, tamaño y edad. Solo aparecen
+   animales disponibles, también si están en acogida. Los estados no públicos tampoco exponen fotos.
+3. Un solicitante se registra, accede y completa vivienda, experiencia y disponibilidad.
+   Pendientes, esperas y aprobadas cuentan para el máximo de dos solicitudes abiertas.
+4. La coordinadora lee el cuestionario, registra la entrevista y decide. Aprobar requiere entrevista
+   no futura y reserva exclusiva; las otras candidaturas activas esperan. Rechazar exige motivo.
+   Una reserva fallida puede liberarse con motivo, reactivando las candidaturas en espera.
+
+Contrato, cuota, seguimientos, gestión completa de acogidas, turnos y padrinos quedan para las
+siguientes historias. Es una aplicación académica local; no se afirma aptitud para producción.

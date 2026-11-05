@@ -147,7 +147,8 @@ ni se añadirán tareas para aparentar iteración cuando no existan incidencias 
 La Constitution concreta los acuerdos de trabajo dentro del alcance docente; no puede sustituir ni
 rebajar requisitos de los enunciados. Ante contradicciones, se registrará su localización y la
 interpretación justificada. Para el reparto se mantienen cuatro historias por persona, coherentes
-con la guía específica y el apartado 4 del enunciado general, pese a sus referencias aisladas a dos.
+con la guía específica y el pasaje de reparto ocho historias/dos personas del enunciado v1, pese a
+sus referencias contradictorias a cuatro integrantes y dos historias por persona.
 Una aclaración posterior del docente debe reflejarse en los documentos afectados.
 
 Antes de integrar una historia, su autor y revisor comprobarán el cumplimiento de estos principios.

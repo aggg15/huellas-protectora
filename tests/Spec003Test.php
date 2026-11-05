@@ -88,4 +88,11 @@ class Spec003Test extends WebTestBase
         foreach ($this->answers() as $answer) { self::assertSelectorTextContains('main',$answer); }
         $this->client->loginUser($volunteer);$this->client->request('GET','/admin/solicitudes/'.$application->id);self::assertResponseStatusCodeSame(403);
     }
+    public function testRealLoginAcceptsNormalizedEmailAndRoutesApplicantCorrectly(): void
+    {
+        $this->user();$c=$this->client->request('GET','/acceso');
+        $form=$c->selectButton('Acceder')->form(['_username'=>' PERSONA@EXAMPLE.TEST ','_password'=>'Ficticia-Prueba-2026']);
+        $this->client->submit($form);$error=$this->client->getRequest()->getSession()->get('_security.last_error');self::assertNull($error,$error?get_class($error).': '.$error->getMessage():'');self::assertResponseRedirects('/acceso/completado');$this->client->followRedirect();
+        self::assertResponseRedirects('/mis-solicitudes');$this->client->followRedirect();self::assertResponseIsSuccessful();self::assertSelectorTextContains('h1','Mis solicitudes');
+    }
 }

@@ -38,3 +38,6 @@ missfont.log
 
 # Recursos de npm reproducibles con npm ci && npm run build
 /public/vendor/
+
+# Referencia generada automáticamente por Symfony, no editada a mano
+/config/reference.php

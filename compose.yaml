@@ -1,5 +1,25 @@
 name: huellas
 services:
+  web:
+    build: .
+    environment:
+      APP_ENV: prod
+      APP_DEBUG: 0
+      APP_SECRET: ${APP_SECRET:?Configura APP_SECRET en .env.local}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-huellas}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB:-huellas}?serverVersion=16&charset=utf8
+    ports:
+      - "127.0.0.1:${APP_HTTP_PORT:-8086}:8000"
+    volumes:
+      - uploads_data:/app/var/uploads
+    depends_on:
+      database:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(@file_get_contents('http://127.0.0.1:8000/') === false ? 1 : 0);"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+      start_period: 15s
   database:
     image: postgres:16-alpine
     environment:
@@ -17,3 +37,4 @@ services:
       retries: 20
 volumes:
   database_data:
+  uploads_data:

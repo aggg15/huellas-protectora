@@ -64,3 +64,7 @@ Ver ../../plan.md (desde la raíz: plan.md), data-model.md y docs/decisiones.md.
 ## Requisitos de calidad y permisos
 
 Validación en servidor; formularios CSRF; datos ficticios; errores sin cambios parciales. Catálogo sin cuenta, operaciones internas según los roles del plan común. La verificación incluye caso normal, datos inválidos y permisos o estado.
+
+## Reglas concretadas para aceptación
+
+El registro público crea solo ROLE_USER y usa email único normalizado; el acceso también normaliza el email. Nombre de hasta 100 caracteres; contraseña de al menos 12 caracteres, almacenada como hash. Las tres respuestas son obligatorias, hasta 4000 caracteres cada una. La cuenta autenticada determina al solicitante, sin aceptar un identificador del formulario. Pendiente, en espera y aprobada son abiertas; rechazada y cancelada no. Se rechaza otra solicitud abierta del mismo animal. Límite y disponibilidad se comprueban dentro de una transacción con bloqueo de persona y animal. No se acredita identidad legal ni se envían correos.

@@ -76,4 +76,17 @@ class Spec001Test extends WebTestBase
         $this->client->loginUser($this->user('ROLE_USER','solicitante@example.test'));
         $this->client->request('GET','/admin/animales/nuevo');self::assertResponseStatusCodeSame(403);
     }
+    public function testMissingOrTooManyPhotosAndMalformedFieldsAreRejected(): void
+    {
+        $this->client->loginUser($this->user('ROLE_VOLUNTEER'));
+        $crawler=$this->client->request('GET','/admin/animales/nuevo');$token=$crawler->filter('input[name="_token"]')->attr('value');
+        $data=['_token'=>$token,'species'=>'dog','ageMonths'=>'3','size'=>'small','origin'=>'Procedencia ficticia','receivedAt'=>'2026-01-01T10:00'];
+        foreach ([[],array_map(fn()=>$this->photo(),range(1,7))] as $files) {
+            $this->client->request('POST','/admin/animales/nuevo',$data,['photos'=>$files]);self::assertResponseStatusCodeSame(422);
+            self::assertCount(0,$this->refreshEm()->getRepository(Animal::class)->findAll());
+        }
+        $data['origin']=['texto inesperado'];
+        $this->client->request('POST','/admin/animales/nuevo',$data,['photos'=>[$this->photo()]]);self::assertResponseStatusCodeSame(422);
+        self::assertCount(0,$this->refreshEm()->getRepository(Animal::class)->findAll());
+    }
 }

@@ -5,7 +5,6 @@ security:
     app_users:
       entity:
         class: App\Entity\User
-        property: email
   role_hierarchy:
     ROLE_VOLUNTEER: ROLE_STAFF
     ROLE_VET: ROLE_STAFF

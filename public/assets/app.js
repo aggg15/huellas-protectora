@@ -27,3 +27,8 @@ application.register('questionnaire', class extends Controller {
     this.statusTarget.textContent = `${answered} de 3 respuestas completadas. Si no tienes experiencia previa, indícalo.`;
   }
 });
+
+application.register('confirmation', class extends Controller {
+  static values = { message: String };
+  ask(event) { if (!window.confirm(this.messageValue)) event.preventDefault(); }
+});

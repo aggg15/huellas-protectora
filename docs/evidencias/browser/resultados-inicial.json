@@ -1,0 +1,5 @@
+{
+  "results": [],
+  "error": "page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n  navigated to \"http://127.0.0.1:8085/acceso\"\n============================================================\n    at login (/Users/antoniogarciagomez/Carrera/4º Carrera/Ingeniería de Requisitos/Práctica Grupal/tests/browser.cjs:21:14)\n    at async /Users/antoniogarciagomez/Carrera/4º Carrera/Ingeniería de Requisitos/Práctica Grupal/tests/browser.cjs:38:7\n    at async check (/Users/antoniogarciagomez/Carrera/4º Carrera/Ingeniería de Requisitos/Práctica Grupal/tests/browser.cjs:11:3)\n    at async /Users/antoniogarciagomez/Carrera/4º Carrera/Ingeniería de Requisitos/Práctica Grupal/tests/browser.cjs:37:5",
+  "javascriptErrors": []
+}
