@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+{% block title %}Acceder · Huellas{% endblock %}
+{% block body %}<section class="form-card box"><p class="eyebrow">BIENVENIDO A HUELLAS</p><h1 class="title is-3">Accede a tu cuenta</h1>
+{% if error %}<div class="notification is-danger is-light" role="alert">Email o contraseña incorrectos. Vuelve a intentarlo.</div>{% endif %}
+<form method="post" action="{{ path('login') }}" data-turbo="false">
+<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+<div class="field"><label class="label" for="email">Email</label><input class="input" type="email" id="email" name="_username" value="{{ last_email }}" autocomplete="username" required></div>
+<div class="field"><label class="label" for="password">Contraseña</label><input class="input" type="password" id="password" name="_password" autocomplete="current-password" required></div>
+<button class="button is-primary is-fullwidth">Acceder</button></form></section>{% endblock %}

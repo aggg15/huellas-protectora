@@ -1,89 +1,78 @@
-# Huellas · Gestión de adopciones
+# Huellas · spec-001
 
-Definición inicial de las ocho historias de la Práctica Grupal, a partir de la narrativa SI-30 y de la guía SDD, parte I. Fecha: 15 de octubre de 2026.
+Publicación vigente: **únicamente HU-01 / spec-001**, por indicación del usuario tras consultar al
+profesor el 5 de noviembre de 2026. Incluye registro de animales, fotografías protegidas, cuarentena
+de diez periodos de 24 horas y revisión veterinaria, junto con la base técnica común necesaria.
 
-## Repositorio y colaboración
+Repositorio: [aggg15/huellas-protectora](https://github.com/aggg15/huellas-protectora).
+La rama `spec-001` contiene esta implementación y su [PR #1](https://github.com/aggg15/huellas-protectora/pull/1)
+propone integrarla en `main`, pendiente de revisión del compañero. Las PR #2, #3 y #4 se retiran y
+sus ramas remotas se eliminan. El trabajo posterior se conserva como copia local de recuperación.
 
-Repositorio público: [aggg15/huellas-protectora](https://github.com/aggg15/huellas-protectora).
-La rama principal es `main` y el remoto local `origin` apunta a
-`https://github.com/aggg15/huellas-protectora.git`. La base documental incluye las ocho historias,
-la Constitution, las fuentes del enunciado, el informe de revisión y el documento centralizado
-en LaTeX y PDF.
+HU-02 a HU-08 permanecen como documentación de planificación; su funcionalidad no está implementada
+en esta rama. La portada pública es una página de entrada: el catálogo de adopción corresponde a HU-02.
 
-Para obtener una copia del proyecto:
+## Código y documentación
 
-```sh
-git clone https://github.com/aggg15/huellas-protectora.git
-cd huellas-protectora
-```
+- [Especificación HU-01](specs/spec-001/spec.md), [tareas](specs/spec-001/tasks.md),
+  [implementación](specs/spec-001/implement.md) y [validación](docs/evidencias/spec-001-phpunit.txt).
+- [Constitution](.specify/memory/constitution.md), [plan común](plan.md), [modelo de datos](data-model.md),
+  [decisiones](docs/decisiones.md) y [agrupamiento](docs/agrupamiento.md).
+- Código Symfony en `src/`, vistas Twig en `templates/`, recursos Hotwire/Bulma en `public/` y
+  migraciones PostgreSQL en `migrations/`. Las fotografías se guardan fuera del directorio público.
 
-Las ramas `spec-001` a `spec-008` se crearán al preparar la base común de especificaciones y
-acordar el reparto de cuatro historias por persona, conforme a la guía. Las carpetas existentes
-organizan la documentación y no sustituyen esas ramas.
+Las ocho fichas iniciales están en `spec-001/` a `spec-008/`. El [LaTeX](historias_usuario.tex) y el
+[PDF](output/pdf/historias_usuario.pdf) conservan ese documento inicial; no son evidencia de implementación.
+Las fuentes vigentes son `SI-30-protectora-animales-descripcion.pdf`, `guia_proyecto_SDD_parte_I.pdf`
+y `Practica-SDD-enunciado_v1_IR.pdf`. Se utiliza exclusivamente la documentación de Práctica Grupal.
 
-El archivo `.gitignore` excluye secretos, dependencias, cachés y auxiliares de LaTeX; las fuentes
-`.tex` y los PDF entregables se versionan. La Constitution define la revisión entre compañeros
-y la trazabilidad de los cambios.
+## Desarrollo local
 
-## Constitution
+Requisitos: PHP 8.3 con las extensiones exigidas por Composer, incluidas GD y PDO PostgreSQL;
+Composer, Node.js y Docker para la base de datos.
 
-La [Constitution de Huellas](.specify/memory/constitution.md), versión 1.0.0 preparada el
-29 de octubre de 2026, define los principios de alcance, trazabilidad, diseño compartido,
-colaboración y calidad. Incluye la organización documental, el flujo SDD y las reglas para
-modificar los acuerdos. Está preparada para la revisión conjunta de los dos integrantes;
-la ratificación y el reparto nominal siguen pendientes. Su redacción no acredita haber
-ejecutado `/speckit.constitution` ni haber inicializado la integración de Spec Kit.
-
-## Historias
-
-| Historia | Contenido | Documento |
-|---|---|---|
-| HU-01 | Registrar un animal y gestionar su cuarentena | [spec-001/historia.md](spec-001/historia.md) |
-| HU-02 | Consultar y filtrar el catálogo público de adopción | [spec-002/historia.md](spec-002/historia.md) |
-| HU-03 | Enviar una solicitud de adopción completa | [spec-003/historia.md](spec-003/historia.md) |
-| HU-04 | Evaluar solicitudes, entrevistar y reservar el animal | [spec-004/historia.md](spec-004/historia.md) |
-| HU-05 | Formalizar la adopción y programar los seguimientos | [spec-005/historia.md](spec-005/historia.md) |
-| HU-06 | Gestionar casas de acogida y la evolución del animal | [spec-006/historia.md](spec-006/historia.md) |
-| HU-07 | Inscribirse en turnos y detectar falta de voluntarios | [spec-007/historia.md](spec-007/historia.md) |
-| HU-08 | Apadrinar un animal y recibir sus novedades | [spec-008/historia.md](spec-008/historia.md) |
-
-## Documento centralizado
-
-- PDF: [output/pdf/historias_usuario.pdf](output/pdf/historias_usuario.pdf).
-- LaTeX editable y autónomo: [historias_usuario.tex](historias_usuario.tex). Contiene las ocho historias completas y no necesita archivos auxiliares del proyecto.
-
-Cada ficha y el documento común incluyen la misma historia, alcance, criterios de aceptación, dependencias, dudas para `clarify` y límites. Los criterios `CA-XX-YY` identifican la historia y el criterio, y señalan su origen en la narrativa. Si se modifica una historia en Markdown o en LaTeX, debe reflejarse el cambio en la otra representación antes de volver a distribuir el PDF.
-
-Para regenerar el PDF desde la raíz del proyecto, con una distribución LaTeX instalada, ejecutar dos veces:
+Copia `.env.example` a `.env` y `.env.local` si aún no existen. En `.env.local`, sustituye los valores
+de ejemplo de `APP_SECRET` y `POSTGRES_PASSWORD` y actualiza `DATABASE_URL` con la misma contraseña.
+La URL local debe apuntar a la base `huellas` y al puerto configurado de PostgreSQL. Estos archivos
+son privados y están excluidos de Git. No sobrescribas una configuración local existente.
 
 ```sh
-pdflatex -interaction=nonstopmode -halt-on-error -output-directory=output/pdf historias_usuario.tex
-pdflatex -interaction=nonstopmode -halt-on-error -output-directory=output/pdf historias_usuario.tex
+composer install
+npm ci
+npm run build
+docker compose --env-file .env.local up -d --wait database
+php bin/console doctrine:migrations:migrate --no-interaction
+php -d upload_max_filesize=5M -d post_max_size=32M -d max_file_uploads=20 -S 127.0.0.1:8086 -t public public/router.php
 ```
 
-El editor LaTeX integrado de Codex también permite editar el documento y previsualizar su compilación.
+Abre http://127.0.0.1:8086. Esta versión proporciona PostgreSQL en Compose y ejecuta PHP localmente;
+no incluye el servicio web Docker de la implementación posterior retirada. No se cargan cuentas
+ni animales automáticamente. Las cuentas internas se crean mediante un comando con contraseña oculta:
 
-El LaTeX utiliza fuentes OT1/Latin Modern, `\textquestiondown{}` para los signos de apertura de interrogación y la macro `\HU{08}` (análoga para las demás historias) para mostrar identificadores indivisibles como HU-08.
+```sh
+php bin/console app:create-user voluntario@example.test "Voluntario ficticio" --role=ROLE_VOLUNTEER
+php bin/console app:create-user veterinario@example.test "Veterinario ficticio" --role=ROLE_VET
+php bin/console app:create-user coordinadora@example.test "Coordinadora ficticia" --role=ROLE_COORDINATOR
+```
 
-## Revisión frente al enunciado general
+## Comprobación de spec-001
 
-El [informe de revisión](docs/revision_enunciado_general.md) contrasta las ocho historias con la narrativa, la guía y los entregables del enunciado general. Distingue lo preparado para esta fase de lo pendiente para completar la práctica, documenta la discrepancia del reparto y recoge las comprobaciones de la corrección tipográfica.
+Configura `.env.test.local` con `APP_SECRET` de pruebas y `DATABASE_URL` para una base separada cuyo
+nombre termine en `_test`, usando el servidor PostgreSQL local. Las pruebas comprueban ese sufijo
+antes de limpiar datos; no deben apuntar a la base normal de la aplicación.
 
-## Estado dentro de la guía
+```sh
+php bin/console doctrine:database:create --env=test --if-not-exists
+php bin/console doctrine:migrations:migrate --env=test --no-interaction
+vendor/bin/phpunit --filter Spec001 --testdox
+php bin/console lint:container
+php bin/console lint:twig templates
+```
 
-Se ha realizado la definición inicial de historias (paso 1), preparado la Constitution (paso 2.1), ambas para revisión conjunta, y publicado la base documental en GitHub con rama principal `main`. Estas fichas no son las especificaciones funcionales completas. Siguen pendientes el trabajo con `specify`, el reparto acordado de cuatro historias por persona, el plan y el modelo de datos compartidos y las ramas por historia. Las carpetas `spec-001` a `spec-008` son organización documental; no se han creado las ramas por spec ni se han asignado responsables.
+El hito inicial y la [verificación del alcance corregido](docs/evidencias/spec-001-alcance-corregido.txt)
+pasan **7 pruebas y 32 aserciones**. Comprueban alta con fotografía real, ocultación de
+cuarentena y fotos al público, límite exacto de 240 horas, promoción sin modificar reservas, revisión
+veterinaria por su rol, entradas inválidas sin escrituras parciales, CSRF y permisos de creación.
+Las respuestas 403/404 esperadas se registran como errores HTTP comprobados; no son fallos de PHPUnit.
 
-Cada historia deberá seguir `specify → clarify → plan → tasks → analyze → implement → converge`, repitiendo los pasos necesarios y verificando los criterios de aceptación. Las dudas se han conservado explícitas para no atribuir a la narrativa decisiones que no contiene. No se presenta este trabajo como ejecución de comandos de Spec Kit.
-
-## Discrepancia documental detectada
-
-`Practica-SDD-enunciado IR.pdf` establece cuatro historias por integrante en el apartado 4, pero conserva referencias a dos en otros pasajes. Se mantiene el criterio explícito y coherente de la guía específica: ocho historias, cuatro por persona. Los apartados 5.1 a 5.4 del enunciado general exigen además repetir el refinamiento sobre la primera versión funcional, con decisiones justificadas, informes, trazabilidad, evidencias del antes y el después y revisión entre compañeros. El ciclo previo de la guía no sustituye ese trabajo posterior.
-
-## Fuentes
-
-- `SI-30-protectora-animales-descripcion.pdf`: necesidades y pila propuesta (Symfony, Twig, Hotwire, Doctrine, PostgreSQL y Bulma).
-- `guia_proyecto_SDD_parte_I.pdf`: metodología, ocho historias, reparto y colaboración.
-- `Practica-SDD-enunciado IR.pdf`: objetivos generales, entregables y evidencias del refinamiento.
-- Práctica 1: contexto académico sobre especificación previa, trazabilidad y verificación; sin trasladar al nuevo dominio sus reglas del HIS ni su pila tecnológica.
-
-La contabilidad general de la asociación y las campañas de recogida de pienso están fuera del encargo.
+La revisión del compañero, la ratificación de la Constitution y el reparto nominal permanecen pendientes.

@@ -1,0 +1,1 @@
+{% if errors %}<div class="notification is-danger is-light" role="alert"><p><strong>Revisa los datos del formulario.</strong></p><ul>{% for field, error in errors %}<li id="error-{{ field }}">{{ error }}</li>{% endfor %}</ul></div>{% endif %}

@@ -35,3 +35,6 @@ auth.json
 *.snm
 *.vrb
 missfont.log
+
+# Recursos de npm reproducibles con npm ci && npm run build
+/public/vendor/
