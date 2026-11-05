@@ -15,6 +15,4 @@ class SecurityController extends AbstractController
     }
     #[Route('/salir', name: 'logout', methods: ['POST'])]
     public function logout(): never { throw new \LogicException('Gestionado por Symfony Security.'); }
-    #[Route('/', name: 'home', methods: ['GET'])]
-    public function home(): Response { return $this->render('home.html.twig'); }
 }

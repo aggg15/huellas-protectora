@@ -1,0 +1,35 @@
+PHPUnit 11.5.57 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.3.30
+Configuration: /Users/antoniogarciagomez/Carrera/4º Carrera/Ingeniería de Requisitos/Práctica Grupal/phpunit.xml.dist
+
+............                                                      12 / 12 (100%)
+
+Time: 00:01.538, Memory: 50.50 MB
+
+Spec001 (App\Tests\Spec001)
+ ✔ Volunteer creates identity and photo in quarantine
+ ✔ Anonymous cannot see quarantine or photos
+ ✔ Boundary is exactly ten periods of 24 hours
+ ✔ Expired quarantine releases automatically without changing reservations
+ ✔ Veterinary review and role validation
+ ✔ Invalid animal and spoofed photo leave no partial writes
+ ✔ Csrf required and applicant cannot create animals
+
+Spec002 (App\Tests\Spec002)
+ ✔ Anonymous catalog contains only real availability
+ ✔ Filters combine with and and handle age boundaries
+ ✔ Fostered animal remains visible and marked
+ ✔ Invalid filters are rejected and quarantine automatically expires
+ ✔ Public photo and unknown animal
+
+OK (12 tests, 70 assertions)
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "Not Found" at AbstractController.php line 331
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "Not Found" at AbstractController.php line 331
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Access Denied. The user doesn't have ROLE_VET." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Formulario caducado." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Access Denied. The user doesn't have ROLE_STAFF." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "Not Found" at AbstractController.php line 331
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "Not Found" at AbstractController.php line 331
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "Not Found" at AbstractController.php line 331
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "Not Found" at AbstractController.php line 331
