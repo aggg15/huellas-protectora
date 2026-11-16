@@ -38,3 +38,12 @@ missfont.log
 
 # Recursos de npm reproducibles con npm ci && npm run build
 /public/vendor/
+
+# Compartir solo las skills de equipo; nunca sesiones o credenciales de agentes
+/.agents/*
+!/.agents/skills/
+/.codex/
+
+# Puntero local a la historia activa y temporales de selección de contexto
+/.specify/feature.json
+/.specify/feature.json.*

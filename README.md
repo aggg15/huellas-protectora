@@ -4,6 +4,10 @@ Publicación vigente: **únicamente HU-01 / spec-001**, por indicación del usua
 profesor el 5 de noviembre de 2026. Incluye registro de animales, fotografías protegidas, cuarentena
 de diez periodos de 24 horas y revisión veterinaria, junto con la base técnica común necesaria.
 
+**Trabajo en equipo preparado:** Spec Kit 1.0.11 inicializado para Codex, skills compartidas,
+selección de contexto y CI. Consulta [CONTRIBUTING](CONTRIBUTING.md) para clonar y trabajar con el
+compañero; [AGENTS.md](AGENTS.md) recoge las instrucciones comunes del proyecto.
+
 Repositorio: [aggg15/huellas-protectora](https://github.com/aggg15/huellas-protectora).
 La rama `spec-001` contiene esta implementación y su [PR #1](https://github.com/aggg15/huellas-protectora/pull/1)
 propone integrarla en `main`, pendiente de revisión del compañero. Las PR #2, #3 y #4 se retiran y
@@ -31,12 +35,14 @@ y `Practica-SDD-enunciado_v1_IR.pdf`. Se utiliza exclusivamente la documentació
 Requisitos: PHP 8.3 con las extensiones exigidas por Composer, incluidas GD y PDO PostgreSQL;
 Composer, Node.js y Docker para la base de datos.
 
-Copia `.env.example` a `.env` y `.env.local` si aún no existen. En `.env.local`, sustituye los valores
-de ejemplo de `APP_SECRET` y `POSTGRES_PASSWORD` y actualiza `DATABASE_URL` con la misma contraseña.
-La URL local debe apuntar a la base `huellas` y al puerto configurado de PostgreSQL. Estos archivos
-son privados y están excluidos de Git. No sobrescribas una configuración local existente.
+Ejecuta `php tools/configure.php --test` para crear `.env`, `.env.local` y `.env.test.local` si no
+existen. Genera secretos aleatorios sin mostrarlos y conserva los archivos existentes. La URL local
+apunta a la base `huellas` y al puerto configurado de PostgreSQL; la de pruebas usa otra base terminada
+en `_test`. Estos archivos son privados y están excluidos de Git. También puedes prepararlos
+manualmente desde `.env.example`, cambiando los valores ficticios y las URLs correspondientes.
 
 ```sh
+php tools/configure.php --test
 composer install
 npm ci
 npm run build
@@ -60,6 +66,8 @@ php bin/console app:create-user coordinadora@example.test "Coordinadora ficticia
 Configura `.env.test.local` con `APP_SECRET` de pruebas y `DATABASE_URL` para una base separada cuyo
 nombre termine en `_test`, usando el servidor PostgreSQL local. Las pruebas comprueban ese sufijo
 antes de limpiar datos; no deben apuntar a la base normal de la aplicación.
+
+El asistente de configuración ya prepara este archivo si no existe; no crea ni limpia bases.
 
 ```sh
 php bin/console doctrine:database:create --env=test --if-not-exists

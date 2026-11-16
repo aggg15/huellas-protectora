@@ -16,3 +16,11 @@ Resultado T104: 7 pruebas / 32 aserciones correctas. Véase ../../docs/evidencia
 
 Resultado T106: 7 pruebas / 32 aserciones, validadores de contenedor y Twig correctos y esquema
 Doctrine sincronizado. Véase ../../docs/evidencias/spec-001-alcance-corregido.txt.
+
+- [x] T107: inicializar Spec Kit 1.0.11 para Codex conservando la Constitution; preparar el contexto
+  de spec-001, su plan compatible, instrucciones de equipo, configuración local reproducible y
+  validación automática en PR. Acceso de abcb5-ua y revisión obligatoria en main verificados.
+
+La preparación técnica y sus comprobaciones se registran en
+../../docs/evidencias/preparacion-equipo-2026-11-16.txt y ../../docs/evidencias/equipo-2026-11-16.json.
+Esta tarea no integra la PR #1 ni acredita aprobación del compañero.

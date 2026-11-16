@@ -26,7 +26,8 @@ y también habrá un servicio web en Compose para reproducir el arranque.
 - templates/: vistas Twig en español. public/: entrada web y recursos locales, sin fotos privadas.
 - var/uploads/: fotografías protegidas; la entrega de archivos comprueba la disponibilidad y permisos.
 - migrations/: cambios acumulativos; no se resetean datos de la aplicación al probar.
-- specs/spec-001 a specs/spec-008: especificaciones; tasks e informes del ciclo para las cuatro activas.
+- specs/spec-001 a specs/spec-008: especificaciones; solo spec-001 es una implementación activa.
+  Su plan local referencia este plan común y permite resolver el contexto mediante Spec Kit.
 - tests/: pruebas unitarias y HTTP con PostgreSQL, independientes de la base de demostración.
 
 ## Contratos y coherencia
@@ -55,7 +56,9 @@ main no integra código sin revisión del compañero. Se guardarán commits por 
 indicará la revisión humana pendiente. Se ejecutará PHPUnit con PostgreSQL para cada hito y se
 repetirá la regresión afectada; al terminar se comprobará el recorrido integrado y móvil/escritorio.
 Los informes describen fases SDD aplicadas por Codex, sin afirmar la ejecución de comandos slash
-de Spec Kit que no estén cargados en este repositorio.
+de Spec Kit que no estaban cargados cuando se escribieron. Desde el 2026-11-16, Spec Kit 1.0.11
+está inicializado con skills de Codex y scripts oficiales. La configuración no atribuye
+retroactivamente esas ejecuciones a los informes anteriores. Véase CONTRIBUTING.md y AGENTS.md.
 
 ## Fuentes técnicas
 
