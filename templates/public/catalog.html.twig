@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Animales en adopción · Huellas{% endblock %}
+
+{% block body %}
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">EN BUSCA DE HOGAR</p>
+    <h1 class="title">Animales en adopción</h1>
+    <p class="subtitle is-6">Conoce a nuestros compañeros disponibles para encontrar a su familia definitiva.</p>
+  </div>
+</div>
+
+<div class="box filters-box mb-5">
+  <form method="get" action="{{ path('public_catalog') }}" class="filters-form">
+    <div class="columns is-multiline is-variable is-2 align-items-flex-end">
+      <div class="column is-3-tablet is-12-mobile">
+        <div class="field">
+          <label class="label is-small" for="species">Especie</label>
+          <div class="control">
+            <div class="select is-fullwidth is-small">
+              <select id="species" name="species">
+                <option value="">Todas las especies</option>
+                <option value="dog" {{ filters.species == 'dog' ? 'selected' : '' }}>Perro</option>
+                <option value="cat" {{ filters.species == 'cat' ? 'selected' : '' }}>Gato</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="column is-3-tablet is-12-mobile">
+        <div class="field">
+          <label class="label is-small" for="size">Tamaño</label>
+          <div class="control">
+            <div class="select is-fullwidth is-small">
+              <select id="size" name="size">
+                <option value="">Todos los tamaños</option>
+                <option value="small" {{ filters.size == 'small' ? 'selected' : '' }}>Pequeño</option>
+                <option value="medium" {{ filters.size == 'medium' ? 'selected' : '' }}>Mediano</option>
+                <option value="large" {{ filters.size == 'large' ? 'selected' : '' }}>Grande</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="column is-3-tablet is-12-mobile">
+        <div class="field">
+          <label class="label is-small" for="age">Edad</label>
+          <div class="control">
+            <div class="select is-fullwidth is-small">
+              <select id="age" name="age">
+                <option value="">Todas las edades</option>
+                <option value="<12" {{ filters.age == '<12' ? 'selected' : '' }}>Cachorro / Joven (&lt; 12 meses)</option>
+                <option value="12-83" {{ filters.age == '12-83' ? 'selected' : '' }}>Adulto (1 a 6 años)</option>
+                <option value=">=84" {{ filters.age == '>=84' ? 'selected' : '' }}>Senior (7+ años)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="column is-3-tablet is-12-mobile is-flex" style="align-items: flex-end; gap: 0.5rem; margin-bottom: 0.75rem;">
+        <button type="submit" class="button is-small is-primary is-fullwidth">Filtrar</button>
+        <a href="{{ path('public_catalog') }}" class="button is-small is-light">Limpiar</a>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="animal-grid">
+  {% for animal in animals %}
+    <article class="box animal-card is-flex is-flex-direction-column">
+      {% if primaryPhotos[animal.id] is defined %}
+        <div class="card-thumb mb-3">
+          <img src="{{ path('photo', {id: primaryPhotos[animal.id].id}) }}" alt="Fotografía de {{ animal.code }}" loading="lazy">
+        </div>
+      {% endif %}
+      <div class="is-flex is-justify-content-between is-align-items-center mb-2">
+        <h2 class="title is-5 mb-0">{{ animal.code }}</h2>
+        {% if animal.fostered %}
+          <span class="tag is-warning is-light foster-badge">En casa de acogida</span>
+        {% endif %}
+      </div>
+      <div class="tags are-small mb-2">
+        <span class="tag is-light">{{ animal.species == 'dog' ? 'Perro' : 'Gato' }}</span>
+        <span class="tag is-light">{{ {small:'Pequeño',medium:'Mediano',large:'Grande'}[animal.size] }}</span>
+        <span class="tag is-light">
+          {% if animal.ageMonths < 12 %}
+            {{ animal.ageMonths }} meses
+          {% else %}
+            {{ animal.ageMonths // 12 }} {% if animal.ageMonths // 12 == 1 %}año{% else %}años{% endif %}{% if animal.ageMonths % 12 > 0 %} y {{ animal.ageMonths % 12 }} m{% endif %}
+          {% endif %}
+        </span>
+      </div>
+      <p class="is-size-7 has-text-grey mb-3" style="flex-grow: 1;">
+        {{ animal.origin|length > 90 ? animal.origin|slice(0, 90) ~ '…' : animal.origin }}
+      </p>
+      <a class="button is-small is-primary is-outlined is-fullwidth" href="{{ path('public_animal_show', {id: animal.id}) }}">
+        Ver ficha completa
+      </a>
+    </article>
+  {% else %}
+    <div class="box empty-state">
+      <h2 class="title is-5">No se encontraron animales</h2>
+      <p class="subtitle is-6 has-text-grey">No hay animales disponibles para adopción que coincidan con los criterios seleccionados.</p>
+      <a class="button is-small is-primary is-light mt-3" href="{{ path('public_catalog') }}">Restablecer filtros</a>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

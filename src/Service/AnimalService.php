@@ -63,4 +63,45 @@ class AnimalService
         $this->em->persist(new VeterinaryReview($animal, $vet, $at->setTimezone(new \DateTimeZone('UTC')), $notes));
         $this->em->flush();
     }
+
+    public function findAvailableAnimals(array $filters = []): array
+    {
+        $this->releaseDueAnimals();
+        $qb = $this->em->createQueryBuilder()
+            ->select('a')
+            ->from(Animal::class, 'a')
+            ->where("a.status = 'available'")
+            ->orderBy('a.receivedAt', 'DESC');
+
+        $species = $filters['species'] ?? null;
+        if (in_array($species, ['dog', 'cat'], true)) {
+            $qb->andWhere('a.species = :species')->setParameter('species', $species);
+        }
+
+        $size = $filters['size'] ?? null;
+        if (in_array($size, ['small', 'medium', 'large'], true)) {
+            $qb->andWhere('a.size = :size')->setParameter('size', $size);
+        }
+
+        $age = $filters['age'] ?? null;
+        if ($age === '<12') {
+            $qb->andWhere('a.ageMonths < 12');
+        } elseif ($age === '12-83') {
+            $qb->andWhere('a.ageMonths BETWEEN 12 AND 83');
+        } elseif ($age === '>=84') {
+            $qb->andWhere('a.ageMonths >= 84');
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getPublicAnimal(string $id): ?Animal
+    {
+        $this->releaseDueAnimals();
+        $animal = $this->em->find(Animal::class, $id);
+        if ($animal === null || $animal->status !== 'available') {
+            return null;
+        }
+        return $animal;
+    }
 }

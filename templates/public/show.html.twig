@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ animal.code }} · Animales en adopción · Huellas{% endblock %}
+
+{% block body %}
+<a class="back-link" href="{{ path('public_catalog') }}">← Volver al catálogo</a>
+
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">FICHA DE ADOPCIÓN</p>
+    <h1 class="title">{{ animal.code }}</h1>
+    <p class="subtitle is-6">Disponible para adopción responsable.</p>
+  </div>
+  {% if animal.fostered %}
+    <span class="tag is-warning is-medium is-light foster-badge">En casa de acogida</span>
+  {% else %}
+    <span class="tag is-success is-medium is-light">Disponible</span>
+  {% endif %}
+</div>
+
+{% if animal.fostered %}
+  <div class="notification is-warning is-light mb-5">
+    <p><strong>Cuidado temporal en familia:</strong> Este animal se encuentra acogido temporalmente por una familia colaboradora, recibiendo atención y socialización en un hogar mientras busca su adopción definitiva.</p>
+  </div>
+{% endif %}
+
+<div class="detail-grid">
+  <div>
+    {% if photos is not empty %}
+      <div class="photo-gallery">
+        {% for photo in photos %}
+          <img src="{{ path('photo', {id: photo.id}) }}" alt="Fotografía de {{ animal.code }}" loading="lazy">
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="box">
+      <h2 class="title is-5">Datos del animal</h2>
+      <dl class="facts">
+        <dt>Especie</dt>
+        <dd>{{ animal.species == 'dog' ? 'Perro' : 'Gato' }}</dd>
+        <dt>Tamaño</dt>
+        <dd>{{ {small:'Pequeño',medium:'Mediano',large:'Grande'}[animal.size] }}</dd>
+        <dt>Edad aproximada</dt>
+        <dd>
+          {% if animal.ageMonths < 12 %}
+            {{ animal.ageMonths }} meses
+          {% else %}
+            {{ animal.ageMonths // 12 }} {% if animal.ageMonths // 12 == 1 %}año{% else %}años{% endif %}{% if animal.ageMonths % 12 > 0 %} y {{ animal.ageMonths % 12 }} meses{% endif %}
+          {% endif %}
+        </dd>
+        <dt>Llegada a la protectora</dt>
+        <dd>{{ animal.receivedAt|date('d/m/Y') }}</dd>
+      </dl>
+      <h3 class="title is-6 mt-4 mb-2">Procedencia e historia</h3>
+      <p class="has-text-grey-dark">{{ animal.origin }}</p>
+    </div>
+  </div>
+
+  <aside>
+    <div class="box">
+      <h2 class="title is-5">¿Quieres adoptarlo?</h2>
+      <p class="mb-4 has-text-grey">La adopción es un compromiso para toda la vida. Evaluamos cada solicitud para asegurar el bienestar mutuo del animal y de su nueva familia.</p>
+      {% if is_granted('ROLE_USER') %}
+        <a class="button is-primary is-fullwidth" href="{{ path('home') }}">Iniciar solicitud de adopción</a>
+      {% else %}
+        <p class="is-size-7 has-text-grey mb-3">Para enviar una solicitud completa deberás acceder con tu cuenta de adoptante.</p>
+        <a class="button is-primary is-outlined is-fullwidth" href="{{ path('login') }}">Acceder para adoptar</a>
+      {% endif %}
+    </div>
+
+    <div class="box">
+      <h3 class="title is-6">Compromiso Huellas</h3>
+      <ul class="is-size-7 has-text-grey">
+        <li>✔ Protocolo veterinario y desparasitación completos.</li>
+        <li>✔ Contrato de adopción y dos seguimientos posteriores garantizados.</li>
+        <li>✔ Asesoramiento continuo antes y después de la entrega.</li>
+      </ul>
+    </div>
+  </aside>
+</div>
+{% endblock %}
