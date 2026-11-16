@@ -1,0 +1,136 @@
+Preparación del equipo Huellas: 2026-11-16.
+Alcance funcional: exclusivamente spec-001. Base PostgreSQL nueva, aislada y terminada en _test.
+
+$ composer install --no-interaction --prefer-dist --no-progress
+Installing dependencies from lock file (including require-dev)
+Verifying lock file contents can be installed on current platform.
+Nothing to install, update or remove
+Generating autoload files
+86 packages you are using are looking for funding.
+Use the `composer fund` command to find out more!
+Código de salida: 0
+
+$ composer validate --strict
+./composer.json is valid
+Código de salida: 0
+
+$ npm ci
+
+added 3 packages, and audited 4 packages in 558ms
+
+found 0 vulnerabilities
+npm notice
+npm notice New minor version of npm available! 11.12.1 -> 11.21.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.21.2
+npm notice To update run: npm install -g npm@11.21.2
+npm notice
+Código de salida: 0
+
+$ npm run build
+
+> build
+> node tools/copy-assets.mjs
+
+Turbo, Stimulus y Bulma disponibles localmente.
+Código de salida: 0
+
+$ specify integration status
+Integration status: OK
+Default integration: codex
+Installed integrations: codex
+Multi-install safe: yes
+Shared templates target alignment: codex
+Modified managed files: 0
+Missing managed files: 0
+Invalid manifest paths: 0
+Unchecked manifests: 0
+Código de salida: 0
+
+$ bash tools/spec-context.sh spec-001
+{"FEATURE":"spec-001","FEATURE_DIRECTORY":"specs/spec-001"}
+Código de salida: 0
+
+$ bash .specify/scripts/bash/check-prerequisites.sh --json --require-spec --require-tasks --include-tasks
+{"FEATURE_DIR":"/Users/antoniogarciagomez/Carrera/4º Carrera/Ingeniería de Requisitos/Práctica Grupal/specs/spec-001","AVAILABLE_DOCS":["tasks.md"]}
+Código de salida: 0
+
+$ php bin/console cache:clear --env=test
+
+ // Clearing the cache for the test environment with debug true
+
+ [OK] Cache for the "test" environment (debug=true) was successfully cleared.
+
+Código de salida: 0
+
+$ php bin/console doctrine:database:create --env=test
+Created database "huellas_equipo_20261116181935_test" for connection named default
+Código de salida: 0
+
+$ php bin/console doctrine:migrations:migrate --env=test --no-interaction
+[notice] Migrating up to DoctrineMigrations\Version20261105150000
+[notice] finished in 21.9ms, used 16M memory, 2 migrations executed, 16 sql queries
+
+ [OK] Successfully migrated to version: DoctrineMigrations\Version20261105150000
+
+
+Código de salida: 0
+
+$ php bin/console doctrine:schema:validate --env=test
+
+Mapping
+-------
+
+ [OK] The mapping files are correct.
+
+Database
+--------
+
+ [OK] The database schema is in sync with the mapping files.
+
+Código de salida: 0
+
+$ php bin/console lint:container --env=test
+
+ [OK] The container was linted successfully: all services are injected with
+      values that are compatible with their type declarations.
+
+Código de salida: 0
+
+$ php bin/console lint:twig templates --env=test
+
+ [OK] All 7 Twig files contain valid syntax.
+
+Código de salida: 0
+
+$ php bin/console lint:yaml config --env=test
+
+ [OK] All 6 YAML files contain valid syntax.
+
+Código de salida: 0
+
+$ vendor/bin/phpunit --filter Spec001 --testdox
+PHPUnit 11.5.57 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.3.30
+Configuration: /Users/antoniogarciagomez/Carrera/4º Carrera/Ingeniería de Requisitos/Práctica Grupal/phpunit.xml.dist
+
+.......                                                             7 / 7 (100%)
+
+Time: 00:00.761, Memory: 30.00 MB
+
+Spec001 (App\Tests\Spec001)
+ ✔ Volunteer creates identity and photo in quarantine
+ ✔ Anonymous cannot see quarantine or photos
+ ✔ Boundary is exactly ten periods of 24 hours
+ ✔ Expired quarantine releases automatically without changing reservations
+ ✔ Veterinary review and role validation
+ ✔ Invalid animal and spoofed photo leave no partial writes
+ ✔ Csrf required and applicant cannot create animals
+
+OK (7 tests, 32 assertions)
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "No route found for "GET http://localhost/animales/01a1e55f-2137-7c18-aad9-0b1a7cf7e684" (from "http://localhost/admin/animales/01a1e55f-2137-7c18-aad9-0b1a7cf7e684")" at RouterListener.php line 187
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "Not Found" at AbstractController.php line 331
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Access Denied. The user doesn't have ROLE_VET." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Formulario caducado." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Access Denied. The user doesn't have ROLE_STAFF." at ExceptionListener.php line 126
+Código de salida: 0

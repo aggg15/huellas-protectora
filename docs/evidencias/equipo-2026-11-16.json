@@ -1,0 +1,16 @@
+{
+  "date": "2026-11-16",
+  "repository": "aggg15/huellas-protectora",
+  "access": {
+    "login": "abcb5-ua",
+    "state": "active",
+    "permission": "write"
+  },
+  "main": {
+    "required_approvals": 1,
+    "enforce_admins": true,
+    "force_pushes": false,
+    "deletions": false,
+    "required_status_checks": null
+  }
+}

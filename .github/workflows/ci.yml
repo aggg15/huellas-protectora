@@ -1,0 +1,79 @@
+name: CI de Huellas
+
+on:
+  push:
+    branches: [main, spec-001]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: huellas-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verificar:
+    name: Validación de spec-001
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APP_ENV: test
+      APP_DEBUG: '1'
+      APP_SECRET: ficticio-exclusivo-del-runner-de-pruebas
+      DATABASE_URL: postgresql://huellas:huellas-ci@127.0.0.1:5432/huellas_test?serverVersion=16&charset=utf8
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: huellas
+          POSTGRES_PASSWORD: huellas-ci
+          POSTGRES_DB: huellas_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U huellas -d huellas_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
+        with:
+          php-version: '8.3'
+          extensions: gd, pdo_pgsql, mbstring, intl
+          tools: composer:v2
+          coverage: none
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Instalar dependencias y preparar entorno
+        run: |
+          cp .env.example .env
+          composer install --no-interaction --prefer-dist --no-progress
+          composer validate --strict
+          npm ci
+          npm run build
+      - name: Verificar integración Spec Kit
+        run: |
+          python3 -m venv var/speckit-cli
+          var/speckit-cli/bin/pip install --disable-pip-version-check 'specify-cli==1.0.11'
+          var/speckit-cli/bin/specify integration status
+          bash tools/spec-context.sh spec-001
+          bash .specify/scripts/bash/check-prerequisites.sh --json --require-spec --require-tasks --include-tasks
+      - name: Sintaxis y configuración
+        shell: bash
+        run: |
+          while IFS= read -r -d '' file; do
+            if [[ "$file" == *.php ]]; then php -l "$file"; fi
+          done < <(git ls-files -z -- src tests migrations tools config public)
+          php bin/console lint:container
+          php bin/console lint:twig templates
+          php bin/console lint:yaml config
+      - name: Migraciones y criterios de aceptación
+        run: |
+          php bin/console doctrine:migrations:migrate --no-interaction
+          php bin/console doctrine:schema:validate
+          vendor/bin/phpunit --filter Spec001 --testdox

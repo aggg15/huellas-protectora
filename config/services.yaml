@@ -1,0 +1,13 @@
+parameters: {}
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+  App\:
+    resource: '../src/'
+    exclude: '../src/{Entity,Kernel.php}'
+  Symfony\Component\Clock\NativeClock: ~
+  Symfony\Component\Clock\ClockInterface: '@Symfony\Component\Clock\NativeClock'
+  App\Service\PhotoStorage:
+    arguments:
+      $directory: '%kernel.project_dir%/var/uploads'

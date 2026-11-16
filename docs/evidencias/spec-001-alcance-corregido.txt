@@ -1,0 +1,49 @@
+Verificación de alcance: únicamente spec-001. Fecha: 2026-11-05.
+Base PostgreSQL nueva y aislada; no se modifican las bases existentes.
+
+$ php bin/console cache:clear --env=test
+
+
+$ php bin/console doctrine:database:create --env=test
+
+
+$ php bin/console doctrine:migrations:migrate --env=test --no-interaction
+
+
+$ vendor/bin/phpunit --filter Spec001 --testdox
+PHPUnit 11.5.57 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.3.30
+Configuration: /Users/antoniogarciagomez/Carrera/4º Carrera/Ingeniería de Requisitos/Práctica Grupal/phpunit.xml.dist
+
+.......                                                             7 / 7 (100%)
+
+Time: 00:00.822, Memory: 30.00 MB
+
+Spec001 (App\Tests\Spec001)
+ ✔ Volunteer creates identity and photo in quarantine
+ ✔ Anonymous cannot see quarantine or photos
+ ✔ Boundary is exactly ten periods of 24 hours
+ ✔ Expired quarantine releases automatically without changing reservations
+ ✔ Veterinary review and role validation
+ ✔ Invalid animal and spoofed photo leave no partial writes
+ ✔ Csrf required and applicant cannot create animals
+
+OK (7 tests, 32 assertions)
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "No route found for "GET http://localhost/animales/01a1acec-7bdc-7abb-b8b0-a71659ee724e" (from "http://localhost/admin/animales/01a1acec-7bdc-7abb-b8b0-a71659ee724e")" at RouterListener.php line 187
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "Not Found" at AbstractController.php line 331
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Access Denied. The user doesn't have ROLE_VET." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Formulario caducado." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Access Denied. The user doesn't have ROLE_STAFF." at ExceptionListener.php line 126
+
+$ php bin/console lint:container --env=test
+
+
+$ php bin/console lint:twig templates --env=test
+
+
+$ php bin/console doctrine:schema:validate --env=test
+
+
+Resultado: todos los comandos anteriores finalizaron con código de salida 0.
+Los validadores usan SHELL_VERBOSITY=-1 y no imprimen mensajes de éxito.

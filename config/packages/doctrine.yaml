@@ -1,0 +1,16 @@
+doctrine:
+  dbal:
+    url: '%env(resolve:DATABASE_URL)%'
+    use_savepoints: true
+  orm:
+    auto_generate_proxy_classes: true
+    enable_lazy_ghost_objects: true
+    mappings:
+      App:
+        is_bundle: false
+        type: attribute
+        dir: '%kernel.project_dir%/src/Entity'
+        prefix: App\Entity
+doctrine_migrations:
+  migrations_paths:
+    DoctrineMigrations: '%kernel.project_dir%/migrations'

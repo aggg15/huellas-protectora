@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}Huellas · Protectora de animales{% endblock %}</title>
+  <link rel="stylesheet" href="/vendor/bulma.css"><link rel="stylesheet" href="/assets/app.css">
+  <script type="module" src="/assets/app.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<header class="site-header"><nav class="container nav-content" aria-label="Navegación principal">
+  <a class="brand" href="{{ path('home') }}"><span class="brand-icon" aria-hidden="true">✿</span> huellas<span class="brand-caption">PROTECTORA DE ANIMALES</span></a>
+  <div class="nav-links"><a href="{{ path('home') }}">Buscar un compañero</a>
+  {% if is_granted('ROLE_STAFF') %}<a href="{{ path('admin_animals') }}">Refugio</a>{% endif %}
+  {% if app.user %}<span class="user-name">{{ app.user.name }}</span><form method="post" action="{{ path('logout') }}"><input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}"><button class="button is-small is-light">Salir</button></form>
+  {% else %}<a class="button is-small is-primary is-outlined" href="{{ path('login') }}">Acceder</a>{% endif %}</div>
+</nav></header>
+<main id="contenido" class="container main-content">
+  {% for message in app.flashes('success') %}<div class="notification is-success is-light" role="status">{{ message }}</div>{% endfor %}
+  {% block body %}{% endblock %}
+</main>
+<footer class="site-footer"><div class="container"><strong>Huellas</strong><span>Cada historia merece un hogar.</span></div></footer>
+</body></html>
