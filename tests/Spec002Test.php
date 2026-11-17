@@ -152,6 +152,7 @@ class Spec002Test extends WebTestBase
         self::assertSelectorTextContains('main', $expired->code);
 
         $em = $this->refreshEm();
+        $em->clear();
         $refreshed = $em->find(Animal::class, $expired->id);
         self::assertSame('available', $refreshed->status);
     }
