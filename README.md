@@ -84,3 +84,19 @@ veterinaria por su rol, entradas inválidas sin escrituras parciales, CSRF y per
 Las respuestas 403/404 esperadas se registran como errores HTTP comprobados; no son fallos de PHPUnit.
 
 La revisión del compañero, la ratificación de la Constitution y el reparto nominal permanecen pendientes.
+
+## spec-003 · solicitudes de adopción (HU-03)
+
+La rama `spec-003`, construida sobre `main` con HU-02 ya integrada, añade la solicitud con cuestionario completo, el
+máximo de dos solicitudes abiertas por cuenta y la consulta de candidaturas por la coordinadora.
+Las personas solicitantes crean su cuenta en `/registro`; los roles internos siguen creándose por
+comando. Documentación: [spec](specs/spec-003/spec.md), [plan](specs/spec-003/plan.md),
+[tareas](specs/spec-003/tasks.md) y [evidencia](docs/evidencias/spec-003-phpunit.txt).
+
+```sh
+php bin/console doctrine:migrations:migrate --env=test --no-interaction
+vendor/bin/phpunit --filter Spec003 --testdox
+```
+
+Resultado del 2026-11-17: **11 pruebas y 127 aserciones** correctas, incluida una prueba con cuatro
+procesos simultáneos. La revisión del compañero queda pendiente.

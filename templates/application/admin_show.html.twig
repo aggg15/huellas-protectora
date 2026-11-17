@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Solicitud para {{ application.animal.code }} · Huellas{% endblock %}
+
+{% block body %}
+<a class="back-link" href="{{ path('admin_applications') }}">← Volver a las solicitudes</a>
+
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">SOLICITUD DE ADOPCIÓN</p>
+    <h1 class="title">{{ application.applicant.name }} · {{ application.animal.code }}</h1>
+    <p class="subtitle is-6">Enviada el {{ application.submittedAt|date('d/m/Y \\a \\l\\a\\s H:i', 'Europe/Madrid') }}.</p>
+  </div>
+  <span class="tag is-medium is-light {{ application.open ? 'is-info' : '' }}">{{ application.statusLabel }}</span>
+</div>
+
+<div class="detail-grid">
+  <div>
+    <section class="box">
+      <h2 class="title is-5">Vivienda</h2>
+      <dl class="facts"><dt>Tipo</dt><dd>{{ housingTypes[application.housingType] }}</dd></dl>
+      <p class="answer">{{ application.housing }}</p>
+    </section>
+    <section class="box">
+      <h2 class="title is-5">Experiencia previa</h2>
+      <dl class="facts"><dt>Experiencia</dt><dd>{{ experienceTypes[application.experienceType] }}</dd></dl>
+      {% if application.experience %}<p class="answer">{{ application.experience }}</p>{% else %}<p class="has-text-grey">Sin comentarios adicionales.</p>{% endif %}
+    </section>
+    <section class="box">
+      <h2 class="title is-5">Disponibilidad</h2>
+      <dl class="facts"><dt>Tiempo diario</dt><dd>{{ dailyTimes[application.dailyTime] }}</dd></dl>
+      <p class="answer">{{ application.availability }}</p>
+    </section>
+  </div>
+  <aside>
+    <div class="box">
+      <h2 class="title is-5">Solicitante</h2>
+      <dl class="facts">
+        <dt>Nombre</dt><dd>{{ application.applicant.name }}</dd>
+        <dt>Email</dt><dd><a href="mailto:{{ application.applicant.email }}">{{ application.applicant.email }}</a></dd>
+      </dl>
+    </div>
+    <div class="box">
+      <h2 class="title is-5">Animal solicitado</h2>
+      <p><a href="{{ path('animal_show', {id: application.animal.id}) }}">{{ application.animal.code }}</a> · {{ application.animal.species == 'dog' ? 'Perro' : 'Gato' }}, {{ application.animal.ageMonths }} meses</p>
+      <p class="is-size-7 has-text-grey mt-3">La entrevista, la aprobación y la reserva corresponden a HU-04.</p>
+    </div>
+  </aside>
+</div>
+{% endblock %}

@@ -21,5 +21,7 @@ body { background:var(--paper); color:var(--ink); min-height:100vh; display:flex
 .animal-card:hover { border-color:#3b7754; }
 .filters-box { background:#fff; border-color:#e4e8de; border-radius:12px; }
 .foster-badge { font-weight:600; }
+.questionnaire-section { border:0; padding:0; margin:0 0 1.6rem; }.questionnaire-section legend { margin-bottom:1rem; }
+.answer { white-space:pre-wrap; overflow-wrap:anywhere; }.application-photo { width:100%; max-height:220px; object-fit:cover; border-radius:10px; margin-bottom:1rem; }
 @media(max-width:760px) { .container{width:calc(100% - 2rem)}.nav-content{padding:1rem 0;align-items:flex-start}.nav-links{justify-content:flex-end;gap:.6rem;font-size:.75rem;max-width:60%}.user-name{display:none}.main-content{padding-top:1.7rem}.animal-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.detail-grid{grid-template-columns:1fr}.page-heading{align-items:flex-start;flex-wrap:wrap}.form-wide{padding:1.2rem}.photo-gallery img{max-height:240px}.site-footer span{display:block;margin:.5rem 0 0} }
 @media(max-width:440px) { .animal-grid{grid-template-columns:1fr}.nav-links>a:first-child{display:none}.brand{font-size:1.55rem}.brand-caption{font-size:.44rem}.form-card{padding:1.3rem}.facts{font-size:.87rem} }

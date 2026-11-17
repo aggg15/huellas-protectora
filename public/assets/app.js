@@ -18,3 +18,12 @@ application.register('photos', class extends Controller {
   }
   disconnect() { this.urls.forEach(url => URL.revokeObjectURL(url)); }
 });
+application.register('questionnaire', class extends Controller {
+  static targets = ['experienceType', 'experience', 'experienceOptional'];
+  connect() { this.toggleExperience(); }
+  toggleExperience() {
+    const none = this.experienceTypeTarget.value === 'none';
+    this.experienceTarget.required = !none;
+    this.experienceOptionalTarget.hidden = !none;
+  }
+});

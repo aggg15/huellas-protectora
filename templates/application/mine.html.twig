@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mis solicitudes · Huellas{% endblock %}
+
+{% block body %}
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">MI CUENTA</p>
+    <h1 class="title">Mis solicitudes de adopción</h1>
+    <p class="subtitle is-6">Tienes {{ openCount }} de {{ maxOpen }} solicitudes abiertas.</p>
+  </div>
+  <a class="button is-primary is-outlined" href="{{ path('public_catalog') }}">Ver animales en adopción</a>
+</div>
+
+{% if applications is empty %}
+  <div class="box empty-state">
+    <h2 class="title is-5">Todavía no has enviado solicitudes</h2>
+    <p>Consulta el catálogo y abre la ficha del animal que quieras adoptar para enviar tu solicitud.</p>
+  </div>
+{% else %}
+  <div class="table-container box">
+    <table class="table is-fullwidth">
+      <thead><tr><th scope="col">Animal</th><th scope="col">Fecha de envío</th><th scope="col">Estado</th></tr></thead>
+      <tbody>
+        {% for application in applications %}
+          <tr>
+            <td><strong>{{ application.animal.code }}</strong></td>
+            <td>{{ application.submittedAt|date('d/m/Y H:i', 'Europe/Madrid') }}</td>
+            <td><span class="tag is-light {{ application.open ? 'is-info' : '' }}">{{ application.statusLabel }}</span></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Solicitud para {{ animal.code }} · Huellas{% endblock %}
+
+{% macro described(errors, field) %}{% if errors[field] is defined %} aria-invalid="true" aria-describedby="error-{{ field }}"{% endif %}{% endmacro %}
+{% macro help(errors, field) %}{% if errors[field] is defined %}<p class="help is-danger">{{ errors[field] }}</p>{% endif %}{% endmacro %}
+
+{% block body %}
+{% import _self as f %}
+<a class="back-link" href="{{ path('public_animal_show', {id: animal.id}) }}">← Volver a la ficha de {{ animal.code }}</a>
+
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">SOLICITUD DE ADOPCIÓN</p>
+    <h1 class="title">Quiero adoptar a {{ animal.code }}</h1>
+    <p class="subtitle is-6">Responde a todas las preguntas. Solo se admiten solicitudes completas.</p>
+  </div>
+  <span class="tag is-light is-medium">{{ openCount }} de {{ maxOpen }} solicitudes abiertas</span>
+</div>
+
+<div class="detail-grid">
+  <div>
+    {% if refusal %}
+      <div class="notification is-warning is-light" role="alert">
+        <p><strong>No se puede enviar la solicitud.</strong> {{ refusal }}</p>
+        <p class="mt-2"><a href="{{ path('application_mine') }}">Consultar mis solicitudes</a></p>
+      </div>
+    {% else %}
+      {% include 'partials/errors.html.twig' %}
+      <form class="box form-wide" method="post" action="{{ path('application_new', {id: animal.id}) }}" data-controller="questionnaire">
+        <input type="hidden" name="_token" value="{{ csrf_token('application-' ~ animal.id) }}">
+
+        <fieldset class="questionnaire-section">
+          <legend class="title is-5">1. Vivienda</legend>
+          <div class="field">
+            <label class="label" for="housingType">Tipo de vivienda</label>
+            <div class="select is-fullwidth"><select id="housingType" name="housingType" required{{ f.described(errors, 'housingType') }}>
+              <option value="">Selecciona una opción</option>
+              {% for value, label in housingTypes %}<option value="{{ value }}" {{ data.housingType|default('') == value ? 'selected' }}>{{ label }}</option>{% endfor %}
+            </select></div>
+            {{ f.help(errors, 'housingType') }}
+          </div>
+          <div class="field">
+            <label class="label" for="housing">Descripción de la vivienda</label>
+            <p class="help mb-2">Espacio disponible, personas y animales que conviven en ella y, si es de alquiler, si se permiten animales.</p>
+            <textarea class="textarea" id="housing" name="housing" maxlength="2000" required{{ f.described(errors, 'housing') }}>{{ data.housing|default('') }}</textarea>
+            {{ f.help(errors, 'housing') }}
+          </div>
+        </fieldset>
+
+        <fieldset class="questionnaire-section">
+          <legend class="title is-5">2. Experiencia previa</legend>
+          <div class="field">
+            <label class="label" for="experienceType">Experiencia con animales</label>
+            <div class="select is-fullwidth"><select id="experienceType" name="experienceType" required data-questionnaire-target="experienceType" data-action="questionnaire#toggleExperience"{{ f.described(errors, 'experienceType') }}>
+              <option value="">Selecciona una opción</option>
+              {% for value, label in experienceTypes %}<option value="{{ value }}" {{ data.experienceType|default('') == value ? 'selected' }}>{{ label }}</option>{% endfor %}
+            </select></div>
+            {{ f.help(errors, 'experienceType') }}
+          </div>
+          <div class="field">
+            <label class="label" for="experience">Cuéntanos tu experiencia <span class="has-text-weight-normal" data-questionnaire-target="experienceOptional" hidden>(opcional si no tienes experiencia)</span></label>
+            <textarea class="textarea" id="experience" name="experience" maxlength="2000" required data-questionnaire-target="experience"{{ f.described(errors, 'experience') }}>{{ data.experience|default('') }}</textarea>
+            {{ f.help(errors, 'experience') }}
+          </div>
+        </fieldset>
+
+        <fieldset class="questionnaire-section">
+          <legend class="title is-5">3. Disponibilidad</legend>
+          <div class="field">
+            <label class="label" for="dailyTime">Tiempo diario para el animal</label>
+            <div class="select is-fullwidth"><select id="dailyTime" name="dailyTime" required{{ f.described(errors, 'dailyTime') }}>
+              <option value="">Selecciona una opción</option>
+              {% for value, label in dailyTimes %}<option value="{{ value }}" {{ data.dailyTime|default('') == value ? 'selected' }}>{{ label }}</option>{% endfor %}
+            </select></div>
+            {{ f.help(errors, 'dailyTime') }}
+          </div>
+          <div class="field">
+            <label class="label" for="availability">Organización diaria</label>
+            <p class="help mb-2">Horarios habituales y quién cuidará del animal durante tus ausencias o vacaciones.</p>
+            <textarea class="textarea" id="availability" name="availability" maxlength="2000" required{{ f.described(errors, 'availability') }}>{{ data.availability|default('') }}</textarea>
+            {{ f.help(errors, 'availability') }}
+          </div>
+        </fieldset>
+
+        <p class="is-size-7 has-text-grey mb-4">La solicitud se asociará a tu cuenta ({{ app.user.name }}, {{ app.user.email }}). Puedes tener como máximo {{ maxOpen }} solicitudes abiertas.</p>
+        <button class="button is-primary">Enviar solicitud</button>
+      </form>
+    {% endif %}
+  </div>
+
+  <aside>
+    <div class="box">
+      {% if photo %}<img class="application-photo" src="{{ path('photo', {id: photo.id}) }}" alt="Fotografía de {{ animal.code }}">{% endif %}
+      <h2 class="title is-5">{{ animal.code }}</h2>
+      <dl class="facts">
+        <dt>Especie</dt><dd>{{ animal.species == 'dog' ? 'Perro' : 'Gato' }}</dd>
+        <dt>Tamaño</dt><dd>{{ {small:'Pequeño',medium:'Mediano',large:'Grande'}[animal.size] }}</dd>
+        <dt>Edad aproximada</dt><dd>{{ animal.ageMonths }} meses</dd>
+      </dl>
+    </div>
+  </aside>
+</div>
+{% endblock %}
