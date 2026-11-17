@@ -62,10 +62,11 @@
       <h2 class="title is-5">¿Quieres adoptarlo?</h2>
       <p class="mb-4 has-text-grey">La adopción es un compromiso para toda la vida. Evaluamos cada solicitud para asegurar el bienestar mutuo del animal y de su nueva familia.</p>
       {% if is_granted('ROLE_USER') %}
-        <a class="button is-primary is-fullwidth" href="{{ path('home') }}">Iniciar solicitud de adopción</a>
+        <a class="button is-primary is-fullwidth" href="{{ path('application_new', {id: animal.id}) }}">Iniciar solicitud de adopción</a>
       {% else %}
         <p class="is-size-7 has-text-grey mb-3">Para enviar una solicitud completa deberás acceder con tu cuenta de adoptante.</p>
-        <a class="button is-primary is-outlined is-fullwidth" href="{{ path('login') }}">Acceder para adoptar</a>
+        <a class="button is-primary is-outlined is-fullwidth" href="{{ path('application_new', {id: animal.id}) }}">Acceder para adoptar</a>
+        <p class="is-size-7 mt-3">¿No tienes cuenta? <a href="{{ path('register') }}">Créala aquí</a> y vuelve a esta ficha.</p>
       {% endif %}
     </div>
 

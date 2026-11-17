@@ -22,6 +22,11 @@ sus ramas remotas y se cierran sus PR; el trabajo posterior se conserva únicame
 | D10 | No se reciben nuevas solicitudes para un animal reservado. Al aprobar, las otras pendientes pasan a espera; las rechazadas no se reabren. | El catálogo ofrece solo animales realmente disponibles; HU-03/04. |
 | D11 | Si falla una reserva, la coordinadora puede liberarla con motivo: candidata cancelada, esperas a pendientes, animal disponible. | Dar sentido a la espera descrita sin implementar la formalización de HU-05; HU-04. |
 
+Actualización del 2026-11-17: el usuario encarga expresamente desarrollar y publicar **spec-003**
+(HU-03) a continuación de HU-02, ya integrada en `main` mediante la PR #5. Para aplicar D06 se añade un alta pública mínima
+(`/registro`: nombre, email y contraseña) que solo crea cuentas `ROLE_USER`. La concreción de los
+campos del cuestionario de D08 está en specs/spec-003/clarify.md. No cambia ninguna decisión anterior.
+
 La autenticación es soporte común, no una novena historia. El alcance no incluye verificación de
 email, recuperación de contraseña, servicios externos ni administración pública de roles.
 Las cuentas de personal se crean por comando; las credenciales locales se excluyen de Git.

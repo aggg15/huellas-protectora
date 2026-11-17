@@ -1,0 +1,99 @@
+Evidencia spec-003 · HU-03 · 2026-11-17
+=======================================
+
+Alcance real: presentación de solicitudes de adopción con cuestionario completo, límite de dos
+abiertas por cuenta, consulta por la coordinadora y alta pública mínima de cuenta (D06).
+Versión del código: rama spec-003 sobre main 890d2b3 (incluye spec-002, PR #5); commit que contiene
+este archivo. Desarrollada primero sobre 96f1929; main no difiere en contenido de esa base y todas las
+comprobaciones de este archivo se repitieron después del rebase con los mismos resultados.
+Entorno: macOS, PHP 8.3.30 CLI, PostgreSQL 16.15 (Docker Compose local), Symfony 7.4, Doctrine ORM 3.7.
+Base de pruebas: huellas_spec003_test, creada vacía para esta historia y migrada desde cero (la base
+huellas_test local conservaba migraciones de ramas antiguas retiradas). Datos ficticios.
+Ejecutado por Claude Code a petición del usuario. Revisión humana del compañero: pendiente.
+
+Preparación
+-----------
+DATABASE_URL=<URL de .env.test.local con la base huellas_spec003_test>
+php bin/console doctrine:database:create --env=test --if-not-exists
+php bin/console doctrine:migrations:migrate --env=test --no-interaction
+Resultado: 3 migraciones aplicadas, incluida Version20261117090718 (HU-03).
+
+Validadores
+-----------
+php -l sobre src, tests y migrations ................ sin errores
+php bin/console lint:container --env=test ........... [OK]
+php bin/console lint:twig templates --env=test ...... [OK] All 14 Twig files contain valid syntax.
+php bin/console lint:yaml config .................... [OK] All 6 YAML files contain valid syntax.
+php bin/console doctrine:schema:validate --env=test . [OK] mapping correcto y esquema sincronizado
+
+vendor/bin/phpunit --filter Spec003 --testdox
+---------------------------------------------
+Spec003 (App\Tests\Spec003)
+ ✔ Applicant submits complete questionnaire for available animal
+ ✔ Incomplete questionnaire is not admitted and lists pending data
+ ✔ No previous experience is a valid answer
+ ✔ Third open application is rejected and existing ones are kept
+ ✔ Approved counts as open while rejected and cancelled do not
+ ✔ Duplicate open application for same animal is rejected
+ ✔ Animals that are not available do not receive applications
+ ✔ Concurrent submissions never exceed two open applications
+ ✔ Coordinator accesses received application with complete questionnaire
+ ✔ Permissions and csrf protect applications
+ ✔ Public registration creates applicant account and returns to application
+
+OK (11 tests, 127 assertions)
+
+Comprobación de la prueba de concurrencia (CA-03-06)
+----------------------------------------------------
+Se eliminó temporalmente «FOR UPDATE» del bloqueo de la cuenta en ApplicationService y se ejecutó
+vendor/bin/phpunit --filter 'Spec003Test::testConcurrent' tres veces: las tres fallaron con cuatro
+solicitudes admitidas en lugar de dos. Restaurado el bloqueo, la prueba pasa (2 admitidas, 2 rechazadas).
+El cambio temporal no se ha versionado.
+
+Regresión de las historias anteriores
+-------------------------------------
+vendor/bin/phpunit --filter Spec001 --testdox
+Spec001 (App\Tests\Spec001)
+ ✔ Volunteer creates identity and photo in quarantine
+ ✔ Anonymous cannot see quarantine or photos
+ ✔ Boundary is exactly ten periods of 24 hours
+ ✔ Expired quarantine releases automatically without changing reservations
+ ✔ Veterinary review and role validation
+ ✔ Invalid animal and spoofed photo leave no partial writes
+ ✔ Csrf required and applicant cannot create animals
+
+OK (7 tests, 32 assertions)
+
+vendor/bin/phpunit --filter Spec002 --testdox
+Spec002 (App\Tests\Spec002)
+ ✔ Anonymous can view public catalog with available animals
+ ✔ Filter by species
+ ✔ Filter by size and age combined
+ ✔ Filter without matches shows empty state
+ ✔ Quarantine reserved and adopted animals excluded from catalog
+ ✔ Non available animal detail returns 404
+ ✔ Fostered animal shows foster badge in catalog and detail
+ ✘ Expired quarantine promotes automatically on catalog access
+Tests: 8, Assertions: 76, Failures: 1.
+El fallo existía ya en 96f1929 antes de cualquier cambio de spec-003 (misma ejecución en la base
+nueva y en huellas_test). Causa: la prueba relee el animal con el EntityManager que aún lo tiene en
+su mapa de identidad tras un UPDATE por DBAL; añadiendo $em->clear() antes de find() la prueba pasa.
+La promoción en la base sí ocurre. Sigue presente en main 890d2b3; corresponde a HU-02 y no se modifica
+en esta rama.
+
+Prueba de humo con servidor real
+--------------------------------
+php -d variables_order=EGPCS -S 127.0.0.1:8093 -t public public/router.php (APP_ENV=dev, base
+huellas_spec003_test, animal ficticio HUE-HUMO0001 disponible). Recorrido con curl:
+ficha pública 200 · solicitud anónima 302 → /acceso · registro 303 → formulario de la solicitud ·
+formulario «0 de 2 solicitudes abiertas» · envío incompleto 422 · envío completo 303 → /mis-solicitudes
+con «Solicitud enviada», «Pendiente de valoración» y «1 de 2» · /panel del solicitante → /mis-solicitudes.
+
+Incidencia registrada: un primer intento sin «-d variables_order=EGPCS» hizo que el servidor integrado
+no recibiera DATABASE_URL y usara la base normal «huellas». Se creó una única cuenta ficticia
+(humo@example.test, sin roles, sin solicitudes ni revisiones asociadas) que se eliminó a continuación;
+la consulta posterior devolvió 0 filas. No se modificó ningún otro dato de esa base.
+
+Pendiente
+---------
+Comprobación visual en móvil y escritorio y navegación por teclado en navegador; revisión del compañero.

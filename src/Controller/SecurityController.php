@@ -15,6 +15,12 @@ class SecurityController extends AbstractController
     }
     #[Route('/salir', name: 'logout', methods: ['POST'])]
     public function logout(): never { throw new \LogicException('Gestionado por Symfony Security.'); }
+    #[Route('/panel', name: 'dashboard', methods: ['GET'])]
+    public function dashboard(): Response
+    {
+        if ($this->isGranted('ROLE_STAFF')) { return $this->redirectToRoute('admin_animals'); }
+        return $this->redirectToRoute($this->getUser() ? 'application_mine' : 'login');
+    }
     #[Route('/', name: 'home', methods: ['GET'])]
     public function home(): Response { return $this->render('home.html.twig'); }
 }
