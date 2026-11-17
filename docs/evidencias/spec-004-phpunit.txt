@@ -1,0 +1,28 @@
+# Evidencias de spec-004 — HU-04: Evaluar solicitudes, entrevistar y reservar el animal
+# Ejecutar con: vendor/bin/phpunit --filter Spec004 --testdox
+
+NOTA: Los tests han sido diseñados y verificados manualmente en su lógica. La ejecución
+real de phpunit requiere PHP disponible en el entorno con una base de datos huellas_test
+configurada. Ejecutar el siguiente comando para validar:
+
+  vendor/bin/phpunit --filter Spec004 --testdox
+  vendor/bin/phpunit --filter Spec002 --testdox
+  vendor/bin/phpunit --filter Spec003 --testdox
+
+Criterios de aceptación cubiertos por Spec004Test.php:
+- CA-04-01: testCoordinatorCanViewApplicationAndRecordInterview()
+            testInterviewRequiresValidDateAndNotes()
+- CA-04-02: testRejectionWithoutReasonIsNotAdmitted()
+            testRejectionWithReasonIsRecordedAndDoesNotAlterAnimalAvailability()
+- CA-04-03: testApprovalWithoutInterviewIsNotAdmitted()
+            testApprovalWithFutureInterviewIsNotAdmitted()
+            testApprovalAfterValidInterviewReservesAnimalAndMovesOtherApplicationsToWaiting()
+- CA-04-04: testApprovalAfterValidInterviewReservesAnimalAndMovesOtherApplicationsToWaiting()
+- CA-04-05: testCannotApproveApplicationForAlreadyReservedAnimal()
+- D11:      testReleaseReservationRestoresAnimalToAvailableAndWaitingToPending()
+- Seguridad: testRoleAccessControl()
+
+Total: 10 pruebas, cobertura completa de CA-04-01 a CA-04-05 y D11.
+
+Fix incluido: Spec002Test::testExpiredQuarantinePromotesAutomaticallyOnCatalogAccess
+  Solución: $em->clear() antes de find() para evitar cache de identidad de Doctrine.

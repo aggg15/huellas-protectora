@@ -2,7 +2,7 @@ name: CI de Huellas
 
 on:
   push:
-    branches: [main, spec-001, spec-003]
+    branches: [main, spec-001, spec-003, spec-004]
   pull_request:
     branches: [main]
 
@@ -67,6 +67,10 @@ jobs:
             bash tools/spec-context.sh spec-003
             bash .specify/scripts/bash/check-prerequisites.sh --json --require-spec --require-tasks --include-tasks
           fi
+          if [[ -f specs/spec-004/plan.md ]]; then
+            bash tools/spec-context.sh spec-004
+            bash .specify/scripts/bash/check-prerequisites.sh --json --require-spec --require-tasks --include-tasks
+          fi
       - name: Sintaxis y configuración
         shell: bash
         run: |
@@ -84,3 +88,6 @@ jobs:
       - name: Criterios de aceptación de HU-03
         if: hashFiles('tests/Spec003Test.php') != ''
         run: vendor/bin/phpunit --filter Spec003 --testdox
+      - name: Criterios de aceptación de HU-04
+        if: hashFiles('tests/Spec004Test.php') != ''
+        run: vendor/bin/phpunit --filter Spec004 --testdox
