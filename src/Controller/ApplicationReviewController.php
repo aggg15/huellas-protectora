@@ -3,18 +3,21 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\AdoptionApplication;
-use App\Service\ApplicationService;
+use App\Service\{ApplicationRefused, ApplicationService, ValidationError};
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\{Request, Response};
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-/** Consulta de las candidaturas recibidas por la coordinadora (CA-03-04). Las decisiones corresponden a HU-04. */
+/** Consulta y evaluación de solicitudes por la coordinadora (HU-03 / HU-04). */
 #[IsGranted('ROLE_COORDINATOR')]
 class ApplicationReviewController extends AbstractController
 {
-    public function __construct(private EntityManagerInterface $em) {}
+    public function __construct(
+        private EntityManagerInterface $em,
+        private ApplicationService $applications,
+    ) {}
 
     #[Route('/admin/solicitudes', name: 'admin_applications', methods: ['GET'])]
     public function index(): Response
@@ -25,14 +28,95 @@ class ApplicationReviewController extends AbstractController
     }
 
     #[Route('/admin/solicitudes/{id}', name: 'admin_application_show', methods: ['GET'])]
-    public function show(string $id): Response
+    public function show(string $id, array $errors = []): Response
     {
         $application = $this->em->find(AdoptionApplication::class, $id) ?? throw $this->createNotFoundException();
+        $otherApplications = $this->em->getRepository(AdoptionApplication::class)->findBy(
+            ['animal' => $application->animal],
+            ['submittedAt' => 'DESC']
+        );
+
         return $this->render('application/admin_show.html.twig', [
             'application' => $application,
+            'otherApplications' => array_filter($otherApplications, static fn(AdoptionApplication $a) => $a->id !== $application->id),
             'housingTypes' => ApplicationService::HOUSING_TYPES,
             'experienceTypes' => ApplicationService::EXPERIENCE_TYPES,
             'dailyTimes' => ApplicationService::DAILY_TIMES,
-        ]);
+            'errors' => $errors,
+        ], new Response(status: $errors ? 422 : 200));
+    }
+
+    #[Route('/admin/solicitudes/{id}/entrevista', name: 'admin_application_interview', methods: ['POST'])]
+    public function interview(string $id, Request $request): Response
+    {
+        $data = $request->request->all();
+        if (!$this->isCsrfTokenValid('interview-' . $id, is_string($data['_token'] ?? null) ? $data['_token'] : null)) {
+            throw $this->createAccessDeniedException('Formulario caducado.');
+        }
+
+        $application = $this->em->find(AdoptionApplication::class, $id) ?? throw $this->createNotFoundException();
+        try {
+            $this->applications->recordInterview($application, $data);
+            $this->addFlash('success', 'Entrevista registrada correctamente.');
+            return $this->redirectToRoute('admin_application_show', ['id' => $id], 303);
+        } catch (ValidationError $error) {
+            return $this->show($id, $error->errors);
+        }
+    }
+
+    #[Route('/admin/solicitudes/{id}/aprobar', name: 'admin_application_approve', methods: ['POST'])]
+    public function approve(string $id, Request $request): Response
+    {
+        $data = $request->request->all();
+        if (!$this->isCsrfTokenValid('approve-' . $id, is_string($data['_token'] ?? null) ? $data['_token'] : null)) {
+            throw $this->createAccessDeniedException('Formulario caducado.');
+        }
+
+        $application = $this->em->find(AdoptionApplication::class, $id) ?? throw $this->createNotFoundException();
+        try {
+            $this->applications->approve($application);
+            $this->addFlash('success', 'Candidatura aprobada. El animal ha quedado reservado y las demás solicitudes han pasado a espera.');
+            return $this->redirectToRoute('admin_application_show', ['id' => $id], 303);
+        } catch (ValidationError $error) {
+            return $this->show($id, $error->errors);
+        } catch (ApplicationRefused $refused) {
+            return $this->show($id, ['general' => $refused->getMessage()]);
+        }
+    }
+
+    #[Route('/admin/solicitudes/{id}/rechazar', name: 'admin_application_reject', methods: ['POST'])]
+    public function reject(string $id, Request $request): Response
+    {
+        $data = $request->request->all();
+        if (!$this->isCsrfTokenValid('reject-' . $id, is_string($data['_token'] ?? null) ? $data['_token'] : null)) {
+            throw $this->createAccessDeniedException('Formulario caducado.');
+        }
+
+        $application = $this->em->find(AdoptionApplication::class, $id) ?? throw $this->createNotFoundException();
+        try {
+            $this->applications->reject($application, $data);
+            $this->addFlash('success', 'Candidatura rechazada con motivo registrado.');
+            return $this->redirectToRoute('admin_application_show', ['id' => $id], 303);
+        } catch (ValidationError $error) {
+            return $this->show($id, $error->errors);
+        }
+    }
+
+    #[Route('/admin/solicitudes/{id}/cancelar-reserva', name: 'admin_application_cancel_reservation', methods: ['POST'])]
+    public function cancelReservation(string $id, Request $request): Response
+    {
+        $data = $request->request->all();
+        if (!$this->isCsrfTokenValid('cancel-' . $id, is_string($data['_token'] ?? null) ? $data['_token'] : null)) {
+            throw $this->createAccessDeniedException('Formulario caducado.');
+        }
+
+        $application = $this->em->find(AdoptionApplication::class, $id) ?? throw $this->createNotFoundException();
+        try {
+            $this->applications->cancelReservation($application, $data);
+            $this->addFlash('success', 'Reserva liberada. El animal vuelve a estar disponible y las solicitudes en espera han vuelto a pendientes.');
+            return $this->redirectToRoute('admin_application_show', ['id' => $id], 303);
+        } catch (ValidationError $error) {
+            return $this->show($id, $error->errors);
+        }
     }
 }

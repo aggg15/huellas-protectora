@@ -39,6 +39,16 @@ class AdoptionApplication
     public string $status = 'pending';
     #[ORM\Column(type: 'datetime_immutable')]
     public \DateTimeImmutable $submittedAt;
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    public ?\DateTimeImmutable $interviewAt = null;
+    #[ORM\Column(type: 'text', nullable: true)]
+    public ?string $interviewNotes = null;
+    #[ORM\Column(type: 'text', nullable: true)]
+    public ?string $rejectionReason = null;
+    #[ORM\Column(type: 'text', nullable: true)]
+    public ?string $cancellationReason = null;
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    public ?\DateTimeImmutable $decisionAt = null;
 
     public function __construct(Animal $animal, User $applicant, array $questionnaire, \DateTimeImmutable $submittedAt)
     {
@@ -56,4 +66,10 @@ class AdoptionApplication
 
     public function isOpen(): bool { return in_array($this->status, self::OPEN_STATUSES, true); }
     public function statusLabel(): string { return self::STATUS_LABELS[$this->status]; }
+    public function hasInterview(): bool { return $this->interviewAt !== null; }
+    public function hasValidInterview(\DateTimeImmutable $now): bool
+    {
+        return $this->interviewAt !== null && $this->interviewAt <= $now && trim($this->interviewNotes ?? '') !== '';
+    }
+    public function isApproved(): bool { return $this->status === 'approved'; }
 }

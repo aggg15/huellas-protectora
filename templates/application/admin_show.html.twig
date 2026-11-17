@@ -11,8 +11,28 @@
     <h1 class="title">{{ application.applicant.name }} · {{ application.animal.code }}</h1>
     <p class="subtitle is-6">Enviada el {{ application.submittedAt|date('d/m/Y \\a \\l\\a\\s H:i', 'Europe/Madrid') }}.</p>
   </div>
-  <span class="tag is-medium is-light {{ application.open ? 'is-info' : '' }}">{{ application.statusLabel }}</span>
+  <div>
+    {% set statusClass = {
+      'pending': 'is-info',
+      'waiting': 'is-warning',
+      'approved': 'is-success',
+      'rejected': 'is-danger',
+      'cancelled': 'is-dark'
+    }[application.status]|default('is-light') %}
+    <span class="tag is-medium is-light {{ statusClass }}">{{ application.statusLabel }}</span>
+  </div>
 </div>
+
+{% if errors.general is defined %}
+  <div class="notification is-danger is-light mb-4">
+    {{ errors.general }}
+  </div>
+{% endif %}
+{% if errors.interview is defined %}
+  <div class="notification is-warning is-light mb-4">
+    {{ errors.interview }}
+  </div>
+{% endif %}
 
 <div class="detail-grid">
   <div>
@@ -21,17 +41,56 @@
       <dl class="facts"><dt>Tipo</dt><dd>{{ housingTypes[application.housingType] }}</dd></dl>
       <p class="answer">{{ application.housing }}</p>
     </section>
+
     <section class="box">
       <h2 class="title is-5">Experiencia previa</h2>
       <dl class="facts"><dt>Experiencia</dt><dd>{{ experienceTypes[application.experienceType] }}</dd></dl>
       {% if application.experience %}<p class="answer">{{ application.experience }}</p>{% else %}<p class="has-text-grey">Sin comentarios adicionales.</p>{% endif %}
     </section>
+
     <section class="box">
       <h2 class="title is-5">Disponibilidad</h2>
       <dl class="facts"><dt>Tiempo diario</dt><dd>{{ dailyTimes[application.dailyTime] }}</dd></dl>
       <p class="answer">{{ application.availability }}</p>
     </section>
+
+    <section class="box">
+      <h2 class="title is-5">Entrevista previa</h2>
+      {% if application.hasInterview %}
+        <article class="notification is-light mb-4">
+          <p><strong>Fecha y hora:</strong> {{ application.interviewAt|date('d/m/Y \\a \\l\\a\\s H:i', 'Europe/Madrid') }}</p>
+          <p class="mt-2" style="white-space: pre-wrap;">{{ application.interviewNotes }}</p>
+        </article>
+      {% else %}
+        <p class="has-text-grey mb-3">No hay entrevista registrada todavía.</p>
+      {% endif %}
+
+      {% if application.open %}
+        <details class="mt-3">
+          <summary class="button is-small is-light">{% if application.hasInterview %}Modificar entrevista{% else %}Registrar entrevista{% endif %}</summary>
+          <form method="post" action="{{ path('admin_application_interview', {id: application.id}) }}" class="mt-3">
+            <input type="hidden" name="_token" value="{{ csrf_token('interview-' ~ application.id) }}">
+            <div class="field">
+              <label class="label is-small" for="interviewAt">Fecha y hora de la entrevista</label>
+              <div class="control">
+                <input class="input is-small {{ errors.interviewAt is defined ? 'is-danger' : '' }}" type="datetime-local" id="interviewAt" name="interviewAt" value="{{ application.interviewAt ? application.interviewAt|date('Y-m-d\\TH:i', 'Europe/Madrid') : '' }}" required>
+              </div>
+              {% if errors.interviewAt is defined %}<p class="help is-danger" id="error-interviewAt">{{ errors.interviewAt }}</p>{% endif %}
+            </div>
+            <div class="field">
+              <label class="label is-small" for="interviewNotes">Notas y valoración</label>
+              <div class="control">
+                <textarea class="textarea is-small {{ errors.interviewNotes is defined ? 'is-danger' : '' }}" id="interviewNotes" name="interviewNotes" rows="3" maxlength="5000" placeholder="Observaciones de la conversación, adecuación de la familia..." required>{{ application.interviewNotes }}</textarea>
+              </div>
+              {% if errors.interviewNotes is defined %}<p class="help is-danger" id="error-interviewNotes">{{ errors.interviewNotes }}</p>{% endif %}
+            </div>
+            <button class="button is-small is-primary">Guardar entrevista</button>
+          </form>
+        </details>
+      {% endif %}
+    </section>
   </div>
+
   <aside>
     <div class="box">
       <h2 class="title is-5">Solicitante</h2>
@@ -40,10 +99,89 @@
         <dt>Email</dt><dd><a href="mailto:{{ application.applicant.email }}">{{ application.applicant.email }}</a></dd>
       </dl>
     </div>
+
     <div class="box">
       <h2 class="title is-5">Animal solicitado</h2>
-      <p><a href="{{ path('animal_show', {id: application.animal.id}) }}">{{ application.animal.code }}</a> · {{ application.animal.species == 'dog' ? 'Perro' : 'Gato' }}, {{ application.animal.ageMonths }} meses</p>
-      <p class="is-size-7 has-text-grey mt-3">La entrevista, la aprobación y la reserva corresponden a HU-04.</p>
+      <p class="mb-2">
+        <a href="{{ path('animal_show', {id: application.animal.id}) }}"><strong>{{ application.animal.code }}</strong></a> · {{ application.animal.species == 'dog' ? 'Perro' : 'Gato' }}, {{ application.animal.ageMonths }} meses
+      </p>
+      <p class="is-size-7 mb-3">
+        Estado actual: <span class="tag is-small {{ application.animal.status == 'reserved' ? 'is-warning' : (application.animal.status == 'available' ? 'is-success' : 'is-light') }}">{{ application.animal.status }}</span>
+      </p>
+
+      {% if otherApplications is not empty %}
+        <h3 class="title is-6 mt-3 mb-2">Otras solicitudes para este animal ({{ otherApplications|length }})</h3>
+        <ul class="is-size-7">
+          {% for other in otherApplications %}
+            <li class="mb-1">
+              <a href="{{ path('admin_application_show', {id: other.id}) }}">{{ other.applicant.name }}</a>
+              <span class="tag is-small {{ other.status == 'waiting' ? 'is-warning' : (other.status == 'approved' ? 'is-success' : 'is-light') }}">{{ other.statusLabel }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+
+    <div class="box">
+      <h2 class="title is-5">Decisión de la candidatura</h2>
+
+      {% if application.open %}
+        {# Formulario de Aprobación #}
+        <form method="post" action="{{ path('admin_application_approve', {id: application.id}) }}" class="mb-4">
+          <input type="hidden" name="_token" value="{{ csrf_token('approve-' ~ application.id) }}">
+          <button class="button is-success is-fullwidth" id="btn-approve" {% if not application.hasInterview %}title="Registra una entrevista antes de aprobar"{% endif %}>
+            Aprobar y reservar animal
+          </button>
+        </form>
+
+        <hr>
+
+        {# Formulario de Rechazo con motivo obligatorio #}
+        <form method="post" action="{{ path('admin_application_reject', {id: application.id}) }}">
+          <input type="hidden" name="_token" value="{{ csrf_token('reject-' ~ application.id) }}">
+          <div class="field">
+            <label class="label is-small" for="rejectionReason">Motivo de rechazo (obligatorio)</label>
+            <div class="control">
+              <textarea class="textarea is-small {{ errors.rejectionReason is defined ? 'is-danger' : '' }}" id="rejectionReason" name="rejectionReason" rows="2" maxlength="2000" placeholder="Indica el motivo..." required></textarea>
+            </div>
+            {% if errors.rejectionReason is defined %}<p class="help is-danger" id="error-rejectionReason">{{ errors.rejectionReason }}</p>{% endif %}
+          </div>
+          <button class="button is-danger is-outlined is-fullwidth" id="btn-reject">Rechazar candidatura</button>
+        </form>
+
+      {% elseif application.status == 'approved' %}
+        <div class="notification is-success is-light mb-4">
+          <p class="is-size-7"><strong>Candidatura aprobada.</strong> El animal se encuentra formalmente reservado para este solicitante.</p>
+        </div>
+
+        <details>
+          <summary class="button is-small is-warning is-outlined is-fullwidth">Liberar reserva (D11)</summary>
+          <form method="post" action="{{ path('admin_application_cancel_reservation', {id: application.id}) }}" class="mt-3">
+            <input type="hidden" name="_token" value="{{ csrf_token('cancel-' ~ application.id) }}">
+            <div class="field">
+              <label class="label is-small" for="cancellationReason">Motivo de liberación</label>
+              <div class="control">
+                <textarea class="textarea is-small {{ errors.cancellationReason is defined ? 'is-danger' : '' }}" id="cancellationReason" name="cancellationReason" rows="2" maxlength="2000" placeholder="Motivo de la cancelación..." required></textarea>
+              </div>
+              {% if errors.cancellationReason is defined %}<p class="help is-danger" id="error-cancellationReason">{{ errors.cancellationReason }}</p>{% endif %}
+            </div>
+            <button class="button is-small is-warning is-fullwidth">Confirmar liberación de reserva</button>
+          </form>
+        </details>
+
+      {% elseif application.status == 'rejected' %}
+        <div class="notification is-danger is-light">
+          <p class="is-size-7"><strong>Solicitud rechazada</strong></p>
+          {% if application.decisionAt %}<p class="is-size-7 has-text-grey">{{ application.decisionAt|date('d/m/Y H:i', 'Europe/Madrid') }}</p>{% endif %}
+          <p class="mt-2 is-size-7" style="white-space: pre-wrap;">{{ application.rejectionReason }}</p>
+        </div>
+
+      {% elseif application.status == 'cancelled' %}
+        <div class="notification is-dark is-light">
+          <p class="is-size-7"><strong>Reserva cancelada</strong></p>
+          <p class="mt-2 is-size-7" style="white-space: pre-wrap;">{{ application.cancellationReason }}</p>
+        </div>
+      {% endif %}
     </div>
   </aside>
 </div>
