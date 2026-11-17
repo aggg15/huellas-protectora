@@ -2,7 +2,7 @@ name: CI de Huellas
 
 on:
   push:
-    branches: [main, spec-001, spec-003, spec-004]
+    branches: [main, 'spec-00*']
   pull_request:
     branches: [main]
 
@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   verificar:
-    name: Validación de spec-001
+    name: Validación de las historias de Huellas
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
@@ -61,16 +61,12 @@ jobs:
           python3 -m venv var/speckit-cli
           var/speckit-cli/bin/pip install --disable-pip-version-check 'specify-cli==1.0.11'
           var/speckit-cli/bin/specify integration status
-          bash tools/spec-context.sh spec-001
-          bash .specify/scripts/bash/check-prerequisites.sh --json --require-spec --require-tasks --include-tasks
-          if [[ -f specs/spec-003/plan.md ]]; then
-            bash tools/spec-context.sh spec-003
+          # Toda historia planificada (con plan.md) debe tener spec y tareas coherentes
+          for plan in specs/spec-00*/plan.md; do
+            feature="$(basename "$(dirname "$plan")")"
+            bash tools/spec-context.sh "$feature"
             bash .specify/scripts/bash/check-prerequisites.sh --json --require-spec --require-tasks --include-tasks
-          fi
-          if [[ -f specs/spec-004/plan.md ]]; then
-            bash tools/spec-context.sh spec-004
-            bash .specify/scripts/bash/check-prerequisites.sh --json --require-spec --require-tasks --include-tasks
-          fi
+          done
       - name: Sintaxis y configuración
         shell: bash
         run: |
@@ -80,14 +76,16 @@ jobs:
           php bin/console lint:container
           php bin/console lint:twig templates
           php bin/console lint:yaml config
-      - name: Migraciones y criterios de aceptación
+      - name: Migraciones y esquema
         run: |
           php bin/console doctrine:migrations:migrate --no-interaction
           php bin/console doctrine:schema:validate
-          vendor/bin/phpunit --filter Spec001 --testdox
-      - name: Criterios de aceptación de HU-03
-        if: hashFiles('tests/Spec003Test.php') != ''
-        run: vendor/bin/phpunit --filter Spec003 --testdox
-      - name: Criterios de aceptación de HU-04
-        if: hashFiles('tests/Spec004Test.php') != ''
-        run: vendor/bin/phpunit --filter Spec004 --testdox
+      - name: Criterios de aceptación de todas las historias
+        run: |
+          # Se ejecutan las pruebas de todas las historias para detectar regresiones entre ellas
+          for test in tests/Spec00*Test.php; do
+            story="$(basename "$test" .php)"
+            echo "::group::${story}"
+            vendor/bin/phpunit --filter "$story" --testdox
+            echo "::endgroup::"
+          done

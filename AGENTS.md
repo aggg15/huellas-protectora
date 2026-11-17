@@ -45,8 +45,8 @@
   `converge` informa y añade tareas: las correcciones de código se ejecutan después mediante implement.
 - `main` requiere una revisión. Trabajar en la rama de cada historia y publicar mediante una PR
   hacia `main` que siga `.github/PULL_REQUEST_TEMPLATE.md`. No hacer push directo a main ni
-  fusionar sin revisión humana. El CI (`.github/workflows/ci.yml`) debe incluir la rama y los
-  tests de cada historia nueva.
+  fusionar sin revisión humana. El CI (`.github/workflows/ci.yml`) detecta solo las ramas
+  `spec-00*`, las historias con `plan.md` y los ficheros `tests/Spec00NTest.php`; respetar esos nombres.
 - Los usuarios GitHub son `aggg15` y `abcb5-ua`. No inventar sus nombres académicos, reparto de las
   historias pendientes, ratificación de la Constitution ni aprobaciones del compañero.
 
