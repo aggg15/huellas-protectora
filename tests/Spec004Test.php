@@ -331,6 +331,76 @@ class Spec004Test extends WebTestBase
         self::assertSame('pending', $em->find(AdoptionApplication::class, $app2->id)->status);
     }
 
+    public function testDecidedApplicationAdmitsNoFurtherDecisions(): void
+    {
+        $coordinator = $this->coordinator();
+        $animal = $this->animal(0, 'available');
+        $approved = $this->createApplication($animal);
+        $approved->interviewAt = new \DateTimeImmutable('-1 hour', new \DateTimeZone('UTC'));
+        $approved->interviewNotes = 'Entrevista realizada.';
+        $this->em->flush();
+
+        $this->client->loginUser($coordinator);
+        $crawler = $this->client->request('GET', '/admin/solicitudes/' . $approved->id);
+        $rejectToken = $crawler->filter('form[action$="/rechazar"] input[name="_token"]')->attr('value');
+        self::getContainer()->get(ApplicationService::class)->approve($approved);
+
+        // La ficha de una solicitud aprobada ya no ofrece aprobar, rechazar ni modificar la entrevista
+        $crawler = $this->client->request('GET', '/admin/solicitudes/' . $approved->id);
+        self::assertCount(0, $crawler->filter('form[action$="/aprobar"], form[action$="/rechazar"], form[action$="/entrevista"]'));
+
+        // Un rechazo forzado sobre la solicitud aprobada no deja el animal reservado sin candidatura
+        $this->client->request('POST', '/admin/solicitudes/' . $approved->id . '/rechazar', [
+            '_token' => $rejectToken,
+            'rejectionReason' => 'Intento de rechazo tras la aprobación.',
+        ]);
+        self::assertResponseStatusCodeSame(422);
+        self::assertSelectorTextContains('main', 'ya está resuelta');
+
+        $em = $this->refreshEm();
+        $em->clear();
+        self::assertSame('approved', $em->find(AdoptionApplication::class, $approved->id)->status);
+        self::assertNull($em->find(AdoptionApplication::class, $approved->id)->rejectionReason);
+        self::assertSame('reserved', $em->find(Animal::class, $animal->id)->status);
+    }
+
+    public function testDatabaseRejectsTwoApprovedApplicationsForSameAnimal(): void
+    {
+        $animal = $this->animal(0, 'available');
+        $app1 = $this->createApplication($animal);
+        $app2 = $this->createApplication($animal);
+        $connection = $this->em->getConnection();
+        $connection->executeStatement("UPDATE adoptionapplication SET status = 'approved' WHERE id = ?", [$app1->id]);
+
+        $this->expectException(\Doctrine\DBAL\Exception\UniqueConstraintViolationException::class);
+        $connection->executeStatement("UPDATE adoptionapplication SET status = 'approved' WHERE id = ?", [$app2->id]);
+    }
+
+    public function testReleaseReservationRequiresReason(): void
+    {
+        $animal = $this->animal(0, 'available');
+        $application = $this->createApplication($animal);
+        $application->interviewAt = new \DateTimeImmutable('-1 hour', new \DateTimeZone('UTC'));
+        $application->interviewNotes = 'Entrevista realizada.';
+        $this->em->flush();
+        self::getContainer()->get(ApplicationService::class)->approve($application);
+
+        $this->client->loginUser($this->coordinator());
+        $crawler = $this->client->request('GET', '/admin/solicitudes/' . $application->id);
+        $token = $crawler->filter('form[action$="/cancelar-reserva"] input[name="_token"]')->attr('value');
+        $this->client->request('POST', '/admin/solicitudes/' . $application->id . '/cancelar-reserva', [
+            '_token' => $token,
+            'cancellationReason' => '  ',
+        ]);
+        self::assertResponseStatusCodeSame(422);
+        self::assertSelectorTextContains('#error-cancellationReason', 'Indica el motivo');
+
+        $em = $this->refreshEm();
+        $em->clear();
+        self::assertSame('approved', $em->find(AdoptionApplication::class, $application->id)->status);
+        self::assertSame('reserved', $em->find(Animal::class, $animal->id)->status);
+    }
+
     public function testRoleAccessControl(): void
     {
         $animal = $this->animal(0, 'available');

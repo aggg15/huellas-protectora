@@ -61,6 +61,8 @@ class ApplicationReviewController extends AbstractController
             return $this->redirectToRoute('admin_application_show', ['id' => $id], 303);
         } catch (ValidationError $error) {
             return $this->show($id, $error->errors);
+        } catch (ApplicationRefused $refused) {
+            return $this->show($id, ['general' => $refused->getMessage()]);
         }
     }
 
@@ -99,6 +101,8 @@ class ApplicationReviewController extends AbstractController
             return $this->redirectToRoute('admin_application_show', ['id' => $id], 303);
         } catch (ValidationError $error) {
             return $this->show($id, $error->errors);
+        } catch (ApplicationRefused $refused) {
+            return $this->show($id, ['general' => $refused->getMessage()]);
         }
     }
 

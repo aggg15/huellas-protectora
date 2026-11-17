@@ -20,4 +20,4 @@ Historia: HU-04 · Evaluar solicitudes, entrevistar y reservar el animal.
   - `templates/application/admin_show.html.twig`: formulario de entrevista, formulario de aprobación condicional, formulario de rechazo con motivo, panel de liberación de reserva y listado de solicitudes concurrentes.
   - `templates/application/mine.html.twig`: tabla enriquecida para el adoptante con etiquetas de estado, información de entrevista programada y motivos de rechazo si aplica.
 - **Pruebas automatizadas (`tests/Spec004Test.php`):**
-  - Suite de 10 pruebas cubriendo CA-04-01 a CA-04-05, D09, D10, D11 y control estricto de roles.
+  - Suite de 13 pruebas (10 iniciales + 3 de regresión tras converge) cubriendo CA-04-01 a CA-04-05, D09, D10, D11 y control estricto de roles.

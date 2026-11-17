@@ -18,3 +18,8 @@ Metodología: Spec-Driven Development.
 ## Tareas de verificación y convergencia
 - [x] **T409**: Implementar suite de pruebas automatizadas `tests/Spec004Test.php` verificando todos los criterios de aceptación (CA-04-01 a CA-04-05), casos límite y control de roles.
 - [x] **T410**: Redactar informes `analyze.md`, `implement.md` y `converge.md`, verificando trazabilidad completa.
+
+## Tareas de convergencia tras la primera ejecución real (2026-11-17)
+- [x] **T411**: Declarar el índice parcial `uniq_application_approved_animal` en el mapeo de `AdoptionApplication` para que `doctrine:schema:validate` pase.
+- [x] **T412**: Limitar entrevista, aprobación y rechazo a solicitudes sin decisión (`pending`/`waiting`) en vista y servicio; mostrar el panel de reserva y la liberación (D11) en solicitudes aprobadas.
+- [x] **T413**: Añadir pruebas de regresión (solicitud resuelta, índice parcial en BD, liberación sin motivo) y registrar la evidencia real en `docs/evidencias/spec-004-phpunit.txt`.

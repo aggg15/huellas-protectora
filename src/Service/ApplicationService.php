@@ -111,9 +111,17 @@ class ApplicationService
 
     private function validText(string $value): bool { return $value !== '' && mb_strlen($value) <= self::TEXT_LIMIT; }
 
+    private function assertUndecided(AdoptionApplication $application): void
+    {
+        if (!$application->isUndecided()) {
+            throw new ApplicationRefused('La solicitud ya está resuelta (' . mb_strtolower($application->statusLabel()) . ') y no admite cambios.');
+        }
+    }
+
     public function recordInterview(AdoptionApplication $application, array $data): void
     {
-        $data = array_map(static fn($value) => is_string($value) ? trim($value) : '', $data);
+        $this->assertUndecided($application);
+        $data =array_map(static fn($value) => is_string($value) ? trim($value) : '', $data);
         $errors = [];
         $rawDate = $data['interviewAt'] ?? '';
         $interviewAt = \DateTimeImmutable::createFromFormat('!Y-m-d\TH:i', $rawDate, new \DateTimeZone('Europe/Madrid'));
@@ -134,6 +142,7 @@ class ApplicationService
 
     public function reject(AdoptionApplication $application, array $data): void
     {
+        $this->assertUndecided($application);
         $reason = trim((string)($data['rejectionReason'] ?? ''));
         if ($reason === '' || mb_strlen($reason) > 2000) {
             throw new ValidationError(['rejectionReason' => 'Indica el motivo justificado del rechazo (máximo 2000 caracteres).']);
@@ -146,6 +155,7 @@ class ApplicationService
 
     public function approve(AdoptionApplication $application): void
     {
+        $this->assertUndecided($application);
         $now = $this->clock->now();
         if (!$application->hasValidInterview($now)) {
             throw new ValidationError([

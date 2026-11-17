@@ -16,3 +16,11 @@ Contraste del código desarrollado con los criterios de aceptación de `spec.md`
 * Se mantiene plena compatibilidad con las historias previas HU-01, HU-02 y HU-03.
 * Todas las tareas de `tasks.md` (T401 a T410) han sido verificadas y completadas.
 * La base técnica queda preparada de forma ideal para HU-05 (*Formalizar la adopción y programar los seguimientos*), la cual tomará directamente como punto de partida las solicitudes en estado `approved` y los animales en estado `reserved`.
+
+## Verificación ejecutada (2026-11-17)
+La primera ejecución real de la suite detectó tres desviaciones, corregidas mediante T411–T413:
+* `doctrine:schema:validate` fallaba porque el índice parcial solo existía en la migración (CA-04-05).
+* La ficha de una solicitud aprobada seguía ofreciendo aprobar/rechazar y ocultaba «Liberar reserva» (D11), porque la vista usaba `isOpen()`, que incluye `approved` por D07.
+* El servicio permitía decidir sobre solicitudes ya resueltas (p. ej. rechazar una aprobada dejando el animal reservado).
+
+Resultado tras las correcciones: `vendor/bin/phpunit --testdox` → OK (39 tests, 329 assertions); Spec004 13/13. Detalle en `docs/evidencias/spec-004-phpunit.txt`.
