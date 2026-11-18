@@ -102,15 +102,17 @@ Problema de la revisión previa (D17, CA-05-10): el estado se comprueba antes de
 | `GET /admin/seguimientos` | `admin_follow_ups` | `ROLE_COORDINATOR` | Seguimientos programados por fecha, con animal, adoptante y enlace |
 | `GET /adopciones/{id}/contrato` | `adoption_contract` | `ROLE_USER`; coordinadora o adoptante titular; resto 404 | Contrato imprimible (CA-05-01, CA-05-11) |
 
-- `AdoptionController` reúne las tres rutas nuevas de lectura y la de formalizar. El contrato queda
-  fuera de `/admin` porque `access_control` exige `ROLE_STAFF` allí y el adoptante no es personal.
+- La acción de formalizar se añade a `ApplicationReviewController`, que ya agrupa las decisiones
+  sobre una solicitud y vuelve a mostrar su ficha con los errores (analyze A1). `AdoptionController`
+  reúne las tres rutas de lectura. El contrato queda fuera de `/admin` porque `access_control`
+  exige `ROLE_STAFF` allí y el adoptante no es personal.
 - Ante una cuenta no autorizada el contrato responde 404, no 403, para no revelar que la adopción existe.
 - `AdoptionService::findByAnimal(Animal)` devuelve la adopción única del animal o `null`: es el
   punto de consulta para HU-08 (D18, CA-05-05).
 
 ### Vistas
 
-- `application/admin_show.html.twig` (HU-04): en el bloque `approved`, formulario «Formalizar entrega»
+- `application/admin_show.html.twig` (HU-04): `formalized` en el mapa de clases de estado (A5); en el bloque `approved`, formulario «Formalizar entrega»
   (importe con `inputmode="decimal"`, casilla obligatoria «Confirmo que se ha abonado la cuota», errores
   por campo y `aria-invalid`), encima de «Liberar reserva». Nuevo bloque `formalized` con enlace a la
   adopción y al contrato y sin acciones.
@@ -119,8 +121,9 @@ Problema de la revisión previa (D17, CA-05-10): el estado se comprueba antes de
 - `adoption/contract.html.twig`: número, fecha, partes, animal, cuota, fechas de los seguimientos y
   compromisos de cuidado y seguimiento. Botón «Imprimir» (Stimulus `print`). No afirma validez
   jurídica (Constitution V).
-- `application/mine.html.twig`: el estado «Adopción formalizada» enlaza al contrato. Las canceladas
-  por adopción muestran su motivo.
+- `application/mine.html.twig`: el estado «Adopción formalizada» enlaza al contrato. Toda solicitud
+  cancelada (por adopción o por liberación D11) muestra su motivo; hoy cae en la rama por defecto
+  y aparece como «Pendiente de revisión» (analyze A2, vista compartida con HU-04).
 - `base.html.twig`: enlace «Seguimientos» para `ROLE_COORDINATOR`.
 - `public/assets/app.css`: `@media print` oculta cabecera, pie y botones.
 - `AdoptionApplication::STATUS_LABELS`: `formalized` → «Adopción formalizada».
@@ -160,6 +163,10 @@ de formalización. Recorrido con error: formalizar sin confirmar el abono (422, 
 - **Ajuste de `cancelReservation` (código de `abcb5-ua`):** se limita a releer el estado bajo bloqueo
   y a capturar el conflicto. Debe pasar la suite Spec004 sin cambiar sus pruebas.
 - **Base `_test` local antigua:** usar una base `_test` recién migrada (véase README).
+- **Riesgo aceptado (analyze A4):** `reject()` y `recordInterview()` de HU-04 no bloquean filas. Un
+  rechazo simultáneo a una formalización puede dejar como rechazada una solicitud en espera que la
+  formalización había cancelado. Sigue sin contar como abierta y la adopción no se altera, así que
+  no incumple ninguna regla de HU-05. Corregirlo cambiaría código de HU-04 fuera del alcance.
 
 ## Estado
 

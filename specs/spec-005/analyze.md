@@ -52,8 +52,26 @@ registra como riesgo aceptado.
 
 | ID | Historia / criterio | Gravedad | Evidencia | Decisión | Responsable | Estado |
 |---|---|---|---|---|---|---|
-| A1 | HU-05 / CA-05-07, CA-05-06 | MEDIUM | `ApplicationReviewController::show` prepara `otherApplications`, tipos y errores | Mover formalizar a `ApplicationReviewController` (plan y T513) | `aggg15` | Pendiente |
-| A2 | HU-05 / CA-05-08; HU-04 / D11 | MEDIUM | Rama por defecto de `mine.html.twig` (líneas 45–55) | Ampliar T519; avisar a `abcb5-ua` | `aggg15` (revisa `abcb5-ua`) | Pendiente |
-| A3 | HU-05 / CA-05-11 | LOW | `security.yaml`: `form_login` redirige a la persona anónima | Precisar T523 | `aggg15` | Pendiente |
-| A4 | HU-05 / CA-05-10; HU-04 | LOW | `ApplicationService::reject()` sin `FOR UPDATE` | Riesgo aceptado en el plan; sin tarea | `aggg15` | Pendiente |
-| A5 | HU-05 / CA-05-08 | LOW | Mapa `statusClass` de `admin_show.html.twig` | Ampliar T516 | `aggg15` | Pendiente |
+| A1 | HU-05 / CA-05-07, CA-05-06 | MEDIUM | `ApplicationReviewController::show` prepara `otherApplications`, tipos y errores | Mover formalizar a `ApplicationReviewController` (plan y T513) | `aggg15` | Corregido en plan y tareas |
+| A2 | HU-05 / CA-05-08; HU-04 / D11 | MEDIUM | Rama por defecto de `mine.html.twig` (líneas 45–55) | Ampliar T519; avisar a `abcb5-ua` | `aggg15` (revisa `abcb5-ua`) | Corregido en plan y tareas |
+| A3 | HU-05 / CA-05-11 | LOW | `security.yaml`: `form_login` redirige a la persona anónima | Precisar T523 | `aggg15` | Corregido en plan y tareas |
+| A4 | HU-05 / CA-05-10; HU-04 | LOW | `ApplicationService::reject()` sin `FOR UPDATE` | Riesgo aceptado en el plan; sin tarea | `aggg15` | Aceptado y documentado |
+| A5 | HU-05 / CA-05-08 | LOW | Mapa `statusClass` de `admin_show.html.twig` | Ampliar T516 | `aggg15` | Corregido en plan y tareas |
+
+## Correcciones y repetición del análisis
+
+Correcciones aplicadas el 2026-11-18 tras conservar el informe inicial (commit 0958eff):
+
+- A1: plan «Rutas y controladores» y T513 sitúan formalizar en `ApplicationReviewController`.
+- A2: plan «Vistas» y T519 cubren el motivo de toda solicitud cancelada; T519 queda marcada como
+  coordinación con HU-04.
+- A3: T523 fija la redirección a `/acceso` para la persona anónima y 403 para las cuentas sin rol.
+- A4: añadido a «Riesgos y coordinación» del plan como riesgo aceptado.
+- A5: plan «Vistas» y T516 incluyen `formalized` en el mapa de clases.
+
+### Informe final
+
+Se repiten las mismas pasadas sobre los documentos corregidos. Resultado: sin hallazgos nuevos. Las
+rutas del plan coinciden con T513–T514, y cada vista nombrada en el plan tiene tarea (T516–T519).
+Cobertura 100 % (11/11 criterios, 9/9 reglas), 0 críticos, 0 altos, 0 ambigüedades abiertas y un
+riesgo aceptado (A4). Se puede pasar a implement.

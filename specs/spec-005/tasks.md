@@ -15,7 +15,7 @@ sustituye la evidencia: el cierre se acredita con `docs/evidencias/spec-005-phpu
 - [x] **T502** · Especificar y aclarar HU-05: D12–D18, CA-05-06 a CA-05-11, reglas y casos límite.
   Origen: ficha inicial, preguntas 1–3. Hecho en 366ba6e.
 - [x] **T503** · Redactar `plan.md` y actualizar `data-model.md`. Origen: enunciado §3 (plan). Hecho en 358b48f.
-- [ ] **T504** · Ejecutar analyze sobre spec, plan y tasks; conservar el informe en `analyze.md` antes de corregir hallazgos.
+- [x] **T504** · Ejecutar analyze sobre spec, plan y tasks; conservar el informe en `analyze.md` antes de corregir hallazgos.
   Terminada cuando: no quedan criterios sin tarea ni tareas sin origen, o los hallazgos están registrados y resueltos.
 
 ## Modelo y persistencia
@@ -50,9 +50,10 @@ sustituye la evidencia: el cierre se acredita con `docs/evidencias/spec-005-phpu
 
 ## Controladores y permisos
 
-- [ ] **T513** · `AdoptionController`: `POST /admin/solicitudes/{id}/formalizar` (CSRF `formalize-{id}`, 303 / 422 / 409),
-  `GET /admin/adopciones/{id}` y `GET /admin/seguimientos`, todas con `ROLE_COORDINATOR`.
-  Origen: D12, D16; CA-05-03, CA-05-11.
+- [ ] **T513** · `ApplicationReviewController::formalize`: `POST /admin/solicitudes/{id}/formalizar` (CSRF
+  `formalize-{id}`, 303 a la adopción / 422 / 409 sobre la ficha de la solicitud). `AdoptionController`:
+  `GET /admin/adopciones/{id}` y `GET /admin/seguimientos`. Todas con `ROLE_COORDINATOR`.
+  Origen: D12, D16; CA-05-03, CA-05-11; analyze A1.
 - [ ] **T514** · `GET /adopciones/{id}/contrato` con `ROLE_USER`: solo la coordinadora o el adoptante titular;
   cualquier otra cuenta recibe 404. Origen: D13; CA-05-01, CA-05-11.
 - [ ] **T515** · *Coordinar HU-04.* `ApplicationReviewController`: `show()` acepta un código de estado opcional
@@ -61,14 +62,16 @@ sustituye la evidencia: el cierre se acredita con `docs/evidencias/spec-005-phpu
 ## Interfaz
 
 - [ ] **T516** · *Coordinar HU-04.* `application/admin_show.html.twig`: formulario «Formalizar entrega» en
-  solicitudes aprobadas (importe, casilla de abono, errores por campo, `aria-invalid`) y bloque `formalized`
-  sin acciones y con enlaces a la adopción y al contrato. Origen: CA-05-01, CA-05-07, CA-05-08.
+  solicitudes aprobadas (importe, casilla de abono, errores por campo, `aria-invalid`), bloque `formalized`
+  sin acciones y con enlaces a la adopción y al contrato, y `formalized` en el mapa de clases de estado.
+  Origen: CA-05-01, CA-05-07, CA-05-08; analyze A5.
 - [ ] **T517** · Vistas `adoption/show.html.twig` (entrega, cuota `120,00 €`, seguimientos) y
   `adoption/follow_ups.html.twig` (ordenado por fecha, estado vacío). Origen: CA-05-02, CA-05-03.
 - [ ] **T518** · `adoption/contract.html.twig` con la copia del contrato y las fechas de seguimiento,
   controlador Stimulus `print` y estilos `@media print`. Sin afirmar validez jurídica. Origen: D13; CA-05-01.
-- [ ] **T519** · `application/mine.html.twig`: enlace al contrato en «Adopción formalizada» y motivo en las
-  canceladas por adopción; enlace «Seguimientos» en `base.html.twig` para la coordinadora. Origen: CA-05-08, D13.
+- [ ] **T519** · *Coordinar HU-04.* `application/mine.html.twig`: enlace al contrato en «Adopción formalizada»
+  y motivo en toda solicitud cancelada (por adopción o por D11), que hoy aparece como pendiente; enlace
+  «Seguimientos» en `base.html.twig` para la coordinadora. Origen: CA-05-08, D11, D13; analyze A2.
 
 ## Verificación
 
@@ -79,8 +82,9 @@ sustituye la evidencia: el cierre se acredita con `docs/evidencias/spec-005-phpu
   (huecos libres en el máximo de dos, sin «Liberar reserva») y CA-05-09 (31-ago-2027, 31-ene-2027, 23:30 UTC del 31-mar).
 - [ ] **T522** · `tests/Support/adoption-race.php` y pruebas CA-05-10: dos formalizaciones simultáneas y
   formalización + liberación simultáneas; estado final coherente. La prueba debe fallar si se quita el bloqueo.
-- [ ] **T523** · Pruebas CA-05-11: anónimo, solicitante, voluntario y veterinario no formalizan ni listan
-  seguimientos; contrato ajeno 404; CSRF inválido sin cambios.
+- [ ] **T523** · Pruebas CA-05-11: la persona anónima es redirigida a `/acceso`; solicitante, voluntario y
+  veterinario reciben 403 al formalizar o listar seguimientos; contrato ajeno 404; CSRF inválido sin cambios.
+  En todos los casos no cambia ningún dato. Origen: CA-05-11; analyze A3.
 - [ ] **T524** · Regresión completa (`vendor/bin/phpunit --testdox`), `doctrine:schema:validate` y linters del CI
   en una base `_test` nueva; registrar la salida en `docs/evidencias/spec-005-phpunit.txt`.
 - [ ] **T525** · Verificación manual HU-03 → HU-04 → HU-05 en escritorio y móvil (≤ 400 px) y por teclado,
