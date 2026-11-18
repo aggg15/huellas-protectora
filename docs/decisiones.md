@@ -36,6 +36,21 @@ concreciones de HU-02 y HU-04 están en specs/spec-002/clarify.md y specs/spec-0
 aplican D03, D05 y D07 a D11 sin cambiarlas. El usuario (`aggg15`) asume HU-05; sus decisiones
 se registran a partir de D12. Las tablas anteriores se conservan como historial.
 
+## Decisiones de HU-05 (2026-11-18)
+
+Propuestas en la revisión previa (docs/evidencias/revision-previa-spec-005-2026-11-18.txt) y
+aceptadas por el usuario (`aggg15`, responsable de HU-05). Concreción en specs/spec-005/clarify.md.
+
+| ID | Decisión | Motivo / historias |
+|---|---|---|
+| D12 | Formaliza la coordinadora, solo sobre una solicitud aprobada cuyo animal sigue reservado. La entrega se fecha en el momento de formalizar: no se registran entregas futuras ni retroactivas. | SI-30: «se formaliza el día de la entrega»; HU-04/05. |
+| D13 | El contrato es un documento HTML imprimible generado por el sistema, con número único, fecha de entrega, datos del animal y del adoptante (cuenta), cuota abonada y compromisos de seguimiento. No cambia después de generarse. Solo lo consultan la coordinadora y el adoptante titular. Sin PDF ni firma electrónica. | Hacer verificable «se genera un contrato» sin servicios ajenos; la ficha excluye la firma electrónica. |
+| D14 | SI-30 no fija la cuota: la coordinadora indica el importe abonado (mayor que 0 y hasta 9 999,99 €, con dos decimales como máximo) y confirma expresamente el abono. Sin ambos datos no se formaliza. Sin pasarela de pago ni contabilidad. | Dejar constancia del abono sin inventar una tarifa; contabilidad excluida. |
+| D15 | Al formalizar, en una sola operación: la solicitud pasa a «formalizada» (deja de contar como abierta), el animal pasa a adoptado y deja de figurar en acogida, y las demás solicitudes abiertas del animal se cancelan con el motivo «El animal ha sido adoptado». Ya no se puede liberar la reserva. | D07 («hasta que HU-05 formalice»); evitar que esperas sin salida bloqueen el máximo de dos; HU-03/04/06. |
+| D16 | Se programan dos seguimientos por adopción, al mes y a los seis meses de la fecha de entrega en Europe/Madrid, sumando meses naturales; si el día no existe en el mes de destino se usa el último día de ese mes. Nacen «programados», a cargo de la coordinadora. Registrar las visitas queda fuera. | Fechas inequívocas (31-ene → 28/29-feb); la ficha excluye un módulo de visitas. |
+| D17 | Un animal y una solicitud tienen como máximo una adopción. Formalizaciones repetidas o simultáneas, o una liberación de reserva simultánea, no producen dos adopciones ni deshacen una formalizada; los errores no dejan cambios parciales. | Plan común: concurrencia y coherencia; HU-04/05. |
+| D18 | La adopción registrada (animal, adoptante y fecha) es el dato que HU-08 usará para proponer al padrino otro animal o terminar. HU-05 no crea padrinos ni envía avisos. | CA-05-05 sin adelantar HU-08. |
+
 ## Reparto y material vigente
 
 El nuevo enunciado v1 mezcla cuatro integrantes/dos historias con dos integrantes/cuatro historias.
