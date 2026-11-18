@@ -8,6 +8,8 @@
 *.css text eol=lf
 *.yaml text eol=lf
 *.yml text eol=lf
+# Bash no admite CRLF («set: pipefail: invalid option name»): forzar LF también en Windows.
+*.sh text eol=lf
 *.json text eol=lf
 *.pdf binary
 *.png binary
