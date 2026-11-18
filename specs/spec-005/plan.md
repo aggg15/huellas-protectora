@@ -163,4 +163,4 @@ de formalización. Recorrido con error: formalizar sin confirmar el abono (422, 
 
 ## Estado
 
-Plan redactado el 2026-11-18. Siguiente fase: `tasks.md`.
+Plan redactado el 2026-11-18. Tareas en [tasks.md](tasks.md).
