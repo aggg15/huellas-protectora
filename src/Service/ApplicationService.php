@@ -110,4 +110,111 @@ class ApplicationService
     }
 
     private function validText(string $value): bool { return $value !== '' && mb_strlen($value) <= self::TEXT_LIMIT; }
+
+    private function assertUndecided(AdoptionApplication $application): void
+    {
+        if (!$application->isUndecided()) {
+            throw new ApplicationRefused('La solicitud ya está resuelta (' . mb_strtolower($application->statusLabel()) . ') y no admite cambios.');
+        }
+    }
+
+    public function recordInterview(AdoptionApplication $application, array $data): void
+    {
+        $this->assertUndecided($application);
+        $data =array_map(static fn($value) => is_string($value) ? trim($value) : '', $data);
+        $errors = [];
+        $rawDate = $data['interviewAt'] ?? '';
+        $interviewAt = \DateTimeImmutable::createFromFormat('!Y-m-d\TH:i', $rawDate, new \DateTimeZone('Europe/Madrid'));
+        if (!$interviewAt || $interviewAt->format('Y-m-d\TH:i') !== $rawDate) {
+            $errors['interviewAt'] = 'Indica una fecha y hora válidas para la entrevista.';
+        }
+        $notes = $data['interviewNotes'] ?? '';
+        if ($notes === '' || mb_strlen($notes) > 5000) {
+            $errors['interviewNotes'] = 'Escribe las observaciones de la entrevista (máximo 5000 caracteres).';
+        }
+        if ($errors) {
+            throw new ValidationError($errors);
+        }
+        $application->interviewAt = $interviewAt->setTimezone(new \DateTimeZone('UTC'));
+        $application->interviewNotes = $notes;
+        $this->em->flush();
+    }
+
+    public function reject(AdoptionApplication $application, array $data): void
+    {
+        $this->assertUndecided($application);
+        $reason = trim((string)($data['rejectionReason'] ?? ''));
+        if ($reason === '' || mb_strlen($reason) > 2000) {
+            throw new ValidationError(['rejectionReason' => 'Indica el motivo justificado del rechazo (máximo 2000 caracteres).']);
+        }
+        $application->status = 'rejected';
+        $application->rejectionReason = $reason;
+        $application->decisionAt = $this->clock->now()->setTimezone(new \DateTimeZone('UTC'));
+        $this->em->flush();
+    }
+
+    public function approve(AdoptionApplication $application): void
+    {
+        $this->assertUndecided($application);
+        $now = $this->clock->now();
+        if (!$application->hasValidInterview($now)) {
+            throw new ValidationError([
+                'interview' => 'Para aprobar la solicitud es imprescindible haber realizado y registrado previamente la entrevista (con fecha no futura).',
+            ]);
+        }
+
+        $this->em->wrapInTransaction(function () use ($application, $now): void {
+            $connection = $this->em->getConnection();
+            $animalStatus = $connection->fetchOne('SELECT status FROM animal WHERE id = ? FOR UPDATE', [$application->animal->id]);
+            if ($animalStatus !== 'available') {
+                throw new ApplicationRefused('El animal ya no está disponible para reserva (estado actual: ' . $animalStatus . ').');
+            }
+
+            $alreadyApproved = (int) $connection->fetchOne(
+                "SELECT COUNT(*) FROM adoptionapplication WHERE animal_id = ? AND status = 'approved' AND id <> ?",
+                [$application->animal->id, $application->id]
+            );
+            if ($alreadyApproved > 0) {
+                throw new ApplicationRefused('Ya existe otra candidatura aprobada para este animal.');
+            }
+
+            $application->status = 'approved';
+            $application->decisionAt = $now->setTimezone(new \DateTimeZone('UTC'));
+            $application->animal->status = 'reserved';
+
+            $connection->executeStatement(
+                "UPDATE adoptionapplication SET status = 'waiting' WHERE animal_id = ? AND status = 'pending' AND id <> ?",
+                [$application->animal->id, $application->id]
+            );
+
+            $this->em->flush();
+        });
+    }
+
+    public function cancelReservation(AdoptionApplication $application, array $data): void
+    {
+        if ($application->status !== 'approved') {
+            throw new ValidationError(['cancellationReason' => 'Solo se puede liberar la reserva de una solicitud previamente aprobada.']);
+        }
+        $reason = trim((string)($data['cancellationReason'] ?? ''));
+        if ($reason === '' || mb_strlen($reason) > 2000) {
+            throw new ValidationError(['cancellationReason' => 'Indica el motivo de la cancelación de la reserva (máximo 2000 caracteres).']);
+        }
+
+        $this->em->wrapInTransaction(function () use ($application, $reason): void {
+            $connection = $this->em->getConnection();
+            $connection->executeQuery('SELECT id FROM animal WHERE id = ? FOR UPDATE', [$application->animal->id]);
+
+            $application->status = 'cancelled';
+            $application->cancellationReason = $reason;
+            $application->animal->status = 'available';
+
+            $connection->executeStatement(
+                "UPDATE adoptionapplication SET status = 'pending' WHERE animal_id = ? AND status = 'waiting'",
+                [$application->animal->id]
+            );
+
+            $this->em->flush();
+        });
+    }
 }

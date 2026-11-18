@@ -1,0 +1,61 @@
+# Evidencias de spec-004 — HU-04: Evaluar solicitudes, entrevistar y reservar el animal
+
+Fecha: 2026-11-17.
+Entorno local equivalente al CI: contenedores Docker php:8.3-cli (pdo_pgsql, gd, intl, mbstring)
+y postgres:16-alpine con base huellas_test. Comprobación local; el resultado de CI se consulta en la PR.
+
+## Comandos ejecutados
+
+  composer install --no-interaction --prefer-dist --no-progress
+  composer validate --strict                       -> ./composer.json is valid
+  php -l (src, tests, migrations, tools, config, public) -> sin errores
+  php bin/console lint:container                   -> OK
+  php bin/console lint:twig templates              -> OK (14 ficheros)
+  php bin/console lint:yaml config                 -> OK
+  php bin/console doctrine:migrations:migrate --no-interaction -> 4 migraciones aplicadas desde cero
+  php bin/console doctrine:schema:validate         -> mapping OK, base de datos sincronizada
+  bash tools/spec-context.sh spec-004
+  bash .specify/scripts/bash/check-prerequisites.sh --json --require-spec --require-tasks --include-tasks -> exit 0
+  vendor/bin/phpunit --testdox                     -> OK (39 tests, 329 assertions)
+
+## Primera ejecución real (antes de las correcciones)
+
+- doctrine:schema:validate FALLABA: el índice parcial uniq_application_approved_animal existía en la
+  migración pero no en el mapeo, por lo que Doctrine proponía eliminarlo (el paso de CI habría fallado).
+- Spec004: 10 pruebas, 1 fallo y 1 error:
+  - testApprovalAfterValidInterviewReservesAnimalAndMovesOtherApplicationsToWaiting (fallo)
+  - testReleaseReservationRestoresAnimalToAvailableAndWaitingToPending (error: no existe el formulario
+    /cancelar-reserva)
+  Causa: la vista usaba application.open, que incluye 'approved' (D07), y nunca mostraba el panel de
+  reserva ni la liberación (D11).
+
+## Correcciones aplicadas
+
+- AdoptionApplication: declara el índice parcial único en el mapeo (predicado en la forma canónica que
+  devuelve PostgreSQL) y añade isUndecided() (pending / waiting).
+- admin_show.html.twig: entrevista, aprobación y rechazo solo para solicitudes sin decisión; estado del
+  animal mostrado en español.
+- ApplicationService: recordInterview(), reject() y approve() rechazan solicitudes ya resueltas
+  (evita, por ejemplo, rechazar una aprobada y dejar el animal reservado sin candidatura).
+- ApplicationReviewController: entrevista y rechazo responden 422 con mensaje ante ApplicationRefused.
+- Spec004Test: tres pruebas de regresión nuevas.
+
+## Resultado final de Spec004 (13 pruebas)
+
+ ✔ Coordinator can view application and record interview                       CA-04-01
+ ✔ Interview requires valid date and notes                                     CA-04-01
+ ✔ Rejection without reason is not admitted                                    CA-04-02
+ ✔ Rejection with reason is recorded and does not alter animal availability    CA-04-02
+ ✔ Approval without interview is not admitted                                  CA-04-03 / D09
+ ✔ Approval with future interview is not admitted                              CA-04-03 / D09
+ ✔ Approval after valid interview reserves animal and moves other applications to waiting  CA-04-03 / CA-04-04
+ ✔ Cannot approve application for already reserved animal                      CA-04-05
+ ✔ Release reservation restores animal to available and waiting to pending     D11
+ ✔ Decided application admits no further decisions                             CA-04-02 / CA-04-03
+ ✔ Database rejects two approved applications for same animal                  CA-04-05 (índice parcial)
+ ✔ Release reservation requires reason                                         D11
+ ✔ Role access control                                                         Seguridad
+
+Regresión de historias anteriores en la misma ejecución: Spec001 7/7, Spec002 8/8, Spec003 11/11.
+Las líneas "[error] Uncaught PHP Exception" del log corresponden a respuestas 403/404 esperadas en
+pruebas negativas.

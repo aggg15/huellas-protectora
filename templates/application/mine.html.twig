@@ -20,13 +20,40 @@
 {% else %}
   <div class="table-container box">
     <table class="table is-fullwidth">
-      <thead><tr><th scope="col">Animal</th><th scope="col">Fecha de envío</th><th scope="col">Estado</th></tr></thead>
+      <thead>
+        <tr>
+          <th scope="col">Animal</th>
+          <th scope="col">Fecha de envío</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Detalle / Seguimiento</th>
+        </tr>
+      </thead>
       <tbody>
         {% for application in applications %}
+          {% set tagClass = {
+            'pending': 'is-info',
+            'waiting': 'is-warning',
+            'approved': 'is-success',
+            'rejected': 'is-danger',
+            'cancelled': 'is-dark'
+          }[application.status]|default('is-light') %}
           <tr>
             <td><strong>{{ application.animal.code }}</strong></td>
             <td>{{ application.submittedAt|date('d/m/Y H:i', 'Europe/Madrid') }}</td>
-            <td><span class="tag is-light {{ application.open ? 'is-info' : '' }}">{{ application.statusLabel }}</span></td>
+            <td><span class="tag is-light {{ tagClass }}">{{ application.statusLabel }}</span></td>
+            <td class="is-size-7">
+              {% if application.status == 'approved' %}
+                <span class="has-text-success"><strong>¡Animal reservado para ti!</strong> La protectora contactará contigo para formalizar la adopción.</span>
+              {% elseif application.status == 'waiting' %}
+                <span class="has-text-warning-dark">En lista de espera mientras se valora la reserva del animal.</span>
+              {% elseif application.status == 'rejected' %}
+                <span class="has-text-danger">Motivo: {{ application.rejectionReason }}</span>
+              {% elseif application.hasInterview %}
+                <span>Entrevista programada: {{ application.interviewAt|date('d/m/Y H:i', 'Europe/Madrid') }}</span>
+              {% else %}
+                <span class="has-text-grey">Pendiente de revisión por coordinación.</span>
+              {% endif %}
+            </td>
           </tr>
         {% endfor %}
       </tbody>

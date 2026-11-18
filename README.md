@@ -72,7 +72,9 @@ El asistente de configuración ya prepara este archivo si no existe; no crea ni 
 ```sh
 php bin/console doctrine:database:create --env=test --if-not-exists
 php bin/console doctrine:migrations:migrate --env=test --no-interaction
-vendor/bin/phpunit --filter Spec001 --testdox
+php bin/console doctrine:schema:validate --env=test
+vendor/bin/phpunit --testdox                 # todas las historias
+vendor/bin/phpunit --filter Spec004 --testdox  # una sola historia
 php bin/console lint:container
 php bin/console lint:twig templates
 ```
@@ -82,6 +84,10 @@ pasan **7 pruebas y 32 aserciones**. Comprueban alta con fotografía real, ocult
 cuarentena y fotos al público, límite exacto de 240 horas, promoción sin modificar reservas, revisión
 veterinaria por su rol, entradas inválidas sin escrituras parciales, CSRF y permisos de creación.
 Las respuestas 403/404 esperadas se registran como errores HTTP comprobados; no son fallos de PHPUnit.
+
+Con HU-01 a HU-04 la suite completa pasa **39 pruebas y 329 aserciones**
+([evidencia de spec-004](docs/evidencias/spec-004-phpunit.txt)). El CI ejecuta las pruebas de cada
+historia (`tests/Spec00NTest.php`) en todas las ramas `spec-00*` y en las PR hacia `main`.
 
 La revisión del compañero, la ratificación de la Constitution y el reparto nominal permanecen pendientes.
 

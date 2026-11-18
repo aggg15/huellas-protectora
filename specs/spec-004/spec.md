@@ -1,6 +1,9 @@
 # Especificación HU-04 · spec-004
 
-Fecha: 2026-11-05. Implementación secuencial autorizada en esta sesión.
+Fecha: 2026-11-17.
+Historia: HU-04 · Evaluar solicitudes, entrevistar y reservar el animal.
+Responsable: Implementación spec-004.
+Referencia base: `SI-30-protectora-animales-descripcion.pdf` (pág. 1), `plan.md`, `data-model.md` y `docs/decisiones.md` (D07, D09, D10, D11).
 
 ## Historia de usuario
 
@@ -8,65 +11,110 @@ Como coordinadora de adopciones, quiero revisar las solicitudes, concertar entre
 
 ## Alcance de la historia
 
-- Revisión de las solicitudes y concertación de entrevistas con los candidatos.
-- Decisión de aprobación o rechazo, con motivo obligatorio al rechazar.
-- Reserva del animal para la familia aprobada y paso a espera de las demás solicitudes sobre ese animal.
+- Revisión del cuestionario de adopción completo por parte de la coordinadora (`ROLE_COORDINATOR`).
+- Registro y actualización de entrevistas (fecha/hora y notas de la conversación) vinculadas a la solicitud.
+- Decisión de aprobación de la candidatura:
+  - Exige haber registrado previamente una entrevista cuya fecha no sea futura (D09).
+  - Pasa el estado de la solicitud a `approved`.
+  - Pasa el estado del animal a `reserved`.
+  - Pasa el resto de solicitudes activas (`pending`) sobre ese mismo animal a estado `waiting` (en espera), sin rechazarlas (CA-04-04, D10).
+  - Bloqueo y garantía de no duplicidad de reserva incluso ante peticiones concurrentes (CA-04-05, D10, índice parcial en base de datos).
+- Decisión de rechazo de la candidatura:
+  - Admite rechazo antes o después de la entrevista (D09).
+  - Exige obligatoriamente un motivo justificado por escrito (CA-04-02).
+  - Registra el motivo y pasa la solicitud a `rejected` sin eliminarla ni modificar la disponibilidad del animal.
+- Liberación de reserva en caso de fallo o desistimiento (D11):
+  - Permite a la coordinadora cancelar una reserva activa con motivo registrado.
+  - La solicitud pasa a `cancelled`, el animal vuelve a `available` y las solicitudes en `waiting` se reactivan a `pending`.
 
-## Criterios de aceptación iniciales
+---
 
-Estos criterios concretan la narrativa para su revisión. Las decisiones abiertas se resolverán en `clarify` antes de cerrar la especificación.
+## Criterios de aceptación y escenarios Gherkin
 
-### CA-04-01
+### CA-04-01: Revisión y concertación de entrevista
+Dada una solicitud recibida en estado pendiente o en espera,
+cuando la coordinadora consulta la ficha de la solicitud,
+entonces puede revisar las seis respuestas del cuestionario y registrar una entrevista con fecha, hora y notas.
 
-Dada una solicitud recibida, cuando la coordinadora la revisa, entonces puede consultar el cuestionario y dejar concertada una entrevista con los candidatos.
+#### Escenario 1.1: Registro de entrevista con datos válidos
+- **Dado** que existe una solicitud en estado `pending`,
+- **Cuando** la coordinadora accede a `/admin/solicitudes/{id}` y envía una fecha y notas de entrevista,
+- **Entonces** los datos de la entrevista quedan guardados en la solicitud,
+- **Y** la página muestra el mensaje de confirmación y el detalle de la entrevista registrada.
 
-Traza: SI-30, p. 1: revisión y entrevista.
+#### Escenario 1.2: Validación de datos de entrevista
+- **Dado** una solicitud pendiente,
+- **Cuando** la coordinadora intenta registrar una entrevista sin notas u omitiendo la fecha,
+- **Entonces** la solicitud no se modifica, se responde con código HTTP 422 y se indica el error correspondiente.
 
-### CA-04-02
+---
 
-Dada una solicitud que se decide rechazar, cuando no se aporta el motivo, entonces no se admite el rechazo; cuando se aporta, entonces queda registrado junto con la decisión.
+### CA-04-02: Rechazo con motivo obligatorio
+Dada una solicitud de adopción abierta,
+cuando la coordinadora decide rechazarla,
+entonces solo se admite el rechazo si se aporta un motivo explicativo, quedando registrado junto a la fecha de decisión.
 
-Traza: SI-30, p. 1: rechazo con motivo escrito.
+#### Escenario 2.1: Rechazo con motivo aportado
+- **Dado** una solicitud en estado `pending`,
+- **Cuando** la coordinadora envía el formulario de rechazo aportando el motivo "No dispone del tiempo mínimo requerido",
+- **Entonces** el estado de la solicitud pasa a `rejected`,
+- **Y** el motivo queda almacenado y visible en la ficha.
 
-### CA-04-03
+#### Escenario 2.2: Rechazo sin motivo no admitido
+- **Dado** una solicitud en estado `pending`,
+- **Cuando** la coordinadora intenta rechazarla con el campo de motivo vacío,
+- **Entonces** la petición se rechaza con código HTTP 422,
+- **Y** la solicitud permanece en estado `pending`.
 
-Dada una solicitud aprobada, cuando se confirma la decisión, entonces el animal queda reservado para esa familia.
+---
 
-Traza: SI-30, p. 1: aprobación y reserva.
+### CA-04-03: Aprobación y reserva del animal
+Dada una solicitud recibida sobre un animal disponible con entrevista previa no futura registrada,
+cuando la coordinadora confirma su aprobación,
+entonces la solicitud queda en estado `approved` y el animal pasa a estar reservado (`status = 'reserved'`).
 
-### CA-04-04
+#### Escenario 3.1: Aprobación exitosa tras entrevista válida
+- **Dado** una solicitud para un animal disponible con entrevista registrada en fecha pasada o presente,
+- **When** la coordinadora confirma la aprobación,
+- **Then** la solicitud pasa a `approved`,
+- **And** el animal pasa inmediatamente a `reserved`.
 
-Dadas otras solicitudes sobre el mismo animal, cuando se aprueba una candidatura, entonces las demás quedan en espera y no se rechazan por esa aprobación.
+#### Escenario 3.2: Intento de aprobación sin entrevista previa no admitido
+- **Dado** una solicitud pendiente para la cual no se ha registrado entrevista o cuya entrevista es futura,
+- **When** se intenta aprobar la candidatura,
+- **Then** la operación es rechazada y ni la solicitud ni el animal cambian de estado.
 
-Traza: SI-30, p. 1: otras solicitudes en espera.
+---
 
-### CA-04-05
+### CA-04-04: Paso a espera de las demás solicitudes del animal
+Dadas varias solicitudes abiertas sobre un mismo animal,
+cuando la coordinadora aprueba una de ellas,
+entonces todas las demás solicitudes que se encontraban en estado `pending` pasan a estado `waiting`, conservándose como alternativas activas.
 
-Dado un animal reservado para una familia, cuando se intenta aprobar otra candidatura para ese mismo animal, entonces no se generan dos reservas incompatibles. La forma de resolver el intento se concretará en clarify.
+#### Escenario 4.1: Múltiples candidaturas ante una aprobación
+- **Dado** un animal disponible con tres solicitudes pendientes ($S_1$, $S_2$, $S_3$),
+- **Cuando** la coordinadora aprueba $S_1$ (tras su entrevista),
+- **Entonces** $S_1$ pasa a `approved`,
+- **Y** $S_2$ y $S_3$ pasan automáticamente a `waiting`,
+- **Y** ninguna de ellas es rechazada ni eliminada.
 
-Traza: SI-30, p. 1: reserva para una familia; coherencia derivada.
+---
+
+### CA-04-05: Garantía de no doble reserva y exclusión concurrente
+Dado un animal que ya se encuentra en estado `reserved`,
+cuando se intenta aprobar otra solicitud para ese mismo animal (por interfaz o petición concurrente),
+entonces el sistema impide que existan dos reservas o dos solicitudes aprobadas simultáneamente sobre dicho animal.
+
+#### Escenario 5.1: Bloqueo de aprobación sobre animal ya reservado
+- **Dado** un animal reservado derivado de una solicitud aprobada previa,
+- **Cuando** se intenta aprobar otra solicitud sobre ese animal,
+- **Entonces** la operación se rechaza con un mensaje claro de que el animal ya está reservado,
+- **Y** la integridad se garantiza mediante transacción con bloqueo de fila y restricción única parcial en la base de datos.
+
+---
 
 ## Dependencias y coordinación
 
-Recibe solicitudes de HU-03, actualiza la disponibilidad que consume HU-02 y proporciona la reserva a HU-05. Comparte con HU-03 los estados de las solicitudes.
-
-## Clarificaciones aplicables
-
-Las preguntas de la ficha inicial quedan resueltas para esta iteración en ../../docs/decisiones.md. Se aplican D01 a D11 según la historia, con aceptación de la base por el usuario.
-
-## Límites
-
-No se establece una puntuación automática de candidatos ni una agenda externa de entrevistas.
-
-## Fuente
-
-SI-30, p. 1: actuación de Nuria, entrevistas, decisiones, reserva y espera.
-
-
-## Base compartida
-
-Ver ../../plan.md (desde la raíz: plan.md), data-model.md y docs/decisiones.md. Los criterios CA originales se conservan. La ficha de la raíz se mantiene como antecedente inicial, sin presentarla como especificación implementada.
-
-## Requisitos de calidad y permisos
-
-Validación en servidor; formularios CSRF; datos ficticios; errores sin cambios parciales. Catálogo sin cuenta, operaciones internas según los roles del plan común. La verificación incluye caso normal, datos inválidos y permisos o estado.
+- **HU-01 y HU-02:** El animal proviene de HU-01 y su disponibilidad pública en HU-02 se actualiza automáticamente al pasar a `reserved` (dejando de mostrarse como disponible).
+- **HU-03:** Consume las solicitudes creadas en HU-03 (`AdoptionApplication`) y actualiza su estado.
+- **HU-05:** La reserva formalizada en HU-04 es la precondición obligatoria para la entrega y contrato de adopción en HU-05.
