@@ -1,4 +1,4 @@
-# Clarificaciones y alcance vigente de spec-001
+# Decisiones funcionales y alcance de Huellas
 
 Fecha: 2026-11-05. El usuario ha aceptado como base catálogo público, cuentas con email/contraseña,
 roles internos y diez periodos de 24 horas de cuarentena. Las precisiones restantes son decisiones
@@ -31,15 +31,20 @@ La autenticación es soporte común, no una novena historia. El alcance no inclu
 email, recuperación de contraseña, servicios externos ni administración pública de roles.
 Las cuentas de personal se crean por comando; las credenciales locales se excluyen de Git.
 
+Actualización del 2026-11-18: HU-02 a HU-04 están integradas en `main` (PR #5, #6 y #8). Las
+concreciones de HU-02 y HU-04 están en specs/spec-002/clarify.md y specs/spec-004/clarify.md y
+aplican D03, D05 y D07 a D11 sin cambiarlas. El usuario (`aggg15`) asume HU-05; sus decisiones
+se registran a partir de D12. Las tablas anteriores se conservan como historial.
+
 ## Reparto y material vigente
 
 El nuevo enunciado v1 mezcla cuatro integrantes/dos historias con dos integrantes/cuatro historias.
-Se conserva la guía específica de dos personas; el encargo vigente cubre únicamente la primera historia.
-Los nombres y la revisión cruzada siguen pendientes; no se bloquea el desarrollo autorizado por ello.
+Se conserva la guía específica de dos personas. El reparto observado y los encargos vigentes están en
+agrupamiento.md; los nombres académicos siguen pendientes y la revisión cruzada consta en cada PR.
 La nueva fuente es Practica-SDD-enunciado_v1_IR.pdf y sustituye al archivo anterior retirado por el
 usuario. El informe de octubre y el PDF de historias son antecedentes fechados, no evidencia de la
 implementación actual. La revisión actual deja de usar Práctica 1 como fuente.
 
 El enunciado v1 requiere specs/ y docs/agrupamiento.md y docs/memoria.md, además de dos ZIP finales
 (proyecto y vídeo, máximo conjunto 100 MB). Esta iteración prepara la aplicación y documentación
-de la primera historia; no declara terminadas las otras siete ni la demo final.
+de las historias integradas; no declara terminadas HU-05 a HU-08, la memoria ni la demo final.

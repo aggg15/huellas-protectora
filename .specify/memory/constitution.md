@@ -171,10 +171,16 @@ historias. Su ausencia no se sustituye por datos inventados en esta propuesta.
 - Las ocho fichas `spec-001/historia.md` a `spec-008/historia.md`: contexto y preguntas pendientes.
 - `docs/decisiones.md`: interpretación de las contradicciones del enunciado vigente y decisiones de esta iteración.
 
-**Versión:** 1.1.0 | **Ratificación:** pendiente de revisión conjunta | **Última modificación:** 2026-11-05
+**Versión:** 1.1.1 | **Ratificación:** pendiente de revisión conjunta | **Última modificación:** 2026-11-18
 
 Cambio 1.1.0: actualización de fuentes y ubicación specs/ por el enunciado vigente; el usuario autoriza el desarrollo de HU-01 a HU-04. La revisión conjunta y el reparto nominal no se atribuyen como realizados.
 
 Actualización de alcance del 2026-11-05: después de consultar al profesor, el usuario indica retirar
 la publicación de HU-02 a HU-04 y publicar únicamente HU-01 / spec-001. Se conserva el trabajo
 posterior en local. No cambia el requisito de revisión del compañero antes de integrar en main.
+
+Cambio 1.1.1 (2026-11-18, aclaración sin cambio de obligaciones): se registra que, después de la
+limitación anterior, el usuario encargó expresamente publicar HU-02 a HU-04, integradas en `main`
+mediante las PR #5, #6 y #8 con aprobación en GitHub del otro integrante; el usuario (`aggg15`) asume
+HU-05. Documentos afectados: README, CONTRIBUTING, AGENTS, plan.md, docs/decisiones.md y
+docs/agrupamiento.md. La ratificación conjunta y el reparto de HU-06 a HU-08 siguen pendientes.

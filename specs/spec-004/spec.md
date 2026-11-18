@@ -2,7 +2,7 @@
 
 Fecha: 2026-11-17.
 Historia: HU-04 · Evaluar solicitudes, entrevistar y reservar el animal.
-Responsable: Implementación spec-004.
+Responsable GitHub: `abcb5-ua` (autoría de la PR #8); revisión: `aggg15` (aprobación de la PR #8).
 Referencia base: `SI-30-protectora-animales-descripcion.pdf` (pág. 1), `plan.md`, `data-model.md` y `docs/decisiones.md` (D07, D09, D10, D11).
 
 ## Historia de usuario
@@ -75,14 +75,14 @@ entonces la solicitud queda en estado `approved` y el animal pasa a estar reserv
 
 #### Escenario 3.1: Aprobación exitosa tras entrevista válida
 - **Dado** una solicitud para un animal disponible con entrevista registrada en fecha pasada o presente,
-- **When** la coordinadora confirma la aprobación,
-- **Then** la solicitud pasa a `approved`,
-- **And** el animal pasa inmediatamente a `reserved`.
+- **Cuando** la coordinadora confirma la aprobación,
+- **Entonces** la solicitud pasa a `approved`,
+- **Y** el animal pasa inmediatamente a `reserved`.
 
 #### Escenario 3.2: Intento de aprobación sin entrevista previa no admitido
 - **Dado** una solicitud pendiente para la cual no se ha registrado entrevista o cuya entrevista es futura,
-- **When** se intenta aprobar la candidatura,
-- **Then** la operación es rechazada y ni la solicitud ni el animal cambian de estado.
+- **Cuando** se intenta aprobar la candidatura,
+- **Entonces** la operación es rechazada y ni la solicitud ni el animal cambian de estado.
 
 ---
 

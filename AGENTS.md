@@ -2,9 +2,9 @@
 
 ## Alcance y fuentes
 
-- Estado de las historias: HU-01, HU-02 y HU-03 están integradas en `main` (PR #1, #5 y #6).
-  HU-04 está implementada en la rama `spec-004`, pendiente de PR y revisión. HU-05 a HU-08 solo
-  tienen `specs/spec-00N/spec.md`; no implementarlas sin un encargo expreso.
+- Estado de las historias (2026-11-18): HU-01 a HU-04 están integradas en `main` (PR #1, #5, #6 y #8).
+  HU-05 se especifica en la rama `spec-005` por encargo de `aggg15`. HU-06 a HU-08 solo tienen
+  `specs/spec-00N/spec.md`; no implementarlas sin un encargo expreso.
 - Usar exclusivamente la documentación de Práctica Grupal. Leer la Constitution en
   `.specify/memory/constitution.md`, `plan.md`, `data-model.md` y `docs/decisiones.md`.
 - `specs/spec-00N/spec.md` es la especificación vigente de cada historia. Las ocho carpetas

@@ -74,3 +74,7 @@ Arquitectura: Symfony 7.4, Twig, Hotwire (Turbo/Stimulus), Bulma CSS y Doctrine 
   * `testNonAvailableAnimalPublicDetailReturns404()` (CA-02-03)
   * `testFosteredAnimalShowsFosterBadgeInCatalogAndDetail()` (CA-02-04)
   * `testExpiredQuarantinePromotesAutomaticallyOnCatalogAccess()` (D01 / CA-02-01)
+
+Nota del 2026-11-18: la implementación dividió algunas pruebas previstas (p. ej. filtros en
+`testFilterBySpecies` y `testFilterBySizeAndAgeCombined`); los nombres definitivos están en
+[converge](converge.md).
