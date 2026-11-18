@@ -1,0 +1,46 @@
+# Evidencia de CI de spec-004: sincronización del esquema con el mapeo Doctrine
+
+Fecha: 2026-11-18.
+Alcance: rama spec-004 (PR #7). No se ha modificado código ni migraciones; este fichero solo
+registra el diagnóstico y el resultado real de GitHub Actions.
+Fuente: registros de GitHub Actions consultados con `gh run view`. No se ha repetido la
+ejecución en local.
+
+## Ejecución fallida (commit obsoleto)
+
+- Run: https://github.com/aggg15/huellas-protectora/actions/runs/44066468780 (intento 3, push)
+- Commit: c53eb0a "chore(spec-004): actualizar CI con rama y tests de HU-04; añadir evidencias"
+- Paso: «Migraciones y criterios de aceptación»
+- Comando: php bin/console doctrine:schema:validate
+- Resultado: migraciones aplicadas hasta Version20261117120000 (4 migraciones). Mapping OK, pero
+  [ERROR] The database schema is not in sync with the current mapping file. (exit code 2)
+- Causa: la migración creaba el índice parcial uniq_application_approved_animal, pero el mapeo
+  de AdoptionApplication no lo declaraba.
+- Este run es un reintento del 2026-11-18 21:40 UTC sobre ese commit antiguo. Por eso aparece
+  entre las ejecuciones recientes, aunque el código ya estaba corregido en la cabeza de la rama.
+
+## Correcciones ya presentes en spec-004
+
+- 1524c7a fix(spec-004): declara uniq_application_approved_animal en el mapeo de AdoptionApplication.
+- b56a7c3 fix(schema): migración Version20261118211500, que vuelve a crear el índice con el
+  predicado que genera Doctrine: WHERE ((status)::text = 'approved'::text).
+
+## Ejecución correcta (cabeza de la rama)
+
+- Run: https://github.com/aggg15/huellas-protectora/actions/runs/44403463736 (pull_request, 2026-11-18T21:37:54Z)
+- Commit: 708207f "Update ci.yml"
+- Conclusión: success en todos los pasos.
+
+  php bin/console doctrine:migrations:migrate --no-interaction
+    -> migrado hasta Version20261118211500 (5 migraciones, 33 consultas SQL)
+  php bin/console doctrine:schema:validate
+    -> [OK] The database schema is in sync with the mapping files.
+  vendor/bin/phpunit --filter Spec001 --testdox -> OK (7 tests, 32 assertions)
+  vendor/bin/phpunit --filter Spec002 --testdox -> OK (8 tests, 76 assertions)
+  vendor/bin/phpunit --filter Spec003 --testdox -> OK (11 tests, 127 assertions)
+  vendor/bin/phpunit --filter Spec004 --testdox -> OK (13 tests, 94 assertions)
+
+## Conclusión
+
+El fallo de doctrine:schema:validate solo se reproduce en el commit obsoleto c53eb0a. No hay
+que relanzar ese run. Para la PR #7 cuentan las ejecuciones sobre la cabeza actual de spec-004.
