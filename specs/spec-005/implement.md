@@ -47,4 +47,18 @@ la skill `$speckit-implement`. Tareas: T505–T524 de [tasks.md](tasks.md), tras
 sin cambios en sus pruebas). Esquema sincronizado y linters correctos. Detalle:
 [evidencia](../../docs/evidencias/spec-005-phpunit.txt).
 
-Verificación manual (T525) y converge (T526) realizados el 2026-11-19. Pendientes: tareas de converge T528–T530 y la PR con revisión de `abcb5-ua` (T527).
+Verificación manual (T525) y converge (T526) realizados el 2026-11-19.
+
+## Tareas de converge (2026-11-19)
+
+- **T528.** `templates/application/mine.html.twig`: clase `stacked-table` y `data-label` en cada celda.
+  `public/assets/app.css`: hasta 760 px, cada fila se muestra como tarjeta con la etiqueta de cada dato,
+  sin desplazamiento interno. En escritorio se mantiene la tabla. La vista es la de HU-03/04; no cambia
+  el contenido. Comprobado en Chrome a 390 y 1280 px
+  ([evidencia](../../docs/evidencias/spec-005-manual/README.md#comprobación-de-t528--mis-solicitudes-apilada-en-móvil-2026-11-19)).
+- **T529.** `Spec005Test::testContractKeepsDeliveryDataAfterLaterChanges`: tras formalizar se cambian
+  por SQL el nombre y el email de la cuenta y la edad y el tamaño del animal; el contrato muestra los de la entrega.
+- **T530.** Eliminado `AdoptionApplication::isFormalized()`, que no se usaba.
+
+Resultado: 58 pruebas y 493 aserciones correctas (Spec005 19/19), esquema y linters correctos.
+Pendiente: la PR con revisión de `abcb5-ua` (T527).

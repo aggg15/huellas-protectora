@@ -78,6 +78,4 @@ class AdoptionApplication
         return $this->interviewAt !== null && $this->interviewAt <= $now && trim($this->interviewNotes ?? '') !== '';
     }
     public function isApproved(): bool { return $this->status === 'approved'; }
-    /** Adopción formalizada (HU-05): estado final que ya no cuenta como abierta (D07, D15). */
-    public function isFormalized(): bool { return $this->status === 'formalized'; }
 }

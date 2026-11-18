@@ -103,6 +103,31 @@ class Spec005Test extends WebTestBase
         self::assertCount(1, $this->client->getCrawler()->filter('[data-controller="print"]'));
     }
 
+    // R3 / D13: el contrato conserva los datos de la entrega aunque cambien después la cuenta o la ficha (T529).
+    public function testContractKeepsDeliveryDataAfterLaterChanges(): void
+    {
+        $adopter = $this->user('ROLE_USER', 'familia@example.test');
+        $application = $this->reservation($adopter);
+        $coordinator = $this->coordinator();
+        $adoption = self::getContainer()->get(AdoptionService::class)->formalize($application, $coordinator, ['fee' => '120', 'feePaid' => '1']);
+
+        $connection = $this->em->getConnection();
+        $connection->executeStatement("UPDATE app_user SET name = 'Nombre Cambiado', email = 'cambiado@example.test' WHERE id = ?", [$adopter->id]);
+        $connection->executeStatement("UPDATE animal SET ageMonths = 99, size = 'large' WHERE id = ?", [$application->animal->id]);
+        $this->refreshEm()->clear();
+
+        $this->client->loginUser($coordinator);
+        $this->client->request('GET', '/adopciones/'.$adoption->id.'/contrato');
+        self::assertResponseIsSuccessful();
+        $contract = $this->client->getCrawler()->filter('main')->text();
+        foreach (['Persona Ficticia', 'familia@example.test', 'Edad aproximada en la entrega2 años', 'Mediano'] as $kept) {
+            self::assertStringContainsString($kept, $contract);
+        }
+        foreach (['Nombre Cambiado', 'cambiado@example.test', '8 años', 'Grande'] as $changed) {
+            self::assertStringNotContainsString($changed, $contract);
+        }
+    }
+
     // CA-05-02
     public function testFormalizationRecordsFeeAndMarksAnimalAdopted(): void
     {

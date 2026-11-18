@@ -52,3 +52,25 @@ Por gravedad: 0 críticos, 0 altos, 1 medio y 2 bajos.
 
 Resultado: se añaden T528–T530 en «Phase 8: Convergence» de [tasks.md](tasks.md). Se ejecutarán con
 implement y se repetirá converge sobre el resultado. C1 toca una vista compartida con HU-03 y HU-04.
+
+## Segunda pasada · 2026-11-19, tras implementar T528–T530
+
+Repetida sobre el código con T528–T530 (publicado en el commit que acompaña a este informe), con el mismo
+método y el mismo inventario. Las tres tareas se han comprobado en el código y con pruebas, no por estar
+marcadas.
+
+| Hallazgo | Estado | Comprobación |
+|---|---|---|
+| C1 · CA-05-08, Constitution V | Resuelto | `mine.html.twig` con `stacked-table` y `data-label`; en Chrome a 390 px no hay desplazamiento de la página ni del contenedor, y el estado, el motivo y el enlace al contrato son visibles (6/6, [captura 07](../../docs/evidencias/spec-005-manual/07-movil-mis-solicitudes-apiladas.png)); a 1280 px se mantiene la tabla |
+| C2 · R3 / D13 | Resuelto | `testContractKeepsDeliveryDataAfterLaterChanges` (9 aserciones) |
+| C3 · unrequested | Resuelto | `isFormalized()` eliminado; sin referencias en `src`, `templates` ni `tests` |
+
+Efectos colaterales revisados: `mine.html.twig` es la vista de HU-03/04 y solo cambian la clase y los
+atributos `data-label`; el contenido no varía y Spec003/Spec004 pasan. El CSS se limita a `.stacked-table`
+y a anchos de hasta 760 px. Si un navegador no admite `:has()`, el contenedor puede seguir desplazándose,
+pero la tabla apilada ya ocupa solo el ancho disponible. Suite completa: 58/58, esquema y linters
+correctos ([evidencia](../../docs/evidencias/spec-005-phpunit.txt)).
+
+Hallazgos nuevos: ninguno (0 missing, 0 partial, 0 contradicts, 0 unrequested). Según el método, esta
+pasada no añade tareas ni fase a tasks.md. Resultado: **convergido**. Quedan fuera del alcance de HU-05 el
+desbordamiento de «Liberar reserva (D11)» (HU-04) y la revisión de `abcb5-ua` (T527).

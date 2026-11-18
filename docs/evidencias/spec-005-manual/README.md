@@ -70,3 +70,25 @@ DATABASE_URL=… APP_ENV=dev php docs/evidencias/spec-005-manual/datos-ficticios
 DATABASE_URL=… APP_ENV=dev php -d variables_order=EGPCS -S 127.0.0.1:8095 -t public public/router.php &
 node docs/evidencias/spec-005-manual/recorrido.mjs /tmp/salida /tmp/seed.json http://127.0.0.1:8095
 ```
+
+## Comprobación de T528 · «Mis solicitudes» apilada en móvil (2026-11-19)
+
+Código: rama `spec-005` con T528–T530 sin publicar todavía (posterior a 191e98c). Mismo servidor y base que antes.
+[`datos-ficticios-t528.php`](datos-ficticios-t528.php) añade a «Otra Familia Ficticia» una solicitud
+cancelada con el motivo «El animal ha sido adoptado». Así la misma cuenta tiene una fila formalizada
+(animal B, del recorrido 2) y una fila con motivo. Script: [`recorrido-t528.mjs`](recorrido-t528.mjs);
+resultado: [`resultado-t528-2026-11-19.json`](resultado-t528-2026-11-19.json).
+
+| Paso | Esperado | Observado | Resultado |
+|---|---|---|---|
+| 390 px: desplazamiento horizontal de la página y del contenedor | Ninguno | Ninguno | OK |
+| 390 px: estado y detalle de cada fila dentro de la ventana y sin recortes | 2 filas visibles | 2/2 | OK |
+| 390 px: fila formalizada | Enlace al contrato visible | Visible | OK |
+| 390 px: fila cancelada | «Motivo: El animal ha sido adoptado» visible | Visible | OK |
+| 390 px: etiqueta de cada dato | Animal, Fecha de envío, Estado, Detalle | Las cuatro | OK |
+| 1280 px | Tabla con cabecera, como antes | Tabla | OK |
+
+Capturas: [07 móvil](07-movil-mis-solicitudes-apiladas.png) (comparar con la [04](04-movil-mis-solicitudes.png))
+y [08 escritorio](08-escritorio-mis-solicitudes.png). En la primera captura, la etiqueta de estado ocupaba
+todo el ancho de la celda. Se alineó a la izquierda (`justify-self:start`), se repitió el script (6/6) y se
+revisó la captura definitiva. La observación 1 queda resuelta. La observación 2 sigue pendiente de HU-04.

@@ -126,6 +126,6 @@ Pendientes: T525 (verificación manual), T526 (converge.md; implement.md ya reda
 Añadida por converge el 2026-11-19 ([informe](converge.md)). Las secciones anteriores se cuentan como
 fases 1 a 7. Responsable: `aggg15`; revisor: `abcb5-ua`.
 
-- [ ] T528 Presentar «Mis solicitudes» en móvil (≤ 760 px) sin desplazamiento interno de la tabla, con estado, motivo y enlace al contrato visibles; comprobarlo con una captura a 390 px. *Coordinar HU-03/04* per CA-05-08, Constitution V (partial)
-- [ ] T529 Añadir una prueba que cambie el nombre y el email de la cuenta y los datos del animal después de formalizar y compruebe que el contrato muestra los datos de la entrega per R3 / D13 (partial)
-- [ ] T530 Eliminar `AdoptionApplication::isFormalized()`, que no se usa, o justificar su uso per plan: estado formalized (unrequested)
+- [x] T528 Presentar «Mis solicitudes» en móvil (≤ 760 px) sin desplazamiento interno de la tabla, con estado, motivo y enlace al contrato visibles; comprobarlo con una captura a 390 px. *Coordinar HU-03/04* per CA-05-08, Constitution V (partial)
+- [x] T529 Añadir una prueba que cambie el nombre y el email de la cuenta y los datos del animal después de formalizar y compruebe que el contrato muestra los datos de la entrega per R3 / D13 (partial)
+- [x] T530 Eliminar `AdoptionApplication::isFormalized()`, que no se usa, o justificar su uso per plan: estado formalized (unrequested)

@@ -63,7 +63,24 @@ Resultado esperado: formalize:ok y release:rechazada; adopción con solicitud fo
 
 - Con T512 (relectura de solicitud y animal bajo bloqueo): OK (1 test, 7 assertions).
 
-## Pendiente
+## Pendiente (2026-11-18)
 
 Verificación manual en escritorio, móvil y teclado (T525) y revisión de `abcb5-ua`. Estas pruebas no
-sustituyen la demostración funcional.
+sustituyen la demostración funcional. (T525 se realizó el 2026-11-19: véase spec-005-manual/README.md.)
+
+## Ejecución del 2026-11-19 · tareas de converge T528–T530
+
+Base: huellas_revision_20261118_test (local, APP_ENV=test). Código: rama spec-005 tras T528–T530.
+
+- `vendor/bin/phpunit --filter Spec005Test::testContractKeepsDeliveryDataAfterLaterChanges --testdox`
+  Primera ejecución: fallo de la propia prueba, que esperaba «1 año y 8 meses» para un animal de prueba
+  de 24 meses. Corregida la expectativa a «2 años»: OK (1 test, 9 assertions).
+- `vendor/bin/phpunit --filter Spec005 --testdox` → OK (19 tests, 164 assertions).
+- `vendor/bin/phpunit --testdox` → OK (58 tests, 493 assertions); 0 fallos.
+- `php bin/console doctrine:schema:validate` → mapeo correcto y esquema sincronizado.
+- `lint:container`, `lint:twig templates` (18 ficheros) y `lint:yaml config` (6 ficheros) → OK.
+- `grep -rn isFormalized src templates tests` → sin resultados (T530).
+
+## Pendiente
+
+Revisión de `abcb5-ua` en la PR. El CI de GitHub se registra en la propia PR.

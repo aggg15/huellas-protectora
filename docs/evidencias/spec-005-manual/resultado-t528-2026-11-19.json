@@ -1,0 +1,42 @@
+{
+  "base": "http://127.0.0.1:8095",
+  "failures": 0,
+  "log": [
+    {
+      "step": "Móvil 390 px: sin desplazamiento horizontal de la página ni del contenedor",
+      "expected": "sin desplazamiento",
+      "observed": "sin desplazamiento",
+      "result": "OK"
+    },
+    {
+      "step": "Móvil 390 px: estado y detalle de cada fila visibles",
+      "expected": "2 filas visibles",
+      "observed": "[[true,true],[true,true]]",
+      "result": "OK"
+    },
+    {
+      "step": "Móvil 390 px: fila formalizada con enlace al contrato visible",
+      "expected": "enlace visible",
+      "observed": "enlace visible",
+      "result": "OK"
+    },
+    {
+      "step": "Móvil 390 px: fila cancelada con el motivo visible",
+      "expected": "Motivo: El animal ha sido adoptado",
+      "observed": "Motivo visible",
+      "result": "OK"
+    },
+    {
+      "step": "Móvil 390 px: etiquetas de cada dato",
+      "expected": "Animal, Fecha de envío, Estado, Detalle",
+      "observed": "\"Animal\", \"Fecha de envío\", \"Estado\", \"Detalle\"",
+      "result": "OK"
+    },
+    {
+      "step": "Escritorio 1280 px: se mantiene la tabla con cabecera",
+      "expected": "tabla",
+      "observed": "tabla",
+      "result": "OK"
+    }
+  ]
+}
