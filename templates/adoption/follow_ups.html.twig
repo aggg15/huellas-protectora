@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Seguimientos programados · Huellas{% endblock %}
+
+{% block body %}
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">COORDINACIÓN DE ADOPCIONES</p>
+    <h1 class="title">Seguimientos programados</h1>
+    <p class="subtitle is-6">Visitas posteriores a cada adopción, al mes y a los seis meses de la entrega, ordenadas por fecha.</p>
+  </div>
+</div>
+
+{% if followUps is empty %}
+  <div class="box empty-state">
+    <h2 class="title is-5">No hay seguimientos programados</h2>
+    <p>Al formalizar una adopción se programan aquí sus dos seguimientos.</p>
+  </div>
+{% else %}
+  <div class="table-container box">
+    <table class="table is-fullwidth is-hoverable" id="follow-ups">
+      <thead><tr><th scope="col">Fecha prevista</th><th scope="col">Seguimiento</th><th scope="col">Animal</th><th scope="col">Adoptante</th><th scope="col"><span class="is-sr-only">Acciones</span></th></tr></thead>
+      <tbody>
+        {% for followUp in followUps %}
+          <tr>
+            <td>{{ followUp.dueOn|date('d/m/Y', false) }}</td>
+            <td>{{ followUp.kindLabel }}</td>
+            <td><strong>{{ followUp.adoption.animalCode }}</strong></td>
+            <td>{{ followUp.adoption.adopterName }}</td>
+            <td><a href="{{ path('admin_adoption_show', {id: followUp.adoption.id}) }}">Ver adopción<span class="is-sr-only"> de {{ followUp.adoption.animalCode }}</span></a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endif %}
+{% endblock %}

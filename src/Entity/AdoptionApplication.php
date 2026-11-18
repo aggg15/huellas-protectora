@@ -16,6 +16,7 @@ class AdoptionApplication
         'approved' => 'Aprobada',
         'rejected' => 'Rechazada',
         'cancelled' => 'Cancelada',
+        'formalized' => 'Adopción formalizada',
     ];
 
     #[ORM\Id, ORM\Column(length: 36)]
@@ -77,4 +78,6 @@ class AdoptionApplication
         return $this->interviewAt !== null && $this->interviewAt <= $now && trim($this->interviewNotes ?? '') !== '';
     }
     public function isApproved(): bool { return $this->status === 'approved'; }
+    /** Adopción formalizada (HU-05): estado final que ya no cuenta como abierta (D07, D15). */
+    public function isFormalized(): bool { return $this->status === 'formalized'; }
 }

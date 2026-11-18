@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace App\Controller;
 
-use App\Entity\{AdoptionApplication, AnimalPhoto, User};
+use App\Entity\{Adoption, AdoptionApplication, AnimalPhoto, User};
 use App\Service\{AnimalService, ApplicationRefused, ApplicationService, ValidationError};
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -59,8 +59,13 @@ class ApplicationController extends AbstractController
     public function mine(): Response
     {
         $user = $this->applicant();
+        $adoptions = [];
+        foreach ($this->em->getRepository(Adoption::class)->findBy(['adopter' => $user]) as $adoption) {
+            $adoptions[$adoption->application->id] = $adoption;
+        }
         return $this->render('application/mine.html.twig', [
             'applications' => $this->em->getRepository(AdoptionApplication::class)->findBy(['applicant' => $user], ['submittedAt' => 'DESC']),
+            'adoptions' => $adoptions,
             'openCount' => $this->applications->openCount($user),
             'maxOpen' => ApplicationService::MAX_OPEN,
         ]);

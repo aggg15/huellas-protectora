@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contrato {{ adoption.contractNumber }} · Huellas{% endblock %}
+
+{% block body %}
+<div class="page-heading no-print">
+  <a class="back-link" href="{{ is_granted('ROLE_COORDINATOR') ? path('admin_adoption_show', {id: adoption.id}) : path('application_mine') }}">← Volver</a>
+  <button type="button" class="button is-primary" data-controller="print" data-action="print#print">Imprimir contrato</button>
+</div>
+
+<article class="box contract" aria-labelledby="contract-title">
+  <p class="eyebrow">ASOCIACIÓN PROTECTORA HUELLAS</p>
+  <h1 class="title is-3" id="contract-title">Contrato de adopción {{ adoption.contractNumber }}</h1>
+  <p class="subtitle is-6">Entrega formalizada el {{ adoption.deliveredAt|date('d/m/Y', 'Europe/Madrid') }}.</p>
+
+  <section>
+    <h2 class="title is-5">Partes</h2>
+    <dl class="facts">
+      <dt>Protectora</dt><dd>Huellas, representada por la coordinación de adopciones</dd>
+      <dt>Persona adoptante</dt><dd>{{ adoption.adopterName }}</dd>
+      <dt>Email de la cuenta</dt><dd>{{ adoption.adopterEmail }}</dd>
+    </dl>
+  </section>
+
+  <section>
+    <h2 class="title is-5">Animal adoptado</h2>
+    <dl class="facts">
+      <dt>Código</dt><dd>{{ adoption.animalCode }}</dd>
+      <dt>Especie</dt><dd>{{ {dog: 'Perro', cat: 'Gato'}[adoption.animalSpecies] }}</dd>
+      <dt>Edad aproximada en la entrega</dt><dd>{% include 'adoption/_animal_age.html.twig' with {months: adoption.animalAgeMonths} only %}</dd>
+      <dt>Tamaño</dt><dd>{{ {small: 'Pequeño', medium: 'Mediano', large: 'Grande'}[adoption.animalSize] }}</dd>
+    </dl>
+  </section>
+
+  <section>
+    <h2 class="title is-5">Cuota de adopción</h2>
+    <p>La persona adoptante ha abonado una cuota de <strong>{{ adoption.feeLabel }}</strong> el día de la entrega.</p>
+  </section>
+
+  <section>
+    <h2 class="title is-5">Compromisos</h2>
+    <ol class="contract-clauses">
+      <li>La persona adoptante se compromete a cuidar del animal y a atender su bienestar.</li>
+      <li>La protectora realizará dos seguimientos de la adopción, que la persona adoptante facilitará:
+        <ul>
+          {% for followUp in adoption.followUps %}
+            <li>{{ followUp.kindLabel }}: {{ followUp.dueOn|date('d/m/Y', false) }}.</li>
+          {% endfor %}
+        </ul>
+      </li>
+    </ol>
+  </section>
+
+  <p class="is-size-7 has-text-grey mt-5">Documento generado por el sistema de información de Huellas a partir de los datos registrados en la formalización. No se presenta como un documento revisado jurídicamente.</p>
+</article>
+{% endblock %}

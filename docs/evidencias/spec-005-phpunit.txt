@@ -1,0 +1,69 @@
+# Evidencia de spec-005 (HU-05): pruebas automáticas
+
+Fecha: 2026-11-18, última ejecución a las 23:01 UTC. Rama `spec-005`, base 7e51740, con los cambios
+de implementación del commit que añade este fichero. Responsable: `aggg15`, con asistencia de Claude Code.
+Entorno: PHP 8.3.30 local; PostgreSQL 16 (`postgres:16-alpine`, contenedor `huellas-database-1`);
+base `huellas_revision_20261118_test` (sufijo `_test`). La base local `huellas_test` antigua no se usa
+ni se modifica (véase revision-previa-spec-005-2026-11-18.txt). Datos de prueba ficticios.
+
+## Comandos y resultado (APP_ENV=test)
+
+    php bin/console doctrine:migrations:migrate --no-interaction
+      -> Version20261118230000 aplicada (20 consultas). También se comprobó `migrate prev` y de nuevo
+         `migrate`: ambos correctos.
+    php bin/console doctrine:schema:validate
+      -> [OK] The mapping files are correct. [OK] The database schema is in sync with the mapping files.
+    php -l (src, tests, migrations, tools, config, public) -> sin errores
+    php bin/console lint:container -> código 0; lint:twig templates -> 18 ficheros OK; lint:yaml config -> OK
+    vendor/bin/phpunit --testdox
+      -> OK (57 tests, 484 assertions)
+         Spec001 7/7, Spec002 8/8, Spec003 11/11, Spec004 13/13 (sin modificar sus pruebas), Spec005 18/18
+
+## Spec005
+
+ ✔ Formalization generates contract linked to animal and adopter          CA-05-01
+ ✔ Formalization records fee and marks animal adopted                     CA-05-02 (MockClock)
+ ✔ Fostered animal leaves foster when adopted                             CA-05-02 / D15
+ ✔ Two follow ups are scheduled at one and six months                     CA-05-03 (10-mar-2027)
+ ✔ Follow up list is ordered by date                                      CA-05-03 (incluye estado vacío)
+ ✔ Adopted animal disappears from public catalog detail and photos        CA-05-04
+ ✔ Adoption is identifiable from the animal                               CA-05-05
+ ✔ Formalization requires approved application and reserved animal        CA-05-06 (incluye 409)
+ ✔ Formalization requires valid fee and payment confirmation              CA-05-07 (422)
+ ✔ Formalization closes other applications and frees open slots           CA-05-08
+ ✔ Formalized adoption cannot be released                                 CA-05-08 / D11
+ ✔ Follow up dates use last day of shorter months                         CA-05-09
+ ✔ Follow up dates use madrid calendar day                                CA-05-09
+ ✔ Concurrent formalizations create one adoption                          CA-05-10
+ ✔ Release after concurrent formalization does not undo adoption          CA-05-10 (T512)
+ ✔ Only coordinator formalizes and lists follow ups                       CA-05-11
+ ✔ Contract visible only to coordinator and adopter                       CA-05-11
+ ✔ Formalization requires csrf                                            CA-05-11
+
+Las líneas «[error] Uncaught PHP Exception» del registro corresponden a las respuestas 403/404
+esperadas de las pruebas negativas; no son fallos de PHPUnit.
+
+## Antes y después de T512 (liberación de reserva de HU-04)
+
+Prueba: Spec005Test::testReleaseAfterConcurrentFormalizationDoesNotUndoAdoption.
+Precondición: animal reservado y solicitud aprobada. Dos procesos PHP cargan la solicitud y esperan;
+uno formaliza a la hora de inicio y el otro libera la reserva 0,5 s después, con la solicitud ya cargada
+como «aprobada» (estado obsoleto, como una página abierta antes de formalizar).
+Resultado esperado: formalize:ok y release:rechazada; adopción con solicitud formalizada y animal adoptado.
+
+- Con `src/Service/ApplicationService.php` de 7e51740, sin T512 (restaurado temporalmente en local):
+
+      Failed asserting that two arrays are identical.
+      -    1 => 'release:rechazada',
+      +    1 => 'release:ok',
+      Estado en la base tras la prueba: solicitud cancelled | animal available | 1 adopción
+
+  Es decir, la liberación deshacía la reserva de una adopción ya formalizada: había contrato y
+  seguimientos, pero el animal volvía a estar disponible (incumple D17 y CA-05-10).
+
+- Con T512 (relectura de solicitud y animal bajo bloqueo): OK (1 test, 7 assertions).
+
+## Pendiente
+
+Verificación manual en escritorio, móvil y teclado (T525) y revisión de `abcb5-ua`. Estas pruebas no
+sustituyen la demostración funcional.

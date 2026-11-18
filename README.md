@@ -99,3 +99,6 @@ las PR hacia `main`. La ratificación de la Constitution y los nombres académic
   internos siguen creándose por comando. Detalle en [spec-003](specs/spec-003/spec.md).
 - HU-04: la coordinadora gestiona entrevistas, decisiones y liberación de reservas en
   `/admin/solicitudes`. Detalle en [spec-004](specs/spec-004/spec.md).
+- HU-05 (rama `spec-005`, pendiente de PR): la coordinadora formaliza la entrega desde la solicitud
+  aprobada (cuota y confirmación del abono), genera el contrato imprimible y consulta los seguimientos en
+  `/admin/seguimientos`. Detalle en [spec-005](specs/spec-005/spec.md).

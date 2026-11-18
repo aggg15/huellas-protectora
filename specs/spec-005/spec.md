@@ -3,7 +3,7 @@
 Fecha: 2026-11-05 (especificación inicial); concretada el 2026-11-18 por encargo del usuario.
 Responsable GitHub: `aggg15`. Revisión prevista: `abcb5-ua` (pendiente).
 Estado: especificada, aclarada y planificada ([plan](plan.md)) en la rama `spec-005`, creada desde
-`main` (cdb0416). Con [tareas](tasks.md); sin implementación todavía.
+`main` (cdb0416). Con [tareas](tasks.md) e [implementación](implement.md) (T505–T524); pendientes la verificación manual, converge y la revisión.
 
 ## Historia de usuario
 

@@ -3,7 +3,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\AdoptionApplication;
-use App\Service\{ApplicationRefused, ApplicationService, ValidationError};
+use App\Entity\User;
+use App\Service\{AdoptionService, ApplicationRefused, ApplicationService, ValidationError};
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\{Request, Response};
@@ -17,6 +18,7 @@ class ApplicationReviewController extends AbstractController
     public function __construct(
         private EntityManagerInterface $em,
         private ApplicationService $applications,
+        private AdoptionService $adoptions,
     ) {}
 
     #[Route('/admin/solicitudes', name: 'admin_applications', methods: ['GET'])]
@@ -28,7 +30,7 @@ class ApplicationReviewController extends AbstractController
     }
 
     #[Route('/admin/solicitudes/{id}', name: 'admin_application_show', methods: ['GET'])]
-    public function show(string $id, array $errors = []): Response
+    public function show(string $id, array $errors = [], int $errorStatus = 422, array $formData = []): Response
     {
         $application = $this->em->find(AdoptionApplication::class, $id) ?? throw $this->createNotFoundException();
         $otherApplications = $this->em->getRepository(AdoptionApplication::class)->findBy(
@@ -43,7 +45,9 @@ class ApplicationReviewController extends AbstractController
             'experienceTypes' => ApplicationService::EXPERIENCE_TYPES,
             'dailyTimes' => ApplicationService::DAILY_TIMES,
             'errors' => $errors,
-        ], new Response(status: $errors ? 422 : 200));
+            'adoption' => $this->adoptions->findForApplication($application),
+            'formData' => array_map(static fn($value) => is_string($value) ? $value : '', $formData),
+        ], new Response(status: $errors ? $errorStatus : 200));
     }
 
     #[Route('/admin/solicitudes/{id}/entrevista', name: 'admin_application_interview', methods: ['POST'])]
@@ -121,6 +125,31 @@ class ApplicationReviewController extends AbstractController
             return $this->redirectToRoute('admin_application_show', ['id' => $id], 303);
         } catch (ValidationError $error) {
             return $this->show($id, $error->errors);
+        } catch (ApplicationRefused $refused) {
+            return $this->show($id, ['general' => $refused->getMessage()], 409);
+        }
+    }
+
+    /** Formaliza la entrega de una solicitud aprobada (HU-05, D12 a D17). */
+    #[Route('/admin/solicitudes/{id}/formalizar', name: 'admin_application_formalize', methods: ['POST'])]
+    public function formalize(string $id, Request $request): Response
+    {
+        $data = $request->request->all();
+        if (!$this->isCsrfTokenValid('formalize-' . $id, is_string($data['_token'] ?? null) ? $data['_token'] : null)) {
+            throw $this->createAccessDeniedException('Formulario caducado.');
+        }
+
+        $application = $this->em->find(AdoptionApplication::class, $id) ?? throw $this->createNotFoundException();
+        $coordinator = $this->getUser();
+        if (!$coordinator instanceof User) { throw $this->createAccessDeniedException(); }
+        try {
+            $adoption = $this->adoptions->formalize($application, $coordinator, $data);
+            $this->addFlash('success', 'Adopción formalizada. Se ha generado el contrato ' . $adoption->contractNumber . ' y se han programado los dos seguimientos.');
+            return $this->redirectToRoute('admin_adoption_show', ['id' => $adoption->id], 303);
+        } catch (ValidationError $error) {
+            return $this->show($id, $error->errors, 422, $data);
+        } catch (ApplicationRefused $refused) {
+            return $this->show($id, ['general' => $refused->getMessage()], 409);
         }
     }
 }

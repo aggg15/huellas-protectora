@@ -17,7 +17,8 @@
       'waiting': 'is-warning',
       'approved': 'is-success',
       'rejected': 'is-danger',
-      'cancelled': 'is-dark'
+      'cancelled': 'is-dark',
+      'formalized': 'is-primary'
     }[application.status]|default('is-light') %}
     <span class="tag is-medium is-light {{ statusClass }}">{{ application.statusLabel }}</span>
   </div>
@@ -154,6 +155,30 @@
           <p class="is-size-7"><strong>Candidatura aprobada.</strong> El animal se encuentra formalmente reservado para este solicitante.</p>
         </div>
 
+        {# Formalización de la entrega (HU-05): contrato, cuota y seguimientos #}
+        <form method="post" action="{{ path('admin_application_formalize', {id: application.id}) }}" class="mb-4" id="form-formalize" novalidate>
+          <input type="hidden" name="_token" value="{{ csrf_token('formalize-' ~ application.id) }}">
+          <h3 class="title is-6 mb-2">Formalizar la entrega</h3>
+          <p class="is-size-7 has-text-grey mb-3">Se genera el contrato con la fecha de hoy, el animal pasa a adoptado, se cierran las demás solicitudes y se programan los seguimientos al mes y a los seis meses.</p>
+          <div class="field">
+            <label class="label is-small" for="fee">Cuota de adopción abonada (€)</label>
+            <div class="control">
+              <input class="input is-small {{ errors.fee is defined ? 'is-danger' : '' }}" type="text" id="fee" name="fee" inputmode="decimal" autocomplete="off" placeholder="Por ejemplo, 120,00" value="{{ formData.fee|default('') }}" required{% if errors.fee is defined %} aria-invalid="true" aria-describedby="error-fee"{% endif %}>
+            </div>
+            {% if errors.fee is defined %}<p class="help is-danger" id="error-fee">{{ errors.fee }}</p>{% endif %}
+          </div>
+          <div class="field">
+            <label class="checkbox is-size-7" for="feePaid">
+              <input type="checkbox" id="feePaid" name="feePaid" value="1" required{% if formData.feePaid|default('') == '1' %} checked{% endif %}{% if errors.feePaid is defined %} aria-invalid="true" aria-describedby="error-feePaid"{% endif %}>
+              Confirmo que se ha abonado la cuota de adopción
+            </label>
+            {% if errors.feePaid is defined %}<p class="help is-danger" id="error-feePaid">{{ errors.feePaid }}</p>{% endif %}
+          </div>
+          <button class="button is-primary is-fullwidth" id="btn-formalize">Formalizar adopción y generar contrato</button>
+        </form>
+
+        <hr>
+
         <details>
           <summary class="button is-small is-warning is-outlined is-fullwidth">Liberar reserva (D11)</summary>
           <form method="post" action="{{ path('admin_application_cancel_reservation', {id: application.id}) }}" class="mt-3">
@@ -174,6 +199,17 @@
           <p class="is-size-7"><strong>Solicitud rechazada</strong></p>
           {% if application.decisionAt %}<p class="is-size-7 has-text-grey">{{ application.decisionAt|date('d/m/Y H:i', 'Europe/Madrid') }}</p>{% endif %}
           <p class="mt-2 is-size-7" style="white-space: pre-wrap;">{{ application.rejectionReason }}</p>
+        </div>
+
+      {% elseif application.status == 'formalized' %}
+        <div class="notification is-primary is-light">
+          <p class="is-size-7"><strong>Adopción formalizada.</strong>{% if adoption %} Entrega del {{ adoption.deliveredAt|date('d/m/Y', 'Europe/Madrid') }} · contrato {{ adoption.contractNumber }}.{% endif %}</p>
+          {% if adoption %}
+            <p class="mt-2 is-size-7">
+              <a href="{{ path('admin_adoption_show', {id: adoption.id}) }}">Ver adopción y seguimientos</a> ·
+              <a href="{{ path('adoption_contract', {id: adoption.id}) }}">Ver contrato</a>
+            </p>
+          {% endif %}
         </div>
 
       {% elseif application.status == 'cancelled' %}
