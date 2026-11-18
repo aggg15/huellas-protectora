@@ -1,0 +1,283 @@
+{
+  "base": "http://127.0.0.1:8095",
+  "failures": 0,
+  "log": [
+    {
+      "route": "R1 satisfactorio",
+      "step": "Catálogo anónimo muestra el animal disponible (HU-02)",
+      "expected": "contiene HUE-08345B16744D",
+      "observed": "contiene HUE-08345B16744D",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Alta pública y vuelta al formulario de solicitud (HU-03)",
+      "expected": "/animales/{id}/solicitud",
+      "observed": "/animales/01a1f0e8-4ef0-71b7-b80e-08345b16744d/solicitud",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Solicitud presentada queda pendiente (HU-03)",
+      "expected": "Pendiente de valoración",
+      "observed": "Pendiente de valoración",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Entrevista y aprobación: aparece «Formalizar la entrega» (HU-04 → HU-05)",
+      "expected": "formulario visible, animal reservado",
+      "observed": "formulario visible, animal reservado",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Formalizar con 120,00 € y abono confirmado (CA-05-01/02)",
+      "expected": "mensaje de éxito, contrato CTR-…, 120,00 €",
+      "observed": "éxito, CTR-08345B16744D, 120,00 €",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Planificación con dos seguimientos (CA-05-03)",
+      "expected": "2 filas: al mes y a los seis meses, programados",
+      "observed": "[\"Seguimiento al mes 19/12/2026 Programado\",\"Seguimiento a los seis meses 19/05/2027 Programado\"]",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Listado de seguimientos de la coordinadora (CA-05-03)",
+      "expected": "2 filas ordenadas por fecha",
+      "observed": "2 filas",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Contrato como coordinadora con botón de impresión (CA-05-01)",
+      "expected": "título «Contrato de adopción», botón Imprimir",
+      "observed": "Contrato de adopción CTR-08345B16744D, botón: true",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Vista de impresión oculta cabecera y botones",
+      "expected": "cabecera y botones ocultos",
+      "observed": "ocultos",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Adoptante ve «Adopción formalizada» y enlace al contrato (móvil 390 px)",
+      "expected": "estado y enlace",
+      "observed": "estado, enlace: true",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Adoptante abre su contrato en móvil, sin desplazamiento horizontal",
+      "expected": "contiene HUE-08345B16744D y Familia Nueva Ficticia; sin scroll horizontal",
+      "observed": "datos correctos; scroll horizontal: false",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "El adoptante no accede al listado de seguimientos (CA-05-11)",
+      "expected": "403",
+      "observed": "403",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Visita anónima: el animal adoptado ya no está en el catálogo y su ficha da 404 (CA-05-04)",
+      "expected": "ausente; 404",
+      "observed": "ausente; 404",
+      "result": "OK"
+    },
+    {
+      "route": "R2 error",
+      "step": "Ficha de solicitud aprobada en móvil sin desplazamiento horizontal",
+      "expected": "sin scroll horizontal",
+      "observed": "sin scroll horizontal",
+      "result": "OK"
+    },
+    {
+      "route": "R2 error",
+      "step": "Teclado: el campo de cuota se alcanza con Tab",
+      "expected": "foco en #fee",
+      "observed": "foco en #fee tras 10 pulsaciones",
+      "result": "OK"
+    },
+    {
+      "route": "R2 error",
+      "step": "Teclado: orden cuota → casilla de abono → botón",
+      "expected": "feePaid, btn-formalize",
+      "observed": "feePaid, btn-formalize",
+      "result": "OK"
+    },
+    {
+      "route": "R2 error",
+      "step": "Enviar sin confirmar el abono (CA-05-07)",
+      "expected": "422, error en la casilla, importe conservado",
+      "observed": "422, «Confirma que se ha abonado la cuota de adopción.», importe «120,00»",
+      "result": "OK"
+    },
+    {
+      "route": "R2 error",
+      "step": "El animal sigue reservado y la solicitud aprobada",
+      "expected": "Reservado; formulario disponible",
+      "observed": "Reservado; formulario disponible",
+      "result": "OK"
+    },
+    {
+      "route": "R2 error",
+      "step": "Teclado: Espacio marca la casilla de abono",
+      "expected": "marcada",
+      "observed": "marcada",
+      "result": "OK"
+    },
+    {
+      "route": "R2 error",
+      "step": "Tras corregir, la formalización por teclado se completa",
+      "expected": "página de la adopción",
+      "observed": "/admin/adopciones/01a1f0ea-e0a9-7b88-9866-c2aafad3a876",
+      "result": "OK"
+    }
+  ],
+  "responses": [
+    {
+      "url": "http://127.0.0.1:8095/animales",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8095/animales/01a1f0e8-4ef0-71b7-b80e-08345b16744d",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8095/acceso",
+      "status": 200,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8095/registro",
+      "status": 200,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8095/animales/01a1f0e8-4ef0-71b7-b80e-08345b16744d/solicitud",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8095/mis-solicitudes",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8095/acceso",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8095/admin/animales",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8095/admin/solicitudes",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8095/admin/solicitudes/01a1f0ea-c509-7e5a-bdfb-4645ed5d832c",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8095/admin/solicitudes/01a1f0ea-c509-7e5a-bdfb-4645ed5d832c",
+      "status": 200,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8095/admin/solicitudes/01a1f0ea-c509-7e5a-bdfb-4645ed5d832c",
+      "status": 200,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8095/admin/adopciones/01a1f0ea-ce72-7a18-b06c-e893576df0fd",
+      "status": 200,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8095/admin/seguimientos",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8095/adopciones/01a1f0ea-ce72-7a18-b06c-e893576df0fd/contrato",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8095/acceso",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8095/mis-solicitudes",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8095/mis-solicitudes",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8095/adopciones/01a1f0ea-ce72-7a18-b06c-e893576df0fd/contrato",
+      "status": 200,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8095/admin/seguimientos",
+      "status": 403,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8095/animales",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8095/animales/01a1f0e8-4ef0-71b7-b80e-08345b16744d",
+      "status": 404,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8095/acceso",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8095/admin/animales",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8095/admin/solicitudes/01a1f0e8-4ef7-76e7-b7c5-e84bd4e54a34",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8095/admin/solicitudes/01a1f0e8-4ef7-76e7-b7c5-e84bd4e54a34/formalizar",
+      "status": 422,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8095/admin/adopciones/01a1f0ea-e0a9-7b88-9866-c2aafad3a876",
+      "status": 200,
+      "type": "Fetch"
+    }
+  ]
+}

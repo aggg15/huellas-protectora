@@ -87,13 +87,13 @@ sustituye la evidencia: el cierre se acredita con `docs/evidencias/spec-005-phpu
   En todos los casos no cambia ningún dato. Origen: CA-05-11; analyze A3.
 - [x] **T524** · Regresión completa (`vendor/bin/phpunit --testdox`), `doctrine:schema:validate` y linters del CI
   en una base `_test` nueva; registrar la salida en `docs/evidencias/spec-005-phpunit.txt`.
-- [ ] **T525** · Verificación manual HU-03 → HU-04 → HU-05 en escritorio y móvil (≤ 400 px) y por teclado,
+- [x] **T525** · Verificación manual HU-03 → HU-04 → HU-05 en escritorio y móvil (≤ 400 px) y por teclado,
   más un recorrido con error (formalizar sin confirmar el abono). Registrar precondiciones, datos, pasos y
   resultado esperado y observado.
 
 ## Cierre
 
-- [ ] **T526** · Redactar `implement.md` y `converge.md`; añadir aquí las tareas correctivas que salgan de converge
+- [x] **T526** · Redactar `implement.md` y `converge.md`; añadir aquí las tareas correctivas que salgan de converge
   sin borrar las anteriores.
 - [ ] **T527** · Abrir la PR hacia `main` con la plantilla, señalando los cambios en código de HU-04
   (T512, T515, T516), el CHECK común y `data-model.md`, y pedir la revisión de `abcb5-ua`.
@@ -113,3 +113,19 @@ Detalle de componentes en [implement](implement.md).
 - T524 → suite completa: 57 pruebas / 484 aserciones; [evidencia](../../docs/evidencias/spec-005-phpunit.txt).
 
 Pendientes: T525 (verificación manual), T526 (converge.md; implement.md ya redactado) y T527 (PR).
+
+## Ejecución del 2026-11-19
+
+- T525 → recorridos R1 (satisfactorio) y R2 (error y teclado) en Chrome real, en escritorio y a 390 px:
+  20/20 comprobaciones correctas, con dos observaciones visuales.
+  Véase ../../docs/evidencias/spec-005-manual/README.md.
+- T526 → [converge](converge.md): 3 hallazgos (C1 MEDIUM, C2 y C3 LOW), añadidos debajo como T528–T530.
+
+## Phase 8: Convergence
+
+Añadida por converge el 2026-11-19 ([informe](converge.md)). Las secciones anteriores se cuentan como
+fases 1 a 7. Responsable: `aggg15`; revisor: `abcb5-ua`.
+
+- [ ] T528 Presentar «Mis solicitudes» en móvil (≤ 760 px) sin desplazamiento interno de la tabla, con estado, motivo y enlace al contrato visibles; comprobarlo con una captura a 390 px. *Coordinar HU-03/04* per CA-05-08, Constitution V (partial)
+- [ ] T529 Añadir una prueba que cambie el nombre y el email de la cuenta y los datos del animal después de formalizar y compruebe que el contrato muestra los datos de la entrega per R3 / D13 (partial)
+- [ ] T530 Eliminar `AdoptionApplication::isFormalized()`, que no se usa, o justificar su uso per plan: estado formalized (unrequested)

@@ -47,4 +47,4 @@ la skill `$speckit-implement`. Tareas: T505–T524 de [tasks.md](tasks.md), tras
 sin cambios en sus pruebas). Esquema sincronizado y linters correctos. Detalle:
 [evidencia](../../docs/evidencias/spec-005-phpunit.txt).
 
-Pendiente: verificación manual (T525), converge (T526) y PR con revisión de `abcb5-ua` (T527).
+Verificación manual (T525) y converge (T526) realizados el 2026-11-19. Pendientes: tareas de converge T528–T530 y la PR con revisión de `abcb5-ua` (T527).
