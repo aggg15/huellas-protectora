@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% set shift = row.shift %}
+{% block title %}{{ shift.kindLabel }} del {{ shift.startsAt|date('d/m/Y') }} · Huellas{% endblock %}
+
+{% block body %}
+<a class="back-link" href="{{ path('shifts') }}">← Volver a los turnos</a>
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">TURNO DE {{ shift.kindLabel|upper }}</p>
+    <h1 class="title">{{ shift.kindLabel }} del {{ shift.startsAt|date('d/m/Y') }}</h1>
+    <p class="subtitle is-6">De {{ shift.startsAt|date('H:i') }} a {{ shift.endsAt|date('H:i') }} (hora de Madrid).</p>
+  </div>
+  <div id="shift-status">{% include 'shift/_status.html.twig' %}</div>
+</div>
+
+<div class="detail-grid">
+  <section class="box" aria-labelledby="signups-title">
+    <dl class="facts" id="shift-facts">
+      <dt>Mínimo necesario</dt><dd>{{ shift.minVolunteers }} {{ shift.minVolunteers == 1 ? 'persona' : 'personas' }}</dd>
+      <dt>Máximo admitido</dt><dd>{{ shift.maxVolunteers }} {{ shift.maxVolunteers == 1 ? 'persona' : 'personas' }}</dd>
+      <dt>Inscritas</dt><dd>{{ row.signups }}</dd>
+      <dt>Plazas libres</dt><dd>{{ row.free }}</dd>
+    </dl>
+    <h2 class="title is-5" id="signups-title">Personas inscritas</h2>
+    {% if signups is empty %}
+      <p>Nadie se ha apuntado todavía.</p>
+    {% else %}
+      <ol id="signups">
+        {% for signup in signups %}<li>{{ signup.volunteer.name }} <span class="has-text-grey is-size-7">· desde el {{ signup.signedUpAt|date('d/m/Y H:i') }}</span></li>{% endfor %}
+      </ol>
+    {% endif %}
+  </section>
+
+  {% if is_granted('ROLE_COORDINATOR') %}
+    <section class="box" aria-labelledby="edit-title">
+      <h2 class="title is-5" id="edit-title">Modificar el turno</h2>
+      {% include 'partials/errors.html.twig' %}
+      {% if row.started %}
+        <p>El turno ya ha empezado y no se puede modificar.</p>
+      {% else %}
+        {% if row.signups > 0 %}<p class="help mb-3">Con personas inscritas solo cambian el mínimo y el máximo, y el máximo no puede ser menor que {{ row.signups }}.</p>{% endif %}
+        <form method="post" action="{{ path('shift_edit', {id: shift.id}) }}" id="form-shift-edit" novalidate>
+          <input type="hidden" name="_token" value="{{ csrf_token('shift-edit-' ~ shift.id) }}">
+          {% include 'shift/_form.html.twig' %}
+          <button class="button is-primary">Guardar cambios</button>
+        </form>
+      {% endif %}
+    </section>
+  {% endif %}
+</div>
+{% endblock %}

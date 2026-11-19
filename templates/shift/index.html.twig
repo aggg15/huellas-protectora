@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Turnos · Huellas{% endblock %}
+
+{% block body %}
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">TRABAJO DIARIO DEL REFUGIO</p>
+    <h1 class="title">Turnos de paseo y limpieza</h1>
+    <p class="subtitle is-6">Apúntate en los turnos con plazas. Se destacan los que no cubren su mínimo cuando faltan 48 horas o menos.</p>
+  </div>
+  {% if is_granted('ROLE_COORDINATOR') %}<a class="button is-primary" href="{{ path('shift_new') }}">Nuevo turno</a>{% endif %}
+</div>
+
+{% if refusal %}<div class="notification is-danger is-light" role="alert" id="shift-refusal">{{ refusal }}</div>{% endif %}
+{% if undercovered > 0 %}
+  <div class="notification is-warning is-light" role="status" id="undercovered-notice"><strong>{{ undercovered }} {{ undercovered == 1 ? 'turno de las próximas 48 horas no cubre' : 'turnos de las próximas 48 horas no cubren' }} su mínimo de personas.</strong> Están destacados en la lista.</div>
+{% endif %}
+
+{% if rows is empty %}
+  <div class="box empty-state">
+    <h2 class="title is-5">No hay turnos programados</h2>
+    <p>{{ is_granted('ROLE_COORDINATOR') ? 'Crea el primero con «Nuevo turno».' : 'La coordinadora publicará aquí los próximos turnos.' }}</p>
+  </div>
+{% else %}
+  <div class="table-container box">
+    <table class="table is-fullwidth stacked-table" id="shifts">
+      <thead><tr><th scope="col">Turno</th><th scope="col">Fecha y hora</th><th scope="col">Mínimo</th><th scope="col">Máximo</th><th scope="col">Inscritas</th><th scope="col">Estado</th><th scope="col"><span class="is-sr-only">Acciones</span></th></tr></thead>
+      <tbody>
+        {% for row in rows %}
+          {% set shift = row.shift %}
+          <tr id="shift-{{ shift.id }}"{% if row.undercovered %} class="shift-undercovered"{% endif %}>
+            <td data-label="Turno"><a href="{{ path('shift_show', {id: shift.id}) }}"><strong>{{ shift.kindLabel }}</strong></a></td>
+            <td data-label="Fecha y hora">{{ shift.startsAt|date('d/m/Y') }}, {{ shift.startsAt|date('H:i') }}–{{ shift.endsAt|date('H:i') }}</td>
+            <td data-label="Mínimo">{{ shift.minVolunteers }}</td>
+            <td data-label="Máximo">{{ shift.maxVolunteers }}</td>
+            {# Un solo elemento por celda: en móvil la celda apilada es una rejilla etiqueta | valor (T721). #}
+            <td data-label="Inscritas"><span>{{ row.signups }} <span class="has-text-grey is-size-7">({{ row.free }} {{ row.free == 1 ? 'plaza libre' : 'plazas libres' }})</span></span></td>
+            <td data-label="Estado"><span class="shift-tags">{% include 'shift/_status.html.twig' %}{% if row.signedUp %} <span class="tag is-primary is-light">Te has apuntado</span>{% endif %}</span></td>
+            <td data-label="Acción">
+              {% if row.canSignUp %}
+                <form method="post" action="{{ path('shift_signup', {id: shift.id}) }}">
+                  <input type="hidden" name="_token" value="{{ csrf_token('shift-signup-' ~ shift.id) }}">
+                  <button class="button is-small is-primary">Apuntarme<span class="is-sr-only"> al turno de {{ shift.kindLabel|lower }} del {{ shift.startsAt|date('d/m/Y H:i') }}</span></button>
+                </form>
+              {% elseif row.canLeave %}
+                <form method="post" action="{{ path('shift_leave', {id: shift.id}) }}">
+                  <input type="hidden" name="_token" value="{{ csrf_token('shift-leave-' ~ shift.id) }}">
+                  <button class="button is-small is-light">Darme de baja<span class="is-sr-only"> del turno de {{ shift.kindLabel|lower }} del {{ shift.startsAt|date('d/m/Y H:i') }}</span></button>
+                </form>
+              {% elseif row.clash %}
+                <span class="is-size-7 has-text-grey">Coincide con otro de tus turnos</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endif %}
+{% endblock %}

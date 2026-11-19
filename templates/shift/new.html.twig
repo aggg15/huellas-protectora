@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nuevo turno · Huellas{% endblock %}
+
+{% block body %}
+<a class="back-link" href="{{ path('shifts') }}">← Volver a los turnos</a>
+<h1 class="title">Nuevo turno</h1>
+<p class="subtitle is-6">Paseo o limpieza, con las personas que necesita y las que admite.</p>
+<div class="box form-wide">
+  {% include 'partials/errors.html.twig' %}
+  <form method="post" id="form-shift" novalidate>
+    <input type="hidden" name="_token" value="{{ csrf_token('shift-new') }}">
+    {% include 'shift/_form.html.twig' %}
+    <button class="button is-primary">Crear turno</button>
+  </form>
+</div>
+{% endblock %}

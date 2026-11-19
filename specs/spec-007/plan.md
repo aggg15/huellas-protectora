@@ -74,9 +74,10 @@ lecturas DBAL después del bloqueo, no con entidades en memoria (plan común).
 - Orden de bloqueo: cuenta → turno en `signUp`; solo turno en `update` y `leave`. Sin ciclos de espera.
 - Una edición que cambia las horas de un turno sin inscripciones mientras alguien se apunta: la inscripción espera
   al bloqueo del turno y relee las horas nuevas antes de comprobar coincidencias.
-- Consultas: `upcoming()` (turnos no terminados por inicio, con número de inscripciones; una consulta agrupada),
-  `signupsOf(Shift)` (inscripciones con nombre, por hora de inscripción), `signedShiftIdsOf(User)` y
-  `signupCount(Shift)`. `now()` expone el reloj a las vistas.
+- Consultas: `board(User)` (turnos no terminados por inicio, con número de inscripciones en una consulta agrupada y,
+  para quien consulta, «Te has apuntado», coincidencias y botones disponibles), `coverage(Shift, int)` (inscritas,
+  plazas libres, personas que faltan y estado de un turno) y `signupsOf(Shift)` (inscripciones con nombre, por hora
+  de inscripción). `now()` expone el reloj. Lista alineada con el código por converge (T722).
 - Las horas del formulario se interpretan con `DateTimeImmutable::createFromFormat('!Y-m-d H:i', …, Europe/Madrid)`
   y se aceptan solo si al volver a formatearlas en Madrid se obtiene lo escrito: así se rechaza la hora inexistente
   del cambio de horario (CA-07-07). Se guardan en UTC, como `Adoption.deliveredAt`.
@@ -118,7 +119,7 @@ lecturas DBAL después del bloqueo, no con entidades en memoria (plan común).
 
 | Criterio | Implementación | Verificación (`tests/Spec007Test.php`) |
 |---|---|---|
-| CA-07-01 | `upcoming`, `signupsOf`, `shift/index`, `shift/show` | `testShiftShowsScheduleLimitsAndSignups` |
+| CA-07-01 | `board`, `signupsOf`, `shift/index`, `shift/show` | `testShiftShowsScheduleLimitsAndSignups` |
 | CA-07-02 | `signUp`, listado | `testVolunteerSignsUpForShiftWithPlaces` |
 | CA-07-03 | `signUp` (plazas bajo bloqueo) | `testFullShiftRejectsAnotherSignup` |
 | CA-07-04 | `ShiftCoverage::isUndercovered`, aviso | `testUndercoveredShiftIsHighlightedWithin48Hours`, `testHighlightWindowIsExactAndUsesRealHours` |
@@ -150,4 +151,4 @@ teclado del listado y del formulario de alta.
 
 ## Estado
 
-Plan redactado el 2026-11-19. Tareas en [tasks.md](tasks.md).
+Plan redactado el 2026-11-19 y ajustado por converge (T722). Tareas en [tasks.md](tasks.md).

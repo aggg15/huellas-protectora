@@ -1,0 +1,307 @@
+{
+  "base": "http://127.0.0.1:8097",
+  "failures": 0,
+  "log": [
+    {
+      "route": "R1 satisfactorio",
+      "step": "Teclado: «Nuevo turno» se alcanza con Tab",
+      "expected": "foco en «Nuevo turno»",
+      "observed": "«Nuevo turno» tras 10 pulsaciones",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "La coordinadora crea un paseo dentro de unas 30 horas, mínimo 2 y máximo 3 (CA-07-06)",
+      "expected": "éxito; 20/11/2026, 21:00–23:00; destacado «Faltan voluntarios: 2»",
+      "observed": "Paseo 20/11/2026, 21:00–23:00 2 3 0 (3 plazas libres) Faltan voluntarios: 2 para el mínimo Apuntarme al turno de paseo del 20/11/2026 21:00",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Aviso de turnos faltos de voluntarios en las próximas 48 horas (CA-07-04)",
+      "expected": "1 turno de las próximas 48 horas no cubre su mínimo",
+      "observed": "1 turno de las próximas 48 horas no cubre su mínimo de personas. Están destacados en la lista.",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Listado en móvil (390 px) sin desbordar: desplazamiento y borde derecho de cajas y filas",
+      "expected": "scrollWidth y borde ≤ 390",
+      "observed": {
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "maxRight": 374
+      },
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "La voluntaria ve el turno destacado con «Apuntarme» (CA-07-01, CA-07-04)",
+      "expected": "destacado; 0 inscritas; botón Apuntarme",
+      "observed": "shift-undercovered; Paseo 20/11/2026, 21:00–23:00 2 3 0 (3 plazas libres) Faltan voluntarios: 2 para el mínimo Apuntarme al turno de paseo del 20/11/2026 21:00",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Teclado: Tab hasta «Apuntarme» y Enter; la inscripción cuenta (CA-07-02)",
+      "expected": "éxito; 1 inscrita; «Te has apuntado»; sigue destacado con 1 para el mínimo",
+      "observed": "7 pulsaciones, foco «Apuntarme al turno de paseo del 20/11/2026 21:00»; Paseo 20/11/2026, 21:00–23:00 2 3 1 (2 plazas libres) Faltan voluntarios: 1 para el mínimo Te has apuntado Darme de baja del turno de paseo del 20/11/2026 21:00",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Tras el mensaje de éxito, el listado sigue sin desbordar en móvil",
+      "expected": "scrollWidth y borde ≤ 390",
+      "observed": {
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "maxRight": 374
+      },
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Al apuntarse la segunda persona, el turno deja de destacarse (CA-07-05)",
+      "expected": "sin destacar; «Mínimo cubierto»; sin aviso",
+      "observed": "sin clase; Paseo 20/11/2026, 21:00–23:00 2 3 2 (1 plaza libre) Mínimo cubierto Te has apuntado Darme de baja del turno de paseo del 20/11/2026 21:00; aviso ausente",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Bruno ve el paseo coincidente sin botón (CA-07-09)",
+      "expected": "«Coincide con otro de tus turnos», sin botón",
+      "observed": "Paseo 23/11/2026, 11:00–13:00 1 3 0 (3 plazas libres) 1 para el mínimo Coincide con otro de tus turnos; botones: 0",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Ficha del turno: límites, inscritas y nombres (CA-07-01)",
+      "expected": "2 personas · 3 personas · 2 · 1; Ana y Bruno",
+      "observed": "2 personas · 3 personas · 2 · 1; Ana Voluntaria Ficticia · desde el 19/11/2026 17:27 Bruno Voluntario Ficticio · desde el 19/11/2026 17:27",
+      "result": "OK"
+    },
+    {
+      "route": "R2 error",
+      "step": "Limpieza con una plaza libre: botón «Apuntarme» visible",
+      "expected": "1 (1 plaza libre); Apuntarme",
+      "observed": "Limpieza 22/11/2026, 10:00–12:00 1 2 1 (1 plaza libre) Mínimo cubierto Apuntarme al turno de limpieza del 22/11/2026 10:00",
+      "result": "OK"
+    },
+    {
+      "route": "R2 error",
+      "step": "Otra persona ocupa la última plaza con la página abierta; Enter en «Apuntarme» (CA-07-03)",
+      "expected": "409; «ya tiene cubierto su máximo de 2 personas»; «Completo» sin botón",
+      "observed": "409; «No te has podido apuntar al turno de limpieza del 22/11/2026 de 10:00 a 12:00. El turno ya tiene cubierto su máximo de 2 personas.»; Limpieza 22/11/2026, 10:00–12:00 1 2 2 (0 plazas libres) Completo",
+      "result": "OK"
+    },
+    {
+      "route": "R2 error",
+      "step": "El rechazo en móvil no desborda",
+      "expected": "scrollWidth y borde ≤ 390",
+      "observed": {
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "maxRight": 374
+      },
+      "result": "OK"
+    },
+    {
+      "route": "R2 error",
+      "step": "Bajar el máximo a 1 con dos inscritas (CA-07-06)",
+      "expected": "409; «el máximo no puede ser menor»",
+      "observed": "409; «Hay 2 personas inscritas en el turno: el máximo no puede ser menor.»",
+      "result": "OK"
+    },
+    {
+      "route": "R2 error",
+      "step": "El turno no cambia tras el rechazo",
+      "expected": "2 personas · 3 personas · 2 · 1",
+      "observed": "2 personas · 3 personas · 2 · 1",
+      "result": "OK"
+    },
+    {
+      "route": "R2 error",
+      "step": "Alta con fin anterior al inicio y máximo menor que el mínimo (CA-07-07)",
+      "expected": "422; endTime y maxVolunteers marcados; valores conservados",
+      "observed": "422; aria-invalid: endTime,maxVolunteers; fin 11:00",
+      "result": "OK"
+    },
+    {
+      "route": "R2 error",
+      "step": "Formulario con errores en móvil sin desbordar",
+      "expected": "scrollWidth y borde ≤ 390",
+      "observed": {
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "maxRight": 374
+      },
+      "result": "OK"
+    },
+    {
+      "route": "R2 error",
+      "step": "La veterinaria no accede a los turnos (CA-07-11, D26)",
+      "expected": "403",
+      "observed": "403",
+      "result": "OK"
+    },
+    {
+      "route": "R2 error",
+      "step": "Persona anónima en /admin/turnos (CA-07-11)",
+      "expected": "redirección a /acceso",
+      "observed": "redirección",
+      "result": "OK"
+    }
+  ],
+  "responses": [
+    {
+      "url": "http://127.0.0.1:8097/acceso",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8097/admin/animales",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8097/admin/turnos",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8097/admin/turnos/nuevo",
+      "status": 200,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8097/admin/turnos",
+      "status": 200,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8097/acceso",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8097/admin/animales",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8097/admin/turnos",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8097/admin/turnos",
+      "status": 200,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8097/acceso",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8097/admin/animales",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8097/admin/turnos",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8097/admin/turnos",
+      "status": 200,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8097/acceso",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8097/admin/animales",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8097/admin/turnos/01a1f4a2-c854-755e-83d6-ae3ce203c9b8",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8097/acceso",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8097/admin/animales",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8097/admin/turnos",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8097/admin/turnos/01a1f4a2-70f1-7d15-8c8a-3beb5a9f567a/inscripcion",
+      "status": 409,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8097/acceso",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8097/admin/animales",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8097/admin/turnos/01a1f4a2-c854-755e-83d6-ae3ce203c9b8",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8097/admin/turnos/01a1f4a2-c854-755e-83d6-ae3ce203c9b8/editar",
+      "status": 409,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8097/admin/turnos/01a1f4a2-c854-755e-83d6-ae3ce203c9b8",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8097/admin/turnos/nuevo",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8097/admin/turnos/nuevo",
+      "status": 422,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8097/acceso",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8097/admin/animales",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8097/admin/turnos",
+      "status": 403,
+      "type": "Fetch"
+    }
+  ]
+}

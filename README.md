@@ -86,9 +86,9 @@ php bin/console lint:container
 php bin/console lint:twig templates
 ```
 
-Con HU-01 a HU-04 la suite completa pasa **39 pruebas y 329 aserciones** sobre `main` (cdb0416),
-repetida el 2026-11-18 en una base `_test` recién migrada
-([evidencia](docs/evidencias/revision-previa-spec-005-2026-11-18.txt)). Si una base `_test` antigua
+Con HU-01 a HU-06 la suite completa pasa **81 pruebas y 778 aserciones** sobre `main` (edc7941), y con HU-07
+en la rama `spec-007`, **99 pruebas y 1039 aserciones**, ambas el 2026-11-19 en bases `_test` recién migradas
+([evidencia](docs/evidencias/spec-007-phpunit.txt)). Si una base `_test` antigua
 conserva tablas de las implementaciones retiradas el 5 de noviembre, las migraciones fallan con
 «relation already exists»: crea otra base terminada en `_test` en lugar de limpiar la existente.
 Las respuestas 403/404/409/422 esperadas se registran como errores HTTP comprobados; no son fallos de PHPUnit.
@@ -105,3 +105,8 @@ las PR hacia `main`. La ratificación de la Constitution y los nombres académic
 - HU-05: la coordinadora formaliza la entrega desde la solicitud
   aprobada (cuota y confirmación del abono), genera el contrato imprimible y consulta los seguimientos en
   `/admin/seguimientos`. Detalle en [spec-005](specs/spec-005/spec.md).
+- HU-06: las familias de acogida (`ROLE_FOSTER`) indican capacidad y periodos y anotan novedades en `/acogida`;
+  la coordinadora registra y finaliza acogidas desde la ficha del animal. Detalle en [spec-006](specs/spec-006/spec.md).
+- HU-07 (rama `spec-007`, pendiente de revisión): la coordinadora crea los turnos de paseo y limpieza y los
+  voluntarios se apuntan o se dan de baja en `/admin/turnos`, que destaca los turnos sin el mínimo cuando faltan
+  48 horas o menos. Detalle en [spec-007](specs/spec-007/spec.md).

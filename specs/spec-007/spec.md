@@ -2,9 +2,10 @@
 
 Fecha: 2026-11-05 (especificación inicial); concretada el 2026-11-19 por encargo de `aggg15`.
 Responsable GitHub: `aggg15`. Revisión prevista: `abcb5-ua` (pendiente).
-Estado: especificada y aclarada ([clarify](clarify.md)) en la rama `spec-007`, creada desde `main` (edc7941,
-con HU-01 a HU-06 integradas). Planificación, tareas y análisis en [plan](plan.md), [tasks](tasks.md) y
-[analyze](analyze.md).
+Estado: especificada, aclarada ([clarify](clarify.md)) y planificada ([plan](plan.md)) en la rama `spec-007`,
+creada desde `main` (edc7941, con HU-01 a HU-06 integradas). Con [tareas](tasks.md), [analyze](analyze.md),
+[implementación](implement.md) (T705–T718) y verificación manual; [converge](converge.md) con T721–T722 completadas
+y convergido. Pendiente la revisión de `abcb5-ua`.
 
 ## Historia de usuario
 

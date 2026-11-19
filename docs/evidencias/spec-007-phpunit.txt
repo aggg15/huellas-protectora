@@ -1,0 +1,87 @@
+# Evidencia de spec-007 (HU-07): pruebas automáticas
+
+Fecha: 2026-11-19. Rama `spec-007`, base edc7941 (main con HU-01 a HU-06), con los cambios de implementación del
+commit que añade este fichero. Responsable: `aggg15`, con asistencia de Claude Code. Datos de prueba ficticios.
+Entorno: macOS 27.2.1 con PHP 8.3.30 local (pdo_pgsql, gd, intl) y PostgreSQL 16.15 (`postgres:16-alpine`,
+contenedor `huellas-database-1` de Compose). Bases propias con sufijo `_test`, borradas y creadas de nuevo antes de
+cada ejecución: `huellas_rev20261119_test` (línea base) y `huellas_spec007_test`. No se usa ni se modifica la base
+normal. Variables: APP_ENV=test y DATABASE_URL hacia esa base, exportadas en la sesión (sin cambiar `.env.test.local`).
+
+## Línea base antes de especificar (T701)
+
+    vendor/bin/phpunit   (main edc7941, base _test recién migrada)
+      -> OK (81 tests, 778 assertions)
+
+## Comandos y resultado tras la implementación (inicio 16:24 UTC)
+
+    composer validate --strict -> ./composer.json is valid
+    php bin/console doctrine:migrations:migrate --no-interaction
+      -> 8 migraciones, 90 consultas; versión Version20261119180000
+    php bin/console doctrine:migrations:migrate prev --no-interaction  -> Version20261119120000 (down de HU-07)
+    php bin/console doctrine:migrations:migrate --no-interaction       -> Version20261119180000 (13 consultas)
+    php bin/console doctrine:schema:validate
+      -> [OK] The mapping files are correct. [OK] The database schema is in sync with the mapping files.
+         (incluye el único uniq_shift_signup_volunteer declarado en el mapeo)
+    php -l (src, tests, migrations, tools, config, public) -> 67 ficheros sin errores
+    php bin/console lint:container -> OK; lint:twig templates -> 26 ficheros OK; lint:yaml config -> 6 ficheros OK
+    vendor/bin/phpunit --testdox
+      -> OK (99 tests, 1039 assertions)
+         Spec001 7/7, Spec002 8/8, Spec003 11/11, Spec004 13/13, Spec005 19/19, Spec006 23/23 (sin modificar sus
+         pruebas), Spec007 18/18
+
+## Repetición tras las tareas de converge T721–T722 (16:33–16:34 UTC)
+
+Base `huellas_spec007_test` borrada y migrada de nuevo; `doctrine:schema:validate`, `lint:twig` y `lint:container`
+correctos.
+
+    vendor/bin/phpunit --testdox -> OK (99 tests, 1039 assertions), 51 s
+      Spec001 7, Spec002 8, Spec003 11, Spec004 13, Spec005 19, Spec006 23, Spec007 18
+
+Las líneas «[error] Uncaught PHP Exception …» de la salida son los 403/404 esperados que el núcleo de Symfony
+registra durante las pruebas de permisos y CSRF; no son fallos.
+
+## Spec007
+
+ ✔ Shift shows schedule limits and signups                  CA-07-01 (listado y ficha con nombres)
+ ✔ Volunteer signs up for shift with places                 CA-07-02
+ ✔ Full shift rejects another signup                        CA-07-03 (página abierta y última plaza ocupada: 409)
+ ✔ Undercovered shift is highlighted within 48 hours        CA-07-04 (voluntaria y coordinadora; > 48 h; en curso)
+ ✔ Highlight window is exact and uses real hours            CA-07-04 (MockClock: 48 h − 1 min / 48 h / inicio;
+                                                            cambio de hora del 28-mar-2027; contiguos)
+ ✔ Shift reaching minimum is no longer highlighted          CA-07-05
+ ✔ Coordinator creates shift                                CA-07-06 (horas de Madrid guardadas en UTC)
+ ✔ Coordinator changes limits within rules                  CA-07-06 (máximo = inscritas → Completo; 409)
+ ✔ Invalid shift data is rejected                           CA-07-07 (11 casos 422; hora inexistente de marzo;
+                                                            hora repetida de octubre → la primera)
+ ✔ Volunteer leaves shift and highlight returns             CA-07-08 (vuelve el destacado; baja sin figurar 409)
+ ✔ Started shift rejects signup leave and changes           CA-07-08 (409 en las tres operaciones)
+ ✔ Duplicate and overlapping signups are rejected           CA-07-09 (mismo turno, coincidente, contiguo)
+ ✔ Concurrent signups do not exceed maximum                 CA-07-10
+ ✔ Concurrent overlapping signups create one                CA-07-10
+ ✔ Concurrent maximum change and signup stay within limit   CA-07-10
+ ✔ Only volunteers see and join shifts                      CA-07-11 (anónimo, solicitante, familia, veterinaria)
+ ✔ Only coordinator creates and edits shifts                CA-07-11
+ ✔ Shift forms require csrf                                 CA-07-11 y caso límite (nombre con HTML escapado)
+
+## Antes y después: mutaciones (T715)
+
+Cada mutación se aplicó a una copia de `src/Service/ShiftService.php`, se ejecutó la prueba indicada y se restauró
+el fichero (comprobado con `cmp`). Con el código sin mutar, las tres pruebas pasan (resultado anterior).
+
+    M1  sin FOR UPDATE en la lectura del turno (signUp)
+        --filter testConcurrentSignupsDoNotExceedMaximum
+        -> FALLA: ['signup:ok', 'signup:ok'] en lugar de ['signup:ok', 'signup:rechazada'] (dos inscripciones admitidas con una sola plaza libre)
+    M2  sin el bloqueo de la cuenta del voluntario (signUp)
+        --filter testConcurrentOverlappingSignupsCreateOne
+        -> FALLA: ['signup:ok', 'signup:ok'] (la misma persona en dos turnos coincidentes)
+    M3  sin elegir la primera de las dos 02:30 de octubre
+        --filter testInvalidShiftDataIsRejected
+        -> FALLA: se guarda '2027-10-31 01:30:00' (UTC) en lugar de '2027-10-31 00:30:00'
+
+## Defectos detectados por las pruebas durante la implementación
+
+Primera ejecución de Spec007: 4 pruebas fallidas de 18. Dos eran errores del código y se corrigieron en
+`ShiftService` (véase specs/spec-007/implement.md): la hora repetida de octubre se interpretaba como la segunda y la
+comparación con segundos tomaba un formulario sin cambios como un cambio de horario. Las otras dos eran errores de
+las propias pruebas (texto de una lista `dl` comparado como una sola cadena y un `modify('-1 hour 1 minute')` que
+suma el minuto) y se corrigieron en la prueba sin cambiar lo que comprueban.
