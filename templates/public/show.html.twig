@@ -70,6 +70,14 @@
       {% endif %}
     </div>
 
+    {% if not is_granted('ROLE_STAFF') and not is_granted('ROLE_FOSTER') %}
+      <div class="box" id="sponsor-box">
+        <h2 class="title is-5">¿Prefieres apadrinarlo?</h2>
+        <p class="mb-4 has-text-grey">Apóyalo con una aportación mensual desde 10 € y recibe sus novedades mientras busca familia.</p>
+        <a class="button is-primary is-outlined is-fullwidth" href="{{ path('sponsorship_new', {id: animal.id}) }}">Apadrinar a {{ animal.code }}</a>
+      </div>
+    {% endif %}
+
     <div class="box">
       <h3 class="title is-6">Compromiso Huellas</h3>
       <ul class="is-size-7 has-text-grey">

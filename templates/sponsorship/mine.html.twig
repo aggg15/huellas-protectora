@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mis apadrinamientos · Huellas{% endblock %}
+
+{% block body %}
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">MI CUENTA</p>
+    <h1 class="title">Mis apadrinamientos</h1>
+    <p class="subtitle is-6">Tus aportaciones mensuales y las novedades de los animales que apadrinas.</p>
+  </div>
+  <a class="button is-primary is-outlined" href="{{ path('public_catalog') }}">Ver animales</a>
+</div>
+
+{% if rows is empty %}
+  <div class="box empty-state">
+    <h2 class="title is-5">Todavía no apadrinas a ningún animal</h2>
+    <p>Abre la ficha de un animal del catálogo y pulsa «Apadrinar» para apoyarlo con una aportación mensual desde 10 €.</p>
+  </div>
+{% endif %}
+
+{% for row in rows %}
+  {% set s = row.sponsorship %}
+  <article class="box sponsorship-card{{ row.state == 'pending' ? ' sponsorship-pending' }}" id="sponsorship-{{ s.id }}" aria-labelledby="sponsorship-title-{{ s.id }}">
+    <div class="sponsorship-head">
+      <h2 class="title is-5 mb-2" id="sponsorship-title-{{ s.id }}">{{ s.animal.code }}</h2>
+      {% if row.state == 'active' %}<span class="tag is-success is-light">Activo</span>
+      {% elseif row.state == 'pending' %}<span class="tag is-warning is-light">Pendiente de tu decisión</span>
+      {% else %}<span class="tag is-light">Terminado</span>{% endif %}
+    </div>
+    <dl class="facts sponsorship-facts">
+      <dt>Aportación mensual</dt><dd>{{ s.amountLabel }}</dd>
+      <dt>Desde</dt><dd>{{ s.startedAt|date('d/m/Y', 'Europe/Madrid') }}</dd>
+      {% if row.state == 'ended' %}
+        <dt>Terminado</dt><dd>{{ s.endedAt|date('d/m/Y', 'Europe/Madrid') }} · {{ s.endReasonLabel }}{% if row.next %} ({{ row.next.animal.code }}){% endif %}</dd>
+      {% endif %}
+    </dl>
+
+    {% if row.state == 'pending' %}
+      <div class="notification is-warning is-light" role="status">
+        <p><strong>¡{{ s.animal.code }} ha encontrado familia!</strong>{% if row.adoption %} Fue adoptado el {{ row.adoption.deliveredAt|date('d/m/Y', 'Europe/Madrid') }}.{% endif %}
+          Tu aportación está en pausa desde la adopción hasta que decidas cómo continuar: apadrinar a otro animal o terminar tu colaboración.</p>
+      </div>
+      {% if formId == s.id %}{% include 'partials/errors.html.twig' %}{% endif %}
+      {% if targets is empty %}
+        <p class="mb-3">Ahora mismo no hay otros animales disponibles para apadrinar. Puedes volver más tarde o terminar tu colaboración.</p>
+      {% else %}
+        <form method="post" action="{{ path('sponsorship_move', {id: s.id}) }}" class="mb-3" id="form-move-{{ s.id }}">
+          <input type="hidden" name="_token" value="{{ csrf_token('sponsorship-move-' ~ s.id) }}">
+          <div class="field">
+            <label class="label" for="animal-{{ s.id }}">Apadrinar a otro animal con la misma aportación ({{ s.amountLabel }})</label>
+            <div class="select is-fullwidth"><select id="animal-{{ s.id }}" name="animal" required{% if formId == s.id and errors.animal is defined %} aria-invalid="true" aria-describedby="error-animal"{% endif %}>
+              <option value="">Elige un animal</option>
+              {% for animal in targets %}<option value="{{ animal.id }}">{{ animal.code }} · {{ animal.species == 'dog' ? 'Perro' : 'Gato' }}, {{ {small: 'pequeño', medium: 'mediano', large: 'grande'}[animal.size] }}</option>{% endfor %}
+            </select></div>
+          </div>
+          <button class="button is-primary">Apadrinar al animal elegido</button>
+        </form>
+      {% endif %}
+    {% elseif row.state == 'active' and formId == s.id %}
+      {% include 'partials/errors.html.twig' %}
+    {% endif %}
+
+    {% if row.state != 'ended' %}
+      <form method="post" action="{{ path('sponsorship_finish', {id: s.id}) }}" class="mb-4">
+        <input type="hidden" name="_token" value="{{ csrf_token('sponsorship-finish-' ~ s.id) }}">
+        <button class="button is-light">Terminar mi colaboración</button>
+      </form>
+    {% endif %}
+
+    <h3 class="title is-6 mb-2">Novedades</h3>
+    {% if row.updates is empty %}
+      <p class="has-text-grey">Todavía no hay novedades{{ row.state == 'ended' ? ' de este periodo' }}.</p>
+    {% else %}
+      <ul class="sponsor-updates">
+        {% for update in row.updates %}
+          <li><p class="is-size-7 has-text-grey">{{ update.writtenAt|date('d/m/Y H:i', 'Europe/Madrid') }}</p><p class="answer">{{ update.body }}</p></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </article>
+{% endfor %}
+{% endblock %}

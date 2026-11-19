@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Apadrinamientos · Huellas{% endblock %}
+
+{% block body %}
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">COORDINACIÓN</p>
+    <h1 class="title">Apadrinamientos</h1>
+    <p class="subtitle is-6">Animales con padrinos activos. Las novedades que publiques aquí las ven sus padrinos en «Mis apadrinamientos»; las notas de acogida siguen siendo internas.</p>
+  </div>
+</div>
+
+{% if groups is empty %}
+  <div class="box empty-state">
+    <h2 class="title is-5">No hay apadrinamientos activos</h2>
+    <p>Las personas apadrinan desde la ficha pública de un animal disponible.</p>
+  </div>
+{% endif %}
+
+{% for group in groups %}
+  {% set animal = group.animal %}
+  <section class="box" id="sponsored-{{ animal.id }}" aria-labelledby="sponsored-title-{{ animal.id }}">
+    <div class="sponsorship-head">
+      <h2 class="title is-5 mb-2" id="sponsored-title-{{ animal.id }}"><a href="{{ path('animal_show', {id: animal.id}) }}">{{ animal.code }}</a></h2>
+      {% if animal.status == 'adopted' %}<span class="tag is-warning is-light">Adoptado · {{ group.pending }} {{ group.pending == 1 ? 'apadrinamiento pendiente' : 'apadrinamientos pendientes' }} de decisión</span>{% endif %}
+    </div>
+    <table class="table is-fullwidth stacked-table sponsors">
+      <thead><tr><th scope="col">Persona que apadrina</th><th scope="col">Aportación mensual</th><th scope="col">Desde</th></tr></thead>
+      <tbody>
+        {% for s in group.sponsorships %}
+          <tr>
+            <td data-label="Persona">{{ s.sponsor.name }}</td>
+            <td data-label="Aportación">{{ s.amountLabel }}{% if s.pendingDecision %} <span class="tag is-light">En pausa</span>{% endif %}</td>
+            <td data-label="Desde">{{ s.startedAt|date('d/m/Y', 'Europe/Madrid') }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% if animalId == animal.id %}{% include 'partials/errors.html.twig' %}{% endif %}
+    <form method="post" action="{{ path('admin_sponsor_update_add', {id: animal.id}) }}" id="form-update-{{ animal.id }}">
+      <input type="hidden" name="_token" value="{{ csrf_token('sponsor-update-' ~ animal.id) }}">
+      <div class="field">
+        <label class="label" for="body-{{ animal.id }}">Nueva novedad para los padrinos de {{ animal.code }}</label>
+        <textarea class="textarea" id="body-{{ animal.id }}" name="body" rows="3" maxlength="2000" required{% if animalId == animal.id and errors.body is defined %} aria-invalid="true" aria-describedby="error-body"{% endif %}>{{ animalId == animal.id ? formData.body|default('') }}</textarea>
+        <p class="help">Hasta 2000 caracteres. No se puede editar ni borrar después.</p>
+      </div>
+      <button class="button is-primary">Publicar novedad</button>
+    </form>
+
+    <h3 class="title is-6 mt-4 mb-2">Novedades publicadas</h3>
+    {% if group.updates is empty %}
+      <p class="has-text-grey">Sin novedades todavía.</p>
+    {% else %}
+      <ul class="sponsor-updates">
+        {% for update in group.updates %}
+          <li><p class="is-size-7 has-text-grey">{{ update.writtenAt|date('d/m/Y H:i', 'Europe/Madrid') }} · {{ update.author.name }}</p><p class="answer">{{ update.body }}</p></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </section>
+{% endfor %}
+{% endblock %}
