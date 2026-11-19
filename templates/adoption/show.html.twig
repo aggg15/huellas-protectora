@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Adopción de {{ adoption.animalCode }} · Huellas{% endblock %}
+
+{% block body %}
+<a class="back-link" href="{{ path('admin_application_show', {id: adoption.application.id}) }}">← Volver a la solicitud</a>
+
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">ADOPCIÓN FORMALIZADA</p>
+    <h1 class="title">{{ adoption.animalCode }} · {{ adoption.adopterName }}</h1>
+    <p class="subtitle is-6">Entrega del {{ adoption.deliveredAt|date('d/m/Y \\a \\l\\a\\s H:i', 'Europe/Madrid') }} · contrato {{ adoption.contractNumber }}</p>
+  </div>
+  <a class="button is-primary is-outlined" href="{{ path('adoption_contract', {id: adoption.id}) }}">Ver contrato</a>
+</div>
+
+<div class="detail-grid">
+  <section class="box">
+    <h2 class="title is-5">Planificación de seguimientos</h2>
+    <div class="table-container">
+      <table class="table is-fullwidth" id="follow-ups">
+        <thead><tr><th scope="col">Seguimiento</th><th scope="col">Fecha prevista</th><th scope="col">Estado</th></tr></thead>
+        <tbody>
+          {% for followUp in adoption.followUps %}
+            <tr>
+              <td>{{ followUp.kindLabel }}</td>
+              <td>{{ followUp.dueOn|date('d/m/Y', false) }}</td>
+              <td><span class="tag is-info is-light">{{ followUp.statusLabel }}</span></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="is-size-7 has-text-grey">Responsable: coordinación de adopciones. El registro de las visitas no forma parte de esta aplicación.</p>
+  </section>
+
+  <aside class="box">
+    <h2 class="title is-5">Entrega y cuota</h2>
+    <dl class="facts">
+      <dt>Animal</dt><dd><a href="{{ path('animal_show', {id: adoption.animal.id}) }}">{{ adoption.animalCode }}</a></dd>
+      <dt>Adoptante</dt><dd>{{ adoption.adopterName }}</dd>
+      <dt>Email</dt><dd>{{ adoption.adopterEmail }}</dd>
+      <dt>Cuota abonada</dt><dd id="fee">{{ adoption.feeLabel }}</dd>
+      <dt>Formalizada por</dt><dd>{{ adoption.formalizedBy.name }}</dd>
+    </dl>
+  </aside>
+</div>
+{% endblock %}

@@ -2,7 +2,7 @@ name: CI de Huellas
 
 on:
   push:
-    branches: [main, spec-001, spec-002, spec-003, spec-004]
+    branches: [main, spec-001, spec-002, spec-003, spec-004, spec-005, spec-006, spec-007, spec-008]
   pull_request:
     branches: [main]
 

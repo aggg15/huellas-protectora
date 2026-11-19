@@ -18,4 +18,4 @@ Comandos ejecutados, resultados y enlace a evidencias. Distinguir comprobaciones
 - [ ] Las comprobaciones afectadas pasan y la documentación coincide con el código.
 - [ ] El compañero ha comprobado al menos un criterio y registrado su revisión en GitHub.
 
-No marcar revisión o ratificación pendientes como realizadas. La entrega actual se limita a spec-001.
+No marcar revisión o ratificación pendientes como realizadas. Una PR corresponde a una sola historia.

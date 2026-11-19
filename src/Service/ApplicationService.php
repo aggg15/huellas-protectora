@@ -203,7 +203,13 @@ class ApplicationService
 
         $this->em->wrapInTransaction(function () use ($application, $reason): void {
             $connection = $this->em->getConnection();
-            $connection->executeQuery('SELECT id FROM animal WHERE id = ? FOR UPDATE', [$application->animal->id]);
+            // Se decide con los estados leídos bajo bloqueo (HU-05, D17): una formalización simultánea
+            // puede haber cerrado la reserva después de la comprobación previa.
+            $animalStatus = $connection->fetchOne('SELECT status FROM animal WHERE id = ? FOR UPDATE', [$application->animal->id]);
+            $applicationStatus = $connection->fetchOne('SELECT status FROM adoptionapplication WHERE id = ? FOR UPDATE', [$application->id]);
+            if ($applicationStatus !== 'approved' || $animalStatus !== 'reserved') {
+                throw new ApplicationRefused('La reserva ya no está activa (la adopción puede haberse formalizado); no se ha liberado.');
+            }
 
             $application->status = 'cancelled';
             $application->cancellationReason = $reason;

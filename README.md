@@ -1,25 +1,30 @@
-# Huellas · spec-001
+# Huellas · gestión de adopciones
 
-Publicación vigente: **únicamente HU-01 / spec-001**, por indicación del usuario tras consultar al
-profesor el 5 de noviembre de 2026. Incluye registro de animales, fotografías protegidas, cuarentena
-de diez periodos de 24 horas y revisión veterinaria, junto con la base técnica común necesaria.
+Estado a 18 de noviembre de 2026: `main` integra **HU-01 a HU-04** (PR #1, #5, #6 y #8, cada una
+aprobada en GitHub por el otro integrante). HU-05 se especifica en la rama `spec-005`; HU-06 a HU-08
+solo tienen especificación inicial y no están implementadas.
 
-**Trabajo en equipo preparado:** Spec Kit 1.0.11 inicializado para Codex, skills compartidas,
-selección de contexto y CI. Consulta [CONTRIBUTING](CONTRIBUTING.md) para clonar y trabajar con el
-compañero; [AGENTS.md](AGENTS.md) recoge las instrucciones comunes del proyecto.
+| Historia | Contenido implementado | PR | Autoría observada en GitHub |
+|---|---|---|---|
+| HU-01 | Ficha, fotografías protegidas, cuarentena de 240 horas y revisión veterinaria | #1 | `aggg15` |
+| HU-02 | Catálogo público y filtros por especie, tamaño y edad | #5 | `abcb5-ua` |
+| HU-03 | Solicitud con cuestionario completo y máximo de dos abiertas | #6 | `aggg15` |
+| HU-04 | Entrevista, rechazo motivado, aprobación con reserva y espera | #8 | `abcb5-ua` |
+
+El 5 de noviembre se limitó temporalmente la publicación a HU-01 tras consultar al profesor y se
+cerraron las PR #2 a #4. Las historias siguientes se han publicado después por encargo expreso del
+usuario, sobre `main`; la cronología está en [decisiones](docs/decisiones.md).
+
+**Trabajo en equipo:** Spec Kit 1.0.11 inicializado para Codex, skills compartidas, selección de
+contexto y CI. Consulta [CONTRIBUTING](CONTRIBUTING.md) para clonar y trabajar con el compañero;
+[AGENTS.md](AGENTS.md) recoge las instrucciones comunes del proyecto.
 
 Repositorio: [aggg15/huellas-protectora](https://github.com/aggg15/huellas-protectora).
-La rama `spec-001` contiene esta implementación y su [PR #1](https://github.com/aggg15/huellas-protectora/pull/1)
-propone integrarla en `main`, pendiente de revisión del compañero. Las PR #2, #3 y #4 se retiran y
-sus ramas remotas se eliminan. El trabajo posterior se conserva como copia local de recuperación.
-
-HU-02 a HU-08 permanecen como documentación de planificación; su funcionalidad no está implementada
-en esta rama. La portada pública es una página de entrada: el catálogo de adopción corresponde a HU-02.
 
 ## Código y documentación
 
-- [Especificación HU-01](specs/spec-001/spec.md), [tareas](specs/spec-001/tasks.md),
-  [implementación](specs/spec-001/implement.md) y [validación](docs/evidencias/spec-001-phpunit.txt).
+- Especificaciones y ciclo SDD de cada historia en `specs/spec-00N/` (spec, clarify, plan, tasks,
+  analyze, implement y converge cuando se han elaborado); evidencias en `docs/evidencias/`.
 - [Constitution](.specify/memory/constitution.md), [plan común](plan.md), [modelo de datos](data-model.md),
   [decisiones](docs/decisiones.md) y [agrupamiento](docs/agrupamiento.md).
 - Código Symfony en `src/`, vistas Twig en `templates/`, recursos Hotwire/Bulma en `public/` y
@@ -51,8 +56,7 @@ php bin/console doctrine:migrations:migrate --no-interaction
 php -d upload_max_filesize=5M -d post_max_size=32M -d max_file_uploads=20 -S 127.0.0.1:8086 -t public public/router.php
 ```
 
-Abre http://127.0.0.1:8086. Esta versión proporciona PostgreSQL en Compose y ejecuta PHP localmente;
-no incluye el servicio web Docker de la implementación posterior retirada. No se cargan cuentas
+Abre http://127.0.0.1:8086. Esta versión proporciona PostgreSQL en Compose y ejecuta PHP localmente. No se cargan cuentas
 ni animales automáticamente. Las cuentas internas se crean mediante un comando con contraseña oculta:
 
 ```sh
@@ -61,7 +65,7 @@ php bin/console app:create-user veterinario@example.test "Veterinario ficticio" 
 php bin/console app:create-user coordinadora@example.test "Coordinadora ficticia" --role=ROLE_COORDINATOR
 ```
 
-## Comprobación de spec-001
+## Pruebas
 
 Configura `.env.test.local` con `APP_SECRET` de pruebas y `DATABASE_URL` para una base separada cuyo
 nombre termine en `_test`, usando el servidor PostgreSQL local. Las pruebas comprueban ese sufijo
@@ -79,30 +83,22 @@ php bin/console lint:container
 php bin/console lint:twig templates
 ```
 
-El hito inicial y la [verificación del alcance corregido](docs/evidencias/spec-001-alcance-corregido.txt)
-pasan **7 pruebas y 32 aserciones**. Comprueban alta con fotografía real, ocultación de
-cuarentena y fotos al público, límite exacto de 240 horas, promoción sin modificar reservas, revisión
-veterinaria por su rol, entradas inválidas sin escrituras parciales, CSRF y permisos de creación.
-Las respuestas 403/404 esperadas se registran como errores HTTP comprobados; no son fallos de PHPUnit.
+Con HU-01 a HU-04 la suite completa pasa **39 pruebas y 329 aserciones** sobre `main` (cdb0416),
+repetida el 2026-11-18 en una base `_test` recién migrada
+([evidencia](docs/evidencias/revision-previa-spec-005-2026-11-18.txt)). Si una base `_test` antigua
+conserva tablas de las implementaciones retiradas el 5 de noviembre, las migraciones fallan con
+«relation already exists»: crea otra base terminada en `_test` en lugar de limpiar la existente.
+Las respuestas 403/404/409/422 esperadas se registran como errores HTTP comprobados; no son fallos de PHPUnit.
 
-Con HU-01 a HU-04 la suite completa pasa **39 pruebas y 329 aserciones**
-([evidencia de spec-004](docs/evidencias/spec-004-phpunit.txt)). El CI ejecuta las pruebas de cada
-historia (`tests/Spec00NTest.php`) en todas las ramas `spec-00*` y en las PR hacia `main`.
+El CI ejecuta las pruebas de cada historia (`tests/Spec00NTest.php`) en las ramas `spec-00*` y en
+las PR hacia `main`. La ratificación de la Constitution y los nombres académicos siguen pendientes.
 
-La revisión del compañero, la ratificación de la Constitution y el reparto nominal permanecen pendientes.
+## Notas por historia
 
-## spec-003 · solicitudes de adopción (HU-03)
-
-La rama `spec-003`, construida sobre `main` con HU-02 ya integrada, añade la solicitud con cuestionario completo, el
-máximo de dos solicitudes abiertas por cuenta y la consulta de candidaturas por la coordinadora.
-Las personas solicitantes crean su cuenta en `/registro`; los roles internos siguen creándose por
-comando. Documentación: [spec](specs/spec-003/spec.md), [plan](specs/spec-003/plan.md),
-[tareas](specs/spec-003/tasks.md) y [evidencia](docs/evidencias/spec-003-phpunit.txt).
-
-```sh
-php bin/console doctrine:migrations:migrate --env=test --no-interaction
-vendor/bin/phpunit --filter Spec003 --testdox
-```
-
-Resultado del 2026-11-17: **11 pruebas y 127 aserciones** correctas, incluida una prueba con cuatro
-procesos simultáneos. La revisión del compañero queda pendiente.
+- HU-03: las personas solicitantes crean su cuenta en `/registro` (solo `ROLE_USER`); los roles
+  internos siguen creándose por comando. Detalle en [spec-003](specs/spec-003/spec.md).
+- HU-04: la coordinadora gestiona entrevistas, decisiones y liberación de reservas en
+  `/admin/solicitudes`. Detalle en [spec-004](specs/spec-004/spec.md).
+- HU-05 (rama `spec-005`, pendiente de PR): la coordinadora formaliza la entrega desde la solicitud
+  aprobada (cuota y confirmación del abono), genera el contrato imprimible y consulta los seguimientos en
+  `/admin/seguimientos`. Detalle en [spec-005](specs/spec-005/spec.md).

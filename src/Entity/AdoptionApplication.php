@@ -16,6 +16,7 @@ class AdoptionApplication
         'approved' => 'Aprobada',
         'rejected' => 'Rechazada',
         'cancelled' => 'Cancelada',
+        'formalized' => 'Adopción formalizada',
     ];
 
     #[ORM\Id, ORM\Column(length: 36)]

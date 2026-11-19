@@ -50,7 +50,7 @@ Estado: Clarificaciones acordadas y documentadas en `docs/decisiones.md`.
   * `GET /animales` (`name: 'public_catalog'`): Catálogo público con barra de filtros, rejilla de tarjetas con fotos y estado vacío.
   * `GET /animales/{id}` (`name: 'public_animal_show'`): Ficha pública detallada del animal con galería de fotos, edad formateada (años y meses), especie, tamaño, procedencia e indicación de acogida.
 * **Navegación:**
-  * El enlace principal "Buscar un compañero" en el encabezado de [`templates/base.html.twig`](file:///c:/Users/34635/Desktop/ingenieria_requisitos/huellas-protectora/templates/base.html.twig) apunta directamente a la ruta `public_catalog` (`/animales`).
+  * El enlace principal "Buscar un compañero" en el encabezado de [`templates/base.html.twig`](../../templates/base.html.twig) apunta directamente a la ruta `public_catalog` (`/animales`).
 * **Anonimato y seguridad:**
   * No se requiere inicio de sesión para consultar el catálogo ni la ficha pública.
   * Los accesos anónimos nunca revelan notas veterinarias, revisiones ni datos privados de la gestión interna.

@@ -1,8 +1,9 @@
 # Plan común de Huellas
 
-Fecha: 2026-11-05. Alcance vigente: únicamente HU-01 (spec-001), tras la indicación del usuario
-después de consultar al profesor. Las otras siete historias conservan su documentación de
-planificación y sus puntos de integración, sin formar parte de esta implementación publicada.
+Fecha: 2026-11-05; actualizado el 2026-11-18. El 2026-11-05 el alcance se limitó a HU-01 tras
+consultar al profesor. Después, por encargo expreso del usuario, se han integrado en `main` HU-02 a
+HU-04 (PR #5, #6 y #8). HU-05 se planificará en `specs/spec-005/plan.md` sobre este plan común;
+HU-06 a HU-08 conservan su documentación inicial y sus puntos de integración.
 
 ## Arquitectura y pila
 
@@ -20,14 +21,15 @@ y también habrá un servicio web en Compose para reproducir el arranque.
 
 ## Estructura
 
-- src/Entity: User, Animal, AnimalPhoto, VeterinaryReview y posteriormente AdoptionApplication.
+- src/Entity: User, Animal, AnimalPhoto, VeterinaryReview y AdoptionApplication (HU-03/04); HU-05
+  añadirá la adopción formal y sus seguimientos.
 - src/Service: operaciones de cada historia, reloj inyectable y validación central del dominio.
 - src/Controller: catálogo público, acceso y administración según roles.
 - templates/: vistas Twig en español. public/: entrada web y recursos locales, sin fotos privadas.
 - var/uploads/: fotografías protegidas; la entrega de archivos comprueba la disponibilidad y permisos.
 - migrations/: cambios acumulativos; no se resetean datos de la aplicación al probar.
-- specs/spec-001 a specs/spec-008: especificaciones; solo spec-001 es una implementación activa.
-  Su plan local referencia este plan común y permite resolver el contexto mediante Spec Kit.
+- specs/spec-001 a specs/spec-008: especificaciones; HU-01 a HU-04 están implementadas. Cada plan
+  local referencia este plan común y permite resolver el contexto mediante Spec Kit.
 - tests/: pruebas unitarias y HTTP con PostgreSQL, independientes de la base de demostración.
 
 ## Contratos y coherencia
@@ -48,12 +50,14 @@ HU-03 bloqueará la fila de la persona y del animal al presentar una solicitud. 
 el animal antes de aprobar y actualizará la candidata y las otras solicitudes activas en una misma
 transacción. Las esperas y aprobadas cuentan como abiertas. Conflictos y errores no producen
 reservas dobles ni escrituras parciales. El código y los tests concretos se incorporan en cada fase.
+Toda operación que cambie el estado de una reserva (aprobar, liberar o formalizar) debe volver a leer
+el estado de la solicitud y del animal después de obtener el bloqueo, no antes.
 
 ## Validación y secuencia
 
-Cada rama spec-00N se desarrollará sobre la anterior ya verificada, para conservar sus dependencias.
+Cada rama spec-00N se crea desde `main` después de integrar la historia anterior de la que depende.
 main no integra código sin revisión del compañero. Se guardarán commits por historia y el informe
-indicará la revisión humana pendiente. Se ejecutará PHPUnit con PostgreSQL para cada hito y se
+indicará si la revisión humana está pendiente o registrada en la PR. Se ejecutará PHPUnit con PostgreSQL para cada hito y se
 repetirá la regresión afectada; al terminar se comprobará el recorrido integrado y móvil/escritorio.
 Los informes describen fases SDD aplicadas por Codex, sin afirmar la ejecución de comandos slash
 de Spec Kit que no estaban cargados cuando se escribieron. Desde el 2026-11-16, Spec Kit 1.0.11

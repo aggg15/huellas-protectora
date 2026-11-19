@@ -27,3 +27,6 @@ application.register('questionnaire', class extends Controller {
     this.experienceOptionalTarget.hidden = !none;
   }
 });
+application.register('print', class extends Controller {
+  print() { window.print(); }
+});

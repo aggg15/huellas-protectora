@@ -24,3 +24,6 @@ Permisos, CSRF y alta sin roles: `testPermissionsAndCsrfProtectApplications` y
 - Pendiente: comprobación visual móvil/escritorio y por teclado, y revisión del compañero.
 
 Evidencia: ../../docs/evidencias/spec-003-phpunit.txt.
+
+Nota del 2026-11-18: en `main` (cdb0416) la prueba de promoción de Spec002 pasa (8/8 en Spec002,
+39/39 en la suite). Véase ../../docs/evidencias/revision-previa-spec-005-2026-11-18.txt.

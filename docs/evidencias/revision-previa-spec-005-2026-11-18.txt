@@ -1,0 +1,65 @@
+# Revisión de HU-01 a HU-04 antes de especificar HU-05
+
+Fecha: 2026-11-18 (última ejecución 22:38 UTC). Rama `spec-005`, creada desde `main` (cdb0416).
+Responsable: `aggg15`, con asistencia de Claude Code. No se ha ejecutado ninguna skill `$speckit-*`.
+Alcance: revisión documental de Constitution, plan.md, data-model.md, docs/decisiones.md y los
+documentos del ciclo de specs/spec-001 a specs/spec-004; contraste con el código, las migraciones, el
+CI y las PR; ejecución de la suite. El código de la aplicación no se modifica en esta revisión.
+
+## Entorno
+
+- PHP 8.3.30 local; PostgreSQL 16 (`postgres:16-alpine`) en el contenedor `huellas-database-1`.
+- La base local `huellas_test` conserva tablas de las implementaciones retiradas el 2026-11-05
+  (migraciones Version20261105150248 y Version20261105150714, que ya no existen en el repositorio).
+  `doctrine:migrations:migrate` falla con «relation "adoptionapplication" already exists» y la suite da
+  39 pruebas con 19 errores y 3 fallos contra ella. Es un problema del entorno local, no del código:
+  no se ha limpiado ni modificado esa base.
+- Para comprobar el código se crea una base nueva `huellas_revision_20261118_test` (sufijo `_test`).
+
+## Comandos y resultado (APP_ENV=test, DATABASE_URL → huellas_revision_20261118_test)
+
+    php bin/console doctrine:migrations:migrate --no-interaction
+      -> 5 migraciones, actual Version20261118211500, 0 nuevas
+    php bin/console doctrine:schema:validate
+      -> [OK] The mapping files are correct. [OK] The database schema is in sync with the mapping files.
+    vendor/bin/phpunit --testdox
+      -> OK (39 tests, 329 assertions): Spec001 7/7, Spec002 8/8, Spec003 11/11, Spec004 13/13
+    php bin/console lint:twig templates; lint:yaml config; lint:container   -> código de salida 0
+    php bin/console lint:yaml .github/workflows/ci.yml                       -> [OK]
+
+La prueba Spec002 de promoción que spec-003/converge.md daba como fallida pasa en cdb0416.
+
+## Revisión cruzada registrada en GitHub (gh pr view)
+
+| PR | Historia | Autor | Aprobación | Fusiona |
+|---|---|---|---|---|
+| #1 | HU-01 | aggg15 | abcb5-ua | abcb5-ua |
+| #5 | HU-02 | abcb5-ua | aggg15 | aggg15 |
+| #6 | HU-03 | aggg15 | abcb5-ua | abcb5-ua |
+| #8 | HU-04 | abcb5-ua | aggg15 | aggg15 |
+
+## Hallazgos que condicionan HU-05 (se resuelven en specs/spec-005)
+
+1. El CHECK `adoption_application_status` y `OPEN_STATUSES` no tienen un estado final para la
+   solicitud formalizada; D07 dice que la aprobada cuenta como abierta «hasta que HU-05 formalice».
+2. Las solicitudes en espera de un animal adoptado seguirían contando como abiertas (máximo de dos).
+3. `ApplicationService::cancelReservation()` comprueba el estado de la solicitud antes del bloqueo
+   del animal y no lo relee después: una liberación simultánea a una formalización podría anularla.
+   Afecta al código de HU-04 (responsable `abcb5-ua`); se coordina en el plan de HU-05.
+4. `DateTimeImmutable::modify('+1 month')` desborda a fin de mes (31-ene → 3-mar).
+5. CA-05-05 depende de HU-08, aún no implementada.
+6. Falta decidir el indicador `fostered` cuando se adopta un animal en acogida.
+
+## Documentación corregida en el mismo commit
+
+README, CONTRIBUTING, AGENTS, plan.md, plantilla de PR y Constitution (nota 1.1.1) describían la
+publicación como «únicamente spec-001». docs/agrupamiento.md y docs/decisiones.md no reflejaban HU-02
+a HU-04. El CI no se disparaba al publicar spec-005 a spec-008. spec-002/clarify.md enlazaba una ruta
+local `file:///c:/...`; spec-002/spec.md y spec-004/spec.md no identificaban responsable;
+spec-004/spec.md mezclaba When/Then/And en los escenarios 3.1 y 3.2.
+
+Falso positivo descartado: CA-03-05 y CA-03-06 no figuran en historias_usuario.tex, pero el LaTeX
+reproduce las fichas iniciales de la raíz, que tampoco los contienen; son criterios derivados de clarify.
+
+Pendiente para la fase de refinamiento (enunciado 5.1–5.4): ejecuciones reales de las skills,
+comprobación móvil/escritorio/teclado, matriz de trazabilidad y docs/memoria.md.

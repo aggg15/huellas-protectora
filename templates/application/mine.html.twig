@@ -19,7 +19,7 @@
   </div>
 {% else %}
   <div class="table-container box">
-    <table class="table is-fullwidth">
+    <table class="table is-fullwidth stacked-table">
       <thead>
         <tr>
           <th scope="col">Animal</th>
@@ -35,19 +35,25 @@
             'waiting': 'is-warning',
             'approved': 'is-success',
             'rejected': 'is-danger',
-            'cancelled': 'is-dark'
+            'cancelled': 'is-dark',
+            'formalized': 'is-primary'
           }[application.status]|default('is-light') %}
           <tr>
-            <td><strong>{{ application.animal.code }}</strong></td>
-            <td>{{ application.submittedAt|date('d/m/Y H:i', 'Europe/Madrid') }}</td>
-            <td><span class="tag is-light {{ tagClass }}">{{ application.statusLabel }}</span></td>
-            <td class="is-size-7">
-              {% if application.status == 'approved' %}
+            <td data-label="Animal"><strong>{{ application.animal.code }}</strong></td>
+            <td data-label="Fecha de envío">{{ application.submittedAt|date('d/m/Y H:i', 'Europe/Madrid') }}</td>
+            <td data-label="Estado"><span class="tag is-light {{ tagClass }}">{{ application.statusLabel }}</span></td>
+            <td data-label="Detalle" class="is-size-7">
+              {% if application.status == 'formalized' %}
+                {% set adoption = adoptions[application.id] ?? null %}
+                <span><strong>¡Adopción formalizada!</strong>{% if adoption %} Entrega del {{ adoption.deliveredAt|date('d/m/Y', 'Europe/Madrid') }}. <a href="{{ path('adoption_contract', {id: adoption.id}) }}">Ver contrato {{ adoption.contractNumber }}</a>{% endif %}</span>
+              {% elseif application.status == 'approved' %}
                 <span class="has-text-success"><strong>¡Animal reservado para ti!</strong> La protectora contactará contigo para formalizar la adopción.</span>
               {% elseif application.status == 'waiting' %}
                 <span class="has-text-warning-dark">En lista de espera mientras se valora la reserva del animal.</span>
               {% elseif application.status == 'rejected' %}
                 <span class="has-text-danger">Motivo: {{ application.rejectionReason }}</span>
+              {% elseif application.status == 'cancelled' %}
+                <span class="has-text-grey-dark">Motivo: {{ application.cancellationReason|default('Sin motivo registrado.') }}</span>
               {% elseif application.hasInterview %}
                 <span>Entrevista programada: {{ application.interviewAt|date('d/m/Y H:i', 'Europe/Madrid') }}</span>
               {% else %}

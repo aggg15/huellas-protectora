@@ -1,4 +1,4 @@
-# Clarificaciones y alcance vigente de spec-001
+# Decisiones funcionales y alcance de Huellas
 
 Fecha: 2026-11-05. El usuario ha aceptado como base catálogo público, cuentas con email/contraseña,
 roles internos y diez periodos de 24 horas de cuarentena. Las precisiones restantes son decisiones
@@ -31,15 +31,35 @@ La autenticación es soporte común, no una novena historia. El alcance no inclu
 email, recuperación de contraseña, servicios externos ni administración pública de roles.
 Las cuentas de personal se crean por comando; las credenciales locales se excluyen de Git.
 
+Actualización del 2026-11-18: HU-02 a HU-04 están integradas en `main` (PR #5, #6 y #8). Las
+concreciones de HU-02 y HU-04 están en specs/spec-002/clarify.md y specs/spec-004/clarify.md y
+aplican D03, D05 y D07 a D11 sin cambiarlas. El usuario (`aggg15`) asume HU-05; sus decisiones
+se registran a partir de D12. Las tablas anteriores se conservan como historial.
+
+## Decisiones de HU-05 (2026-11-18)
+
+Propuestas en la revisión previa (docs/evidencias/revision-previa-spec-005-2026-11-18.txt) y
+aceptadas por el usuario (`aggg15`, responsable de HU-05). Concreción en specs/spec-005/clarify.md.
+
+| ID | Decisión | Motivo / historias |
+|---|---|---|
+| D12 | Formaliza la coordinadora, solo sobre una solicitud aprobada cuyo animal sigue reservado. La entrega se fecha en el momento de formalizar: no se registran entregas futuras ni retroactivas. | SI-30: «se formaliza el día de la entrega»; HU-04/05. |
+| D13 | El contrato es un documento HTML imprimible generado por el sistema, con número único, fecha de entrega, datos del animal y del adoptante (cuenta), cuota abonada y compromisos de seguimiento. No cambia después de generarse. Solo lo consultan la coordinadora y el adoptante titular. Sin PDF ni firma electrónica. | Hacer verificable «se genera un contrato» sin servicios ajenos; la ficha excluye la firma electrónica. |
+| D14 | SI-30 no fija la cuota: la coordinadora indica el importe abonado (mayor que 0 y hasta 9 999,99 €, con dos decimales como máximo) y confirma expresamente el abono. Sin ambos datos no se formaliza. Sin pasarela de pago ni contabilidad. | Dejar constancia del abono sin inventar una tarifa; contabilidad excluida. |
+| D15 | Al formalizar, en una sola operación: la solicitud pasa a «formalizada» (deja de contar como abierta), el animal pasa a adoptado y deja de figurar en acogida, y las demás solicitudes abiertas del animal se cancelan con el motivo «El animal ha sido adoptado». Ya no se puede liberar la reserva. | D07 («hasta que HU-05 formalice»); evitar que esperas sin salida bloqueen el máximo de dos; HU-03/04/06. |
+| D16 | Se programan dos seguimientos por adopción, al mes y a los seis meses de la fecha de entrega en Europe/Madrid, sumando meses naturales; si el día no existe en el mes de destino se usa el último día de ese mes. Nacen «programados», a cargo de la coordinadora. Registrar las visitas queda fuera. | Fechas inequívocas (31-ene → 28/29-feb); la ficha excluye un módulo de visitas. |
+| D17 | Un animal y una solicitud tienen como máximo una adopción. Formalizaciones repetidas o simultáneas, o una liberación de reserva simultánea, no producen dos adopciones ni deshacen una formalizada; los errores no dejan cambios parciales. | Plan común: concurrencia y coherencia; HU-04/05. |
+| D18 | La adopción registrada (animal, adoptante y fecha) es el dato que HU-08 usará para proponer al padrino otro animal o terminar. HU-05 no crea padrinos ni envía avisos. | CA-05-05 sin adelantar HU-08. |
+
 ## Reparto y material vigente
 
 El nuevo enunciado v1 mezcla cuatro integrantes/dos historias con dos integrantes/cuatro historias.
-Se conserva la guía específica de dos personas; el encargo vigente cubre únicamente la primera historia.
-Los nombres y la revisión cruzada siguen pendientes; no se bloquea el desarrollo autorizado por ello.
+Se conserva la guía específica de dos personas. El reparto observado y los encargos vigentes están en
+agrupamiento.md; los nombres académicos siguen pendientes y la revisión cruzada consta en cada PR.
 La nueva fuente es Practica-SDD-enunciado_v1_IR.pdf y sustituye al archivo anterior retirado por el
 usuario. El informe de octubre y el PDF de historias son antecedentes fechados, no evidencia de la
 implementación actual. La revisión actual deja de usar Práctica 1 como fuente.
 
 El enunciado v1 requiere specs/ y docs/agrupamiento.md y docs/memoria.md, además de dos ZIP finales
 (proyecto y vídeo, máximo conjunto 100 MB). Esta iteración prepara la aplicación y documentación
-de la primera historia; no declara terminadas las otras siete ni la demo final.
+de las historias integradas; no declara terminadas HU-05 a HU-08, la memoria ni la demo final.

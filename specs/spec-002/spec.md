@@ -2,7 +2,7 @@
 
 Fecha: 2026-11-16.
 Historia: HU-02 · Consultar y filtrar el catálogo público de adopción.
-Responsable: Implementación spec-002.
+Responsable GitHub: `abcb5-ua` (autoría de la PR #5); revisión: `aggg15` (aprobación de la PR #5).
 Referencia base: `SI-30-protectora-animales-descripcion.pdf` (pág. 1), `plan.md`, `data-model.md` y `docs/decisiones.md`.
 
 ## Historia de usuario

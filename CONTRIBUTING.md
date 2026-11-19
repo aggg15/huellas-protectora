@@ -1,16 +1,16 @@
 # Trabajo en equipo
 
-Fecha: 16 de noviembre de 2026. Usuarios GitHub: `aggg15` y `abcb5-ua`, con acceso de escritura.
-Solo se publica la implementación de **spec-001**. La PR #1 sigue pendiente de revisión humana;
-las PR #2 a #4 están cerradas y sus ramas remotas retiradas. No se recuperan esas implementaciones.
+Fecha: 16 de noviembre de 2026; estado actualizado el 18 de noviembre de 2026. Usuarios GitHub:
+`aggg15` y `abcb5-ua`, con acceso de escritura. `main` integra HU-01 a HU-04 (PR #1, #5, #6 y #8).
+Las PR #2 a #4 y #7 están cerradas; sus implementaciones no se recuperan.
 
 ## Preparar una copia propia
 
-Cada integrante trabaja en su clon y con sus secretos locales. Hasta integrar la PR #1, la base
-ejecutable y la configuración compartida están en `spec-001`; `main` conserva la base documental.
+Cada integrante trabaja en su clon y con sus secretos locales. La base ejecutable y la configuración
+compartida están en `main`; cada historia nueva se desarrolla en su rama `spec-00N` creada desde `main`.
 
 ```sh
-git clone --branch spec-001 https://github.com/aggg15/huellas-protectora.git
+git clone https://github.com/aggg15/huellas-protectora.git
 cd huellas-protectora
 php tools/configure.php --test
 composer install
@@ -39,15 +39,15 @@ Abrir esta carpeta en Codex. Las skills del repositorio se detectan en `.agents/
 aparecen, reabrir el proyecto. Se invocan escribiendo `$speckit-analyze`, `$speckit-converge`, etc.
 Esto sigue la [documentación oficial de skills de Codex](https://learn.chatgpt.com/docs/build-skills).
 
-Para la historia actual, un ejemplo de solicitud es:
+Un ejemplo de solicitud, cambiando la historia por la que esté activa, es:
 
 ```text
-$speckit-analyze Revisa specs/spec-001 con su plan y tareas, siguiendo AGENTS.md.
-Conserva los CA-01-01 a CA-01-05 y el plan común. Registra únicamente hallazgos reales.
+$speckit-analyze Revisa specs/spec-00N con su plan y tareas, siguiendo AGENTS.md.
+Conserva los CA-0N-XX existentes y el plan común. Registra únicamente hallazgos reales.
 ```
 
 La secuencia docente sigue siendo specify → clarify → plan → tasks → analyze → implement → converge.
-Las primeras fases de HU-01 ya tienen documentos y código: inicializar la herramienta no significa
+HU-01 a HU-04 ya tienen documentos y código: inicializar la herramienta no significa
 volver a escribirlos ni atribuir retroactivamente ejecuciones automáticas a los informes anteriores.
 Converge puede añadir tareas correctivas justificadas, sin borrar las tareas completadas.
 
@@ -56,25 +56,25 @@ Converge puede añadir tareas correctivas justificadas, sin borrar las tareas co
 `bash tools/spec-context.sh` detecta la rama `spec-00N` y guarda el directorio correspondiente
 en `.specify/feature.json`. Este archivo es propio de cada clon y no se sube a GitHub. El script
 rechaza ramas ajenas al convenio y carpetas sin spec; no crea ramas, no borra documentos y no autoriza
-a implementar historias futuras. En CI con HEAD separado se indica `spec-001` explícitamente.
+a implementar historias futuras. En CI con HEAD separado se indica cada historia con `plan.md` explícitamente.
 
-El plan y el modelo comunes están en la raíz. `specs/spec-001/plan.md` incorpora el contexto de la
-historia y los referencia para que los scripts de Spec Kit encuentren los documentos esperados.
 La instalación usa el núcleo de Spec Kit; Git se gestiona con los comandos normales del equipo,
-sin hooks que creen ramas numeradas genéricas o commits de forma automática.
+sin hooks que creen ramas numeradas genéricas o commits de forma automática. Cada `specs/spec-00N/plan.md`
+referencia el plan y el modelo comunes de la raíz.
 
 ## Publicar y revisar
 
 1. Antes de editar, coordinar quién toca los archivos comunes y revisar `git status`.
-2. Actualizar la rama con `git pull --ff-only origin spec-001` cuando la copia esté limpia.
+2. Crear la rama de la historia desde `main` actualizado (`git switch -c spec-00N origin/main`) o,
+   si ya existe, actualizarla con `git pull --ff-only origin spec-00N` cuando la copia esté limpia.
 3. Hacer un cambio delimitado, revisar `git diff`, pasar las comprobaciones afectadas y crear un
-   commit descriptivo, por ejemplo `fix(spec-001): validar la fecha de recepción`.
-4. Publicar con `git push origin spec-001`. Si Git rechaza el push porque hay trabajo del compañero,
+   commit descriptivo, por ejemplo `fix(spec-005): calcular el seguimiento a fin de mes`.
+4. Publicar con `git push -u origin spec-00N`. Si Git rechaza el push porque hay trabajo del compañero,
    recuperar y conciliar los cambios; no usar force push ni sobrescribir commits ajenos.
-5. El compañero revisa el diff de la [PR #1](https://github.com/aggg15/huellas-protectora/pull/1),
-   comprueba al menos un criterio de aceptación y registra su revisión en GitHub.
+5. Abrir una PR hacia `main` con la plantilla del repositorio. El compañero revisa el diff, comprueba
+   al menos un criterio de aceptación y registra su revisión en GitHub.
 6. Integrar solo con la aprobación exigida y las comprobaciones correctas. Después, ambos
-   actualizan su `main`. Las siguientes historias se preparan cuando se autoricen y se acuerde su base.
+   actualizan su `main` antes de empezar la historia siguiente.
 
 `main` exige al menos una aprobación, también al administrador. Se bloquean force push y borrado;
 no se cambia la configuración para eludir la revisión. No se crea una aprobación atribuida a Codex.
@@ -82,13 +82,14 @@ no se cambia la configuración para eludir la revisión. No se crea una aprobaci
 ## Comprobaciones automáticas
 
 La acción `CI de Huellas` comprueba instalación con lockfiles, assets, contexto Spec Kit,
-sintaxis PHP, contenedor, Twig, esquema y las pruebas de HU-01 contra PostgreSQL efímero.
-Se ejecuta al publicar `spec-001` y en PR hacia `main`. No utiliza secretos del ordenador de un
+sintaxis PHP, contenedor, Twig, esquema y las pruebas `tests/Spec00NTest.php` de todas las historias
+contra PostgreSQL efímero. Se ejecuta al publicar `main` o una rama `spec-001` a `spec-008` y en
+PR hacia `main`. No utiliza secretos del ordenador de un
 integrante, no despliega la aplicación y no aplica migraciones a una base compartida.
 
 La plantilla de PR recoge historia, criterios, pruebas y revisión pendiente. Los nombres académicos,
-el reparto de las otras siete historias y la ratificación de la Constitution se completarán por
-ambos integrantes; los permisos GitHub no acreditan esos acuerdos docentes.
+el reparto de HU-06 a HU-08 y la ratificación de la Constitution se completarán por ambos integrantes
+(véase [agrupamiento](docs/agrupamiento.md)); los permisos GitHub no acreditan esos acuerdos docentes.
 
 ## Archivos compartidos y archivos locales
 

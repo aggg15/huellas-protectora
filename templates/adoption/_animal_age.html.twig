@@ -1,0 +1,1 @@
+{% if months < 12 %}{{ months }} {{ months == 1 ? 'mes' : 'meses' }}{% else %}{{ months // 12 }} {{ months // 12 == 1 ? 'año' : 'años' }}{% if months % 12 > 0 %} y {{ months % 12 }} {{ months % 12 == 1 ? 'mes' : 'meses' }}{% endif %}{% endif %}
