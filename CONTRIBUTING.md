@@ -1,7 +1,8 @@
 # Trabajo en equipo
 
 Fecha: 16 de noviembre de 2026; estado actualizado el 19 de noviembre de 2026. Usuarios GitHub:
-`aggg15` y `abcb5-ua`, con acceso de escritura. `main` integra HU-01 a HU-06 (PR #1, #5, #6, #8, #9 y #10).
+`aggg15` y `abcb5-ua`, con acceso de escritura. `main` integra HU-01 a HU-07 (PR #1, #5, #6, #8, #9, #10 y #11);
+HU-08 se desarrolla en la rama `spec-008`.
 Las PR #2 a #4 y #7 están cerradas; sus implementaciones no se recuperan.
 
 ## Preparar una copia propia
@@ -90,8 +91,8 @@ contra PostgreSQL efímero. Se ejecuta al publicar `main` o una rama `spec-001` 
 PR hacia `main`. No utiliza secretos del ordenador de un
 integrante, no despliega la aplicación y no aplica migraciones a una base compartida.
 
-La plantilla de PR recoge historia, criterios, pruebas y revisión pendiente. Los nombres académicos,
-el reparto de HU-06 a HU-08 y la ratificación de la Constitution se completarán por ambos integrantes
+La plantilla de PR recoge historia, criterios, pruebas y revisión pendiente. El reparto observado de las ocho
+historias consta en agrupamiento; los nombres académicos y la ratificación de la Constitution se completarán por ambos integrantes
 (véase [agrupamiento](docs/agrupamiento.md)); los permisos GitHub no acreditan esos acuerdos docentes.
 
 ## Archivos compartidos y archivos locales

@@ -105,6 +105,7 @@ Detalle de componentes en [implement](implement.md).
 - T719 → [implement](implement.md) y [converge](converge.md): 2 hallazgos (C1 MEDIUM, C2 LOW), añadidos debajo como T721–T722.
 
 - T720 → [PR #11](https://github.com/aggg15/huellas-protectora/pull/11), con revisión pedida a `abcb5-ua` (pendiente).
+  Actualización del 2026-11-19 (T801 de spec-008): `abcb5-ua` aprobó la PR #11 y la integró en `main`; CI correcto.
 
 ## Phase 8: Convergence
 
