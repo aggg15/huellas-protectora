@@ -2,8 +2,8 @@
 
 Fecha: 2026-11-05; actualizado el 2026-11-19. El 2026-11-05 el alcance se limitó a HU-01 tras
 consultar al profesor. Después, por encargo expreso del usuario, se han integrado en `main` HU-02 a
-HU-05 (PR #5, #6, #8 y #9). HU-06 se planifica en `specs/spec-006/plan.md` sobre este plan común;
-HU-07 y HU-08 conservan su documentación inicial y sus puntos de integración.
+HU-06 (PR #5, #6, #8, #9 y #10). HU-07 se planifica en `specs/spec-007/plan.md` sobre este plan común;
+HU-08 conserva su documentación inicial y sus puntos de integración.
 
 ## Arquitectura y pila
 
@@ -22,13 +22,14 @@ y también habrá un servicio web en Compose para reproducir el arranque.
 ## Estructura
 
 - src/Entity: User, Animal, AnimalPhoto, VeterinaryReview, AdoptionApplication (HU-03/04), Adoption y
-  FollowUp (HU-05); HU-06 añade FosterHome, FosterAvailability, FosterPlacement y FosterNote.
+  FollowUp (HU-05); FosterHome, FosterAvailability, FosterPlacement y FosterNote (HU-06); HU-07 añade
+  Shift y ShiftSignup.
 - src/Service: operaciones de cada historia, reloj inyectable y validación central del dominio.
 - src/Controller: catálogo público, acceso y administración según roles.
 - templates/: vistas Twig en español. public/: entrada web y recursos locales, sin fotos privadas.
 - var/uploads/: fotografías protegidas; la entrega de archivos comprueba la disponibilidad y permisos.
 - migrations/: cambios acumulativos; no se resetean datos de la aplicación al probar.
-- specs/spec-001 a specs/spec-008: especificaciones; HU-01 a HU-05 están implementadas. Cada plan
+- specs/spec-001 a specs/spec-008: especificaciones; HU-01 a HU-06 están implementadas. Cada plan
   local referencia este plan común y permite resolver el contexto mediante Spec Kit.
 - tests/: pruebas unitarias y HTTP con PostgreSQL, independientes de la base de demostración.
 
@@ -36,6 +37,7 @@ y también habrá un servicio web en Compose para reproducir el arranque.
 
 Catálogo y fichas públicas no requieren cuenta. El acceso interno exige ROLE_STAFF, con roles
 ROLE_VOLUNTEER, ROLE_VET y ROLE_COORDINATOR. Crear animales corresponde al voluntario o coordinadora;
+apuntarse a turnos, al voluntario (HU-07), y crearlos y modificarlos, a la coordinadora;
 registrar revisión al veterinario; decisiones de solicitudes y acogidas a la coordinadora. Las cuentas
 públicas solo reciben ROLE_USER. Las familias de acogida (HU-06) tienen ROLE_FOSTER, creado por comando y
 fuera de ROLE_STAFF. Todas las mutaciones usan POST y CSRF; las redirecciones exitosas usan 303
@@ -54,6 +56,7 @@ reservas dobles ni escrituras parciales. El código y los tests concretos se inc
 Toda operación que cambie el estado de una reserva (aprobar, liberar o formalizar) debe volver a leer
 el estado de la solicitud y del animal después de obtener el bloqueo, no antes. Las acogidas (HU-06)
 siguen el mismo criterio y el mismo orden: primero el animal, después la casa y por último la acogida.
+Las inscripciones en turnos (HU-07) bloquean primero la cuenta del voluntario y después el turno.
 
 ## Validación y secuencia
 
