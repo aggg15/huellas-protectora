@@ -97,7 +97,7 @@ sustituye la evidencia: el cierre se acredita con `docs/evidencias/spec-006-phpu
 
 - [x] **T624** · Redactar `implement.md` y `converge.md`; añadir aquí las tareas correctivas que salgan de converge
   sin borrar las anteriores.
-- [ ] **T625** · Abrir la PR hacia `main` con la plantilla, señalando los cambios en código de HU-01 (T614, T617)
+- [x] **T625** · Abrir la PR hacia `main` con la plantilla, señalando los cambios en código de HU-01 (T614, T617)
   y HU-05 (T611) y `data-model.md`, y pedir la revisión de `aggg15`.
 
 ## Ejecución del 2026-11-19
@@ -120,7 +120,7 @@ Detalle de componentes en [implement](implement.md).
 
 - T624 → [implement](implement.md) y [converge](converge.md): 2 hallazgos (C1 MEDIUM, C2 LOW), añadidos debajo como T626–T627.
 
-Pendiente: T625 (PR).
+- T625 → [PR #10](https://github.com/aggg15/huellas-protectora/pull/10), con revisión pedida a `aggg15` (pendiente).
 
 ## Phase 8: Convergence
 
