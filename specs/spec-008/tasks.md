@@ -78,7 +78,7 @@ sustituye la evidencia: el cierre se acredita con `docs/evidencias/spec-008-phpu
 
 - [x] **T820** · Redactar `implement.md` y `converge.md`; añadir aquí las tareas correctivas que salgan de converge
   sin borrar las anteriores.
-- [ ] **T821** · Abrir la PR hacia `main` con la plantilla, señalando los archivos comunes y `data-model.md`, y pedir la
+- [x] **T821** · Abrir la PR hacia `main` con la plantilla, señalando los archivos comunes y `data-model.md`, y pedir la
   revisión de `aggg15`.
 
 ## Ejecución del 2026-11-19
@@ -100,6 +100,7 @@ Detalle de componentes en [implement](implement.md).
   ../../docs/evidencias/spec-008-manual/README.md.
 - T819 → suite completa en una base `_test` nueva; [evidencia](../../docs/evidencias/spec-008-phpunit.txt).
 - T820 → [implement](implement.md) y [converge](converge.md): dos hallazgos (C1 y C2, LOW), añadidos debajo como T822–T823.
+- T821 → [PR #12](https://github.com/aggg15/huellas-protectora/pull/12), con revisión pedida a `aggg15` (pendiente).
 
 ## Phase 9: Convergence
 
