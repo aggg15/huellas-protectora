@@ -1,0 +1,6 @@
+{# Estado de cobertura de un turno (HU-07, D31): `row` viene de ShiftService::coverage(). #}
+{% if row.started %}<span class="tag is-light">En curso</span>
+{% elseif row.undercovered %}<span class="tag is-danger shift-alert-tag">Faltan voluntarios: {{ row.missing }} para el mínimo</span>
+{% elseif row.full %}<span class="tag is-info is-light">Completo</span>
+{% elseif row.missing == 0 %}<span class="tag is-success is-light">Mínimo cubierto</span>
+{% else %}<span class="tag is-warning is-light">{{ row.missing }} para el mínimo</span>{% endif %}

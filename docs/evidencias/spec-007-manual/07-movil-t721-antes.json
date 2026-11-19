@@ -1,0 +1,32 @@
+{
+  "innerWidth": 390,
+  "scrollWidth": 390,
+  "cells": 28,
+  "misplaced": [
+    {
+      "label": "Inscritas",
+      "text": "(1 plaza libre)",
+      "offset": 0
+    },
+    {
+      "label": "Estado",
+      "text": "Te has apuntado",
+      "offset": 0
+    },
+    {
+      "label": "Inscritas",
+      "text": "(0 plazas libres)",
+      "offset": 0
+    },
+    {
+      "label": "Inscritas",
+      "text": "(2 plazas libres)",
+      "offset": 0
+    },
+    {
+      "label": "Inscritas",
+      "text": "(3 plazas libres)",
+      "offset": 0
+    }
+  ]
+}

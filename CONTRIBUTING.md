@@ -1,7 +1,7 @@
 # Trabajo en equipo
 
-Fecha: 16 de noviembre de 2026; estado actualizado el 18 de noviembre de 2026. Usuarios GitHub:
-`aggg15` y `abcb5-ua`, con acceso de escritura. `main` integra HU-01 a HU-04 (PR #1, #5, #6 y #8).
+Fecha: 16 de noviembre de 2026; estado actualizado el 19 de noviembre de 2026. Usuarios GitHub:
+`aggg15` y `abcb5-ua`, con acceso de escritura. `main` integra HU-01 a HU-06 (PR #1, #5, #6, #8, #9 y #10).
 Las PR #2 a #4 y #7 están cerradas; sus implementaciones no se recuperan.
 
 ## Preparar una copia propia
@@ -78,6 +78,9 @@ referencia el plan y el modelo comunes de la raíz.
 
 `main` exige al menos una aprobación, también al administrador. Se bloquean force push y borrado;
 no se cambia la configuración para eludir la revisión. No se crea una aprobación atribuida a Codex.
+Comprobación del 2026-11-19 (API de GitHub): la protección de `main` exige 0 aprobaciones y no se aplica
+al administrador, y la PR #10 se integró sin ninguna revisión registrada. Ambos integrantes deben
+restablecer la regla anterior; este documento no la da por cumplida mientras tanto.
 
 ## Comprobaciones automáticas
 

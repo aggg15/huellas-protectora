@@ -69,6 +69,25 @@ D24 se eligieron entre opciones; el resto las concreta. Detalle en specs/spec-00
 | D24 | Las novedades las escribe la familia de la acogida activa (texto de 1 a 2000 caracteres, fecha y autora); no se editan ni se borran. Son internas: el personal ve el historial completo y la familia, las de sus acogidas activas. No se publican; su uso con padrinos se decidirá en HU-08. | Constitution V; no adelantar HU-08; HU-06/08. |
 | D25 | La acogida no cambia el estado del animal (cuarentena, disponible o reservado) ni la reserva; un animal adoptado no admite acogida. La web pública sigue mostrando solo los disponibles, con «En casa de acogida». Formalizar la adopción finaliza la acogida activa con motivo «adopción» en la misma transacción. | CA-06-04; amplía D15 para liberar la plaza de la casa; HU-02/04/05/06. |
 
+Actualización del 2026-11-19 (tarde): HU-06 está integrada en `main` (PR #10). `aggg15` asume HU-07 por
+encargo expreso; sus decisiones se registran a partir de D26.
+
+## Decisiones de HU-07 (2026-11-19)
+
+Planteadas en clarify y elegidas por `aggg15` (responsable de HU-07): D27, D29 (turnos coincidentes) y D30 se
+eligieron entre opciones, en cada caso la recomendada; el resto las concreta. Detalle en specs/spec-007/clarify.md.
+
+| ID | Decisión | Motivo / historias |
+|---|---|---|
+| D26 | Los voluntarios son las cuentas con `ROLE_VOLUNTEER`, creadas por la protectora con `app:create-user` (HU-01). La coordinadora hereda ese rol y también puede apuntarse. Veterinario, familias de acogida y solicitantes no acceden a los turnos. Una inscripción identifica una cuenta. | La historia está escrita desde el voluntario; reutiliza los roles del plan común. |
+| D27 | Solo la coordinadora crea y modifica turnos. Cada turno tiene tipo (paseo o limpieza), fecha y horas de inicio y fin del mismo día en Europe/Madrid (guardadas en UTC), y un mínimo y un máximo de personas con 1 ≤ mínimo ≤ máximo ≤ 20. Empieza después del momento en que se crea y como máximo un año después. Una hora inexistente por el cambio de hora no es válida. | SI-30: «cada turno necesita un mínimo… y admite un máximo». Los límites de 20 personas y un año solo evitan errores de tecleo. |
+| D28 | Mientras el turno no ha empezado, la coordinadora puede cambiar el mínimo y el máximo; el máximo no puede quedar por debajo de las inscripciones. El tipo, la fecha y las horas solo cambian si el turno no tiene inscripciones. No se borran ni se cancelan turnos. | No alterar el compromiso de quien ya se apuntó ni crear coincidencias; la ficha excluye la cancelación automática. |
+| D29 | Un voluntario se apunta a un turno que no ha empezado y tiene plazas (inscripciones < máximo), una sola vez por turno y nunca en un turno que coincida en el tiempo con otro en el que ya figura. Dos turnos coinciden si cada uno empieza antes de que termine el otro; uno que empieza cuando acaba otro no coincide. | SI-30: inscripción libre con un máximo; pregunta 3 de la ficha: nadie cuenta para dos turnos a la vez. |
+| D30 | La persona inscrita puede darse de baja hasta el inicio del turno: la inscripción se elimina y la plaza queda libre. Si así el turno baja de su mínimo, vuelve a contar como falto de voluntarios. | Pregunta 1 de la ficha; un aviso útil debe reflejar las bajas. |
+| D31 | Un turno está falto de voluntarios cuando todavía no ha empezado, tiene menos inscripciones que su mínimo y faltan 48 horas o menos para su inicio. Se calcula con instantes UTC (48 horas reales, también con cambio de hora) en cada consulta, sin tareas programadas. El destacado se muestra en el listado de turnos a voluntarios y coordinadora; con más de 48 horas se informa de la cobertura sin destacar el turno. | SI-30: «aparezcan destacados cuando falten cuarenta y ocho horas»; pregunta 2 de la ficha. |
+| D32 | El listado muestra los turnos que todavía no han terminado, por hora de inicio, con tipo, fecha y horas, mínimo, máximo, inscripciones y plazas libres, y señala aquellos en los que figura quien consulta. La ficha del turno muestra los nombres de las personas inscritas al personal con acceso. Un turno empezado figura «En curso» y no admite inscripciones ni bajas. | CA-07-01: se conocen las inscripciones registradas; información interna, no pública. |
+| D33 | Inscribirse bloquea la cuenta del voluntario y después el turno, y vuelve a comprobar bajo bloqueo plazas, inscripción previa, coincidencias e inicio; modificar o darse de baja bloquea el turno. Un índice único impide dos inscripciones de la misma cuenta en un turno. Peticiones simultáneas no superan el máximo ni dejan cambios parciales. | Plan común: releer el estado después del bloqueo; Constitution III. |
+
 ## Reparto y material vigente
 
 El nuevo enunciado v1 mezcla cuatro integrantes/dos historias con dos integrantes/cuatro historias.
@@ -80,4 +99,4 @@ implementación actual. La revisión actual deja de usar Práctica 1 como fuente
 
 El enunciado v1 requiere specs/ y docs/agrupamiento.md y docs/memoria.md, además de dos ZIP finales
 (proyecto y vídeo, máximo conjunto 100 MB). Esta iteración prepara la aplicación y documentación
-de las historias integradas; no declara terminadas HU-06 a HU-08, la memoria ni la demo final.
+de las historias integradas; no declara terminadas HU-07 y HU-08, la memoria ni la demo final.

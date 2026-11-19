@@ -1,0 +1,35 @@
+{# Campos del turno (HU-07, D27): alta y modificación. Variables: data, errors. #}
+{% macro invalid(errors, field) %}{% if errors[field] is defined %} aria-invalid="true" aria-describedby="error-{{ field }}"{% endif %}{% endmacro %}
+<div class="columns">
+  <div class="column field">
+    <label class="label" for="kind">Tipo de turno</label>
+    <div class="select is-fullwidth"><select id="kind" name="kind" required{{ _self.invalid(errors, 'kind') }}><option value="">Selecciona</option>{% for value, label in {walk: 'Paseo', cleaning: 'Limpieza'} %}<option value="{{ value }}" {{ data.kind == value ? 'selected' }}>{{ label }}</option>{% endfor %}</select></div>
+  </div>
+  <div class="column field">
+    <label class="label" for="date">Fecha</label>
+    <input class="input" id="date" name="date" type="date" required value="{{ data.date }}"{{ _self.invalid(errors, 'date') }}>
+  </div>
+</div>
+<div class="columns">
+  <div class="column field">
+    <label class="label" for="startTime">Hora de inicio</label>
+    <input class="input" id="startTime" name="startTime" type="time" required value="{{ data.startTime }}"{{ _self.invalid(errors, 'startTime') }}>
+  </div>
+  <div class="column field">
+    <label class="label" for="endTime">Hora de fin</label>
+    <input class="input" id="endTime" name="endTime" type="time" required value="{{ data.endTime }}"{{ _self.invalid(errors, 'endTime') }}>
+  </div>
+</div>
+<p class="help mb-4">Hora de Madrid. El turno empieza y termina el mismo día.</p>
+<div class="columns">
+  <div class="column field">
+    <label class="label" for="minVolunteers">Mínimo de personas</label>
+    <input class="input" id="minVolunteers" name="minVolunteers" type="number" min="1" max="20" step="1" inputmode="numeric" required value="{{ data.minVolunteers }}"{{ _self.invalid(errors, 'minVolunteers') }}>
+    <p class="help">Necesarias para poder hacer el turno.</p>
+  </div>
+  <div class="column field">
+    <label class="label" for="maxVolunteers">Máximo de personas</label>
+    <input class="input" id="maxVolunteers" name="maxVolunteers" type="number" min="1" max="20" step="1" inputmode="numeric" required value="{{ data.maxVolunteers }}"{{ _self.invalid(errors, 'maxVolunteers') }}>
+    <p class="help">De 1 a 20, no menor que el mínimo.</p>
+  </div>
+</div>
