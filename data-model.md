@@ -12,12 +12,17 @@ de entidades públicas son UUID. Las restricciones se mantienen también en Post
 | AdoptionApplication (HU-03/04) | id, animal FK, solicitante FK (User), housingType, housing, experienceType, experience, dailyTime, availability, status, submittedAt, interviewAt, interviewNotes, rejectionReason, cancellationReason, decisionAt. | Cuestionario completo (CHECK en PostgreSQL); estados pending/waiting/approved/rejected/cancelled y formalized (HU-05, no abierta). Máximo dos abiertas por cuenta bajo bloqueo de fila; sin duplicado abierto por animal. Índice parcial único sobre (animal_id) WHERE status = 'approved'. |
 | Adoption (HU-05) | id, animal FK, solicitud FK, adoptante FK (User), formalizadaPor FK (User), contractNumber, deliveredAt, feeCents, copia del contrato (nombre y email del adoptante; código, especie, edad y tamaño del animal) | Únicos sobre animal, solicitud y número de contrato; cuota entre 1 y 999999 céntimos. La copia no cambia tras formalizar. |
 | FollowUp (HU-05) | id, adoption FK, kind (one_month/six_months), dueOn (fecha Europe/Madrid), status (scheduled) | Único (adopción, kind); dos por adopción; último día del mes si el día no existe. |
+| FosterHome (HU-06) | id, familia FK (User con ROLE_FOSTER), capacity, createdAt | Una casa por cuenta (único); capacidad entre 1 y 10. |
+| FosterAvailability (HU-06) | id, casa FK, startsOn, endsOn (fechas Europe/Madrid, incluidas) | Fin ≥ inicio; sin solapes en la misma casa (validado bajo bloqueo de la casa). |
+| FosterPlacement (HU-06) | id, animal FK, casa FK, registradaPor FK (User), startedOn, plannedEndOn, endedOn, endReason (returned/adopted) | Una acogida activa (endedOn nulo) por animal: índice parcial único. Activas de una casa ≤ capacidad (bajo bloqueo). Fechas coherentes; endedOn y endReason nulos a la vez. |
+| FosterNote (HU-06) | id, acogida FK, autora FK (User), writtenAt, body | Texto de 1 a 2000 caracteres; inmutable; interna. |
 
 La reserva deriva de una única solicitud aprobada por animal. Un índice parcial impedirá dos
 aprobadas incluso ante fallos de concurrencia. Las demás solicitudes activas pasan a espera.
 El rechazo no elimina la solicitud y conserva un motivo. Al formalizar (HU-05) la solicitud pasa a
 formalized, el animal a adoptado y fuera de acogida, y las demás abiertas del animal a canceladas con
-motivo, en una sola transacción. Acogidas, turnos y padrinos se definirán en HU-06 a HU-08,
-reutilizando estos identificadores; HU-08 localizará la adopción a partir del animal.
-El indicador enAcogida solo permite representar la visibilidad requerida en HU-02; su gestión
-operativa pertenece a HU-06 y no se añade una pantalla de acogidas en esta iteración.
+motivo, en una sola transacción. Turnos y padrinos se definirán en HU-07 y HU-08, reutilizando estos
+identificadores; HU-08 localizará la adopción a partir del animal.
+El indicador enAcogida (`Animal.fostered`) es verdadero mientras el animal tiene una acogida activa (HU-06):
+lo cambian, en la misma transacción que la acogida, su registro, su finalización y la formalización de la
+adopción, que además finaliza la acogida con motivo `adopted`. La acogida no cambia el estado del animal.

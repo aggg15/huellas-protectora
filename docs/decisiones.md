@@ -51,6 +51,24 @@ aceptadas por el usuario (`aggg15`, responsable de HU-05). Concreción en specs/
 | D17 | Un animal y una solicitud tienen como máximo una adopción. Formalizaciones repetidas o simultáneas, o una liberación de reserva simultánea, no producen dos adopciones ni deshacen una formalizada; los errores no dejan cambios parciales. | Plan común: concurrencia y coherencia; HU-04/05. |
 | D18 | La adopción registrada (animal, adoptante y fecha) es el dato que HU-08 usará para proponer al padrino otro animal o terminar. HU-05 no crea padrinos ni envía avisos. | CA-05-05 sin adelantar HU-08. |
 
+Actualización del 2026-11-19: HU-05 está integrada en `main` (PR #9). `abcb5-ua` asume HU-06 por
+encargo expreso; sus decisiones se registran a partir de D19.
+
+## Decisiones de HU-06 (2026-11-19)
+
+Planteadas en clarify y elegidas por `abcb5-ua` (responsable de HU-06): D19, D21, la ocupación de D21 y
+D24 se eligieron entre opciones; el resto las concreta. Detalle en specs/spec-006/clarify.md.
+
+| ID | Decisión | Motivo / historias |
+|---|---|---|
+| D19 | La familia de acogida tiene una cuenta propia con el rol `ROLE_FOSTER`, creada por la protectora con `app:create-user`. No es personal ni se crea desde el registro público. Una cuenta corresponde a una casa. | La historia está escrita desde la familia; evitar que cualquiera se declare casa de acogida; HU-06. |
+| D20 | Capacidad entera de 1 a 10. Periodos de disponibilidad en días completos de Europe/Madrid (inicio y fin incluidos), sin solapes, desde hoy y hasta dos años después; los periodos consecutivos se consideran continuos. | SI-30: «periodos de disponibilidad y número máximo»; límites solo contra errores de tecleo. |
+| D21 | Solo la coordinadora registra acogidas. Empiezan el día en que se registran y tienen un fin previsto; la casa debe estar disponible todos los días del intervalo y sus acogidas activas no pueden superar la capacidad (ocupación = acogidas activas). Un animal tiene como máximo una acogida activa. Se comprueba todo bajo bloqueo (animal y después casa). | Cálculo exacto sin tareas programadas; plan común: releer tras el bloqueo; HU-06. |
+| D22 | La coordinadora finaliza la acogida (fin = hoy, motivo «regreso al refugio»). Un fin previsto superado no la cierra: se señala hasta que se finaliza. Las novedades se conservan. | El animal sigue en la casa hasta que vuelve; HU-06. |
+| D23 | Los cambios de condiciones se aplican a las acogidas nuevas. No se admite bajar la capacidad por debajo de las acogidas activas ni retirar disponibilidad necesaria para una acogida activa. | Pregunta 2 de la ficha: sin cierres automáticos ni datos incoherentes; HU-06. |
+| D24 | Las novedades las escribe la familia de la acogida activa (texto de 1 a 2000 caracteres, fecha y autora); no se editan ni se borran. Son internas: el personal ve el historial completo y la familia, las de sus acogidas activas. No se publican; su uso con padrinos se decidirá en HU-08. | Constitution V; no adelantar HU-08; HU-06/08. |
+| D25 | La acogida no cambia el estado del animal (cuarentena, disponible o reservado) ni la reserva; un animal adoptado no admite acogida. La web pública sigue mostrando solo los disponibles, con «En casa de acogida». Formalizar la adopción finaliza la acogida activa con motivo «adopción» en la misma transacción. | CA-06-04; amplía D15 para liberar la plaza de la casa; HU-02/04/05/06. |
+
 ## Reparto y material vigente
 
 El nuevo enunciado v1 mezcla cuatro integrantes/dos historias con dos integrantes/cuatro historias.
@@ -62,4 +80,4 @@ implementación actual. La revisión actual deja de usar Práctica 1 como fuente
 
 El enunciado v1 requiere specs/ y docs/agrupamiento.md y docs/memoria.md, además de dos ZIP finales
 (proyecto y vídeo, máximo conjunto 100 MB). Esta iteración prepara la aplicación y documentación
-de las historias integradas; no declara terminadas HU-05 a HU-08, la memoria ni la demo final.
+de las historias integradas; no declara terminadas HU-06 a HU-08, la memoria ni la demo final.
