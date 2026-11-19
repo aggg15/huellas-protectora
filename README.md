@@ -1,8 +1,8 @@
 # Huellas · gestión de adopciones
 
-Estado a 19 de noviembre de 2026: `main` integra **HU-01 a HU-05** (PR #1, #5, #6, #8 y #9, cada una
-aprobada en GitHub por el otro integrante). HU-06 se desarrolla en la rama `spec-006`; HU-07 y HU-08
-solo tienen especificación inicial y no están implementadas.
+Estado a 19 de noviembre de 2026: `main` integra **HU-01 a HU-06** (PR #1, #5, #6, #8, #9 y #10). Las
+PR #1 a #9 constan aprobadas en GitHub por el otro integrante; la PR #10 se integró sin revisión registrada.
+HU-07 se desarrolla en la rama `spec-007`; HU-08 solo tiene especificación inicial y no está implementada.
 
 | Historia | Contenido implementado | PR | Autoría observada en GitHub |
 |---|---|---|---|
@@ -11,6 +11,7 @@ solo tienen especificación inicial y no están implementadas.
 | HU-03 | Solicitud con cuestionario completo y máximo de dos abiertas | #6 | `aggg15` |
 | HU-04 | Entrevista, rechazo motivado, aprobación con reserva y espera | #8 | `abcb5-ua` |
 | HU-05 | Formalización con contrato y cuota, adopción y dos seguimientos | #9 | `aggg15` |
+| HU-06 | Casas de acogida: capacidad, periodos, acogidas y novedades | #10 | `abcb5-ua` |
 
 El 5 de noviembre se limitó temporalmente la publicación a HU-01 tras consultar al profesor y se
 cerraron las PR #2 a #4. Las historias siguientes se han publicado después por encargo expreso del
@@ -101,6 +102,6 @@ las PR hacia `main`. La ratificación de la Constitution y los nombres académic
   internos siguen creándose por comando. Detalle en [spec-003](specs/spec-003/spec.md).
 - HU-04: la coordinadora gestiona entrevistas, decisiones y liberación de reservas en
   `/admin/solicitudes`. Detalle en [spec-004](specs/spec-004/spec.md).
-- HU-05 (rama `spec-005`, pendiente de PR): la coordinadora formaliza la entrega desde la solicitud
+- HU-05: la coordinadora formaliza la entrega desde la solicitud
   aprobada (cuota y confirmación del abono), genera el contrato imprimible y consulta los seguimientos en
   `/admin/seguimientos`. Detalle en [spec-005](specs/spec-005/spec.md).
