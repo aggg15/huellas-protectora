@@ -1,0 +1,80 @@
+{# Acogida del animal en su ficha interna (HU-06). Variables: animal, fosterHistory, fosterHomes, fosterToday, fosterErrors, fosterData. #}
+{% set active = (fosterHistory|filter(p => p.active))|first %}
+{% set past = fosterHistory|filter(p => not p.active) %}
+<div class="box" id="foster-panel">
+  <h2 class="title is-5">Acogida</h2>
+  {% if fosterErrors %}
+    <div class="notification is-danger is-light" role="alert">
+      <p><strong>No se ha guardado la acogida.</strong></p>
+      <ul>{% for field, error in fosterErrors %}<li id="foster-error-{{ field }}">{{ error }}</li>{% endfor %}</ul>
+    </div>
+  {% endif %}
+
+  {% if active %}
+    <p class="mb-3">
+      <span class="tag is-warning is-light foster-badge">En casa de acogida</span>
+      {% if active.overdue(fosterToday) %}<span class="tag is-danger is-light">Fin previsto superado</span>{% endif %}
+    </p>
+    <dl class="facts" id="foster-active">
+      <dt>Familia</dt><dd>{{ active.home.family.name }}</dd>
+      <dt>Desde</dt><dd>{{ active.startedOn|date('d/m/Y', false) }}</dd>
+      <dt>Fin previsto</dt><dd>{{ active.plannedEndOn|date('d/m/Y', false) }}</dd>
+    </dl>
+    {% if is_granted('ROLE_COORDINATOR') %}
+      <form method="post" action="{{ path('admin_foster_end', {id: active.id}) }}" id="form-foster-end">
+        <input type="hidden" name="_token" value="{{ csrf_token('foster-end-' ~ active.id) }}">
+        <button class="button is-light">Finalizar acogida</button>
+        <p class="help">El animal regresa al refugio y la plaza queda libre en la casa.</p>
+      </form>
+    {% endif %}
+  {% elseif is_granted('ROLE_COORDINATOR') and animal.status != 'adopted' %}
+    {% if fosterHomes is empty %}
+      <p>No hay casas de acogida con condiciones registradas. Las familias las indican desde su página «Mi acogida».</p>
+    {% else %}
+      <form method="post" action="{{ path('admin_foster_place', {id: animal.id}) }}" id="form-foster-place" novalidate>
+        <input type="hidden" name="_token" value="{{ csrf_token('foster-place-' ~ animal.id) }}">
+        <div class="field">
+          <label class="label" for="foster-home">Casa de acogida</label>
+          <div class="select is-fullwidth"><select id="foster-home" name="home" required{% if fosterErrors.home is defined %} aria-invalid="true" aria-describedby="foster-error-home"{% endif %}>
+            <option value="">Selecciona una casa</option>
+            {% for item in fosterHomes %}
+              {% set current = item.home.periods|filter(p => not p.over(fosterToday)) %}
+              <option value="{{ item.home.id }}" {{ (fosterData.home ?? '') == item.home.id ? 'selected' }}>{{ item.home.family.name }} · {{ item.occupied }} de {{ item.home.capacity }} plazas{% if current is empty %} · sin disponibilidad{% else %} · disponible {% for p in current %}{{ p.startsOn|date('d/m/Y', false) }}–{{ p.endsOn|date('d/m/Y', false) }}{{ not loop.last ? ', ' }}{% endfor %}{% endif %}</option>
+            {% endfor %}
+          </select></div>
+        </div>
+        <div class="field">
+          <label class="label" for="foster-planned-end">Fin previsto</label>
+          <input class="input" id="foster-planned-end" name="plannedEndOn" type="date" min="{{ fosterToday|date('Y-m-d', false) }}" value="{{ fosterData.plannedEndOn ?? '' }}" required{% if fosterErrors.plannedEndOn is defined %} aria-invalid="true" aria-describedby="foster-error-plannedEndOn"{% endif %}>
+          <p class="help">La acogida empieza hoy ({{ fosterToday|date('d/m/Y', false) }}). La casa debe estar disponible todos los días hasta el fin previsto.</p>
+        </div>
+        <button class="button is-primary">Registrar acogida</button>
+      </form>
+    {% endif %}
+  {% else %}
+    <p>No está en acogida.</p>
+  {% endif %}
+
+  <h3 class="title is-6 mt-5">Novedades de la familia</h3>
+  <div id="foster-notes">
+    {% for placement in fosterHistory %}
+      {% for note in placement.notes %}
+        <article class="review">
+          <strong>{{ note.writtenAt|date('d/m/Y H:i', 'Europe/Madrid') }}</strong>
+          <p class="answer">{{ note.body }}</p>
+          <small>{{ note.author.name }}{{ placement.active ? '' : ' · acogida finalizada' }}</small>
+        </article>
+      {% endfor %}
+    {% endfor %}
+    {% if fosterHistory|filter(p => p.notes is not empty) is empty %}<p>Todavía no hay novedades.</p>{% endif %}
+  </div>
+
+  {% if past is not empty %}
+    <h3 class="title is-6 mt-5">Acogidas anteriores</h3>
+    <ul id="foster-past">
+      {% for placement in past %}
+        <li>{{ placement.home.family.name }}: del {{ placement.startedOn|date('d/m/Y', false) }} al {{ placement.endedOn|date('d/m/Y', false) }} · {{ placement.endReasonLabel }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>

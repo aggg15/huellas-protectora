@@ -1,7 +1,7 @@
 # Huellas · gestión de adopciones
 
-Estado a 18 de noviembre de 2026: `main` integra **HU-01 a HU-04** (PR #1, #5, #6 y #8, cada una
-aprobada en GitHub por el otro integrante). HU-05 se especifica en la rama `spec-005`; HU-06 a HU-08
+Estado a 19 de noviembre de 2026: `main` integra **HU-01 a HU-05** (PR #1, #5, #6, #8 y #9, cada una
+aprobada en GitHub por el otro integrante). HU-06 se desarrolla en la rama `spec-006`; HU-07 y HU-08
 solo tienen especificación inicial y no están implementadas.
 
 | Historia | Contenido implementado | PR | Autoría observada en GitHub |
@@ -10,6 +10,7 @@ solo tienen especificación inicial y no están implementadas.
 | HU-02 | Catálogo público y filtros por especie, tamaño y edad | #5 | `abcb5-ua` |
 | HU-03 | Solicitud con cuestionario completo y máximo de dos abiertas | #6 | `aggg15` |
 | HU-04 | Entrevista, rechazo motivado, aprobación con reserva y espera | #8 | `abcb5-ua` |
+| HU-05 | Formalización con contrato y cuota, adopción y dos seguimientos | #9 | `aggg15` |
 
 El 5 de noviembre se limitó temporalmente la publicación a HU-01 tras consultar al profesor y se
 cerraron las PR #2 a #4. Las historias siguientes se han publicado después por encargo expreso del
@@ -63,6 +64,7 @@ ni animales automáticamente. Las cuentas internas se crean mediante un comando 
 php bin/console app:create-user voluntario@example.test "Voluntario ficticio" --role=ROLE_VOLUNTEER
 php bin/console app:create-user veterinario@example.test "Veterinario ficticio" --role=ROLE_VET
 php bin/console app:create-user coordinadora@example.test "Coordinadora ficticia" --role=ROLE_COORDINATOR
+php bin/console app:create-user familia@example.test "Familia de acogida ficticia" --role=ROLE_FOSTER   # HU-06
 ```
 
 ## Pruebas

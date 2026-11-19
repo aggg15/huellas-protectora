@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Acogidas · Huellas{% endblock %}
+
+{% block body %}
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">COORDINACIÓN DE ACOGIDAS</p>
+    <h1 class="title">Casas y acogidas</h1>
+    <p class="subtitle is-6">Capacidad, disponibilidad y ocupación de cada casa. Las acogidas se registran desde la ficha de cada animal.</p>
+  </div>
+</div>
+
+<section class="box" aria-labelledby="placements-title">
+  <h2 class="title is-5" id="placements-title">Acogidas en curso</h2>
+  {% if placements is empty %}
+    <p>No hay animales en acogida.</p>
+  {% else %}
+    <table class="table is-fullwidth is-hoverable stacked-table" id="placements">
+      <thead><tr><th scope="col">Animal</th><th scope="col">Familia</th><th scope="col">Desde</th><th scope="col">Fin previsto</th></tr></thead>
+      <tbody>
+        {% for placement in placements %}
+          <tr>
+            <td data-label="Animal"><a href="{{ path('animal_show', {id: placement.animal.id}) }}"><strong>{{ placement.animal.code }}</strong></a></td>
+            <td data-label="Familia">{{ placement.home.family.name }}</td>
+            <td data-label="Desde">{{ placement.startedOn|date('d/m/Y', false) }}</td>
+            <td data-label="Fin previsto">{{ placement.plannedEndOn|date('d/m/Y', false) }}{% if placement.overdue(today) %} <span class="tag is-danger is-light">Fin previsto superado</span>{% endif %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+</section>
+
+<section class="box" aria-labelledby="homes-title">
+  <h2 class="title is-5" id="homes-title">Casas de acogida</h2>
+  {% if homes is empty %}
+    <p>Ninguna familia ha indicado todavía sus condiciones. Las cuentas de familia se crean con <code>app:create-user --role=ROLE_FOSTER</code>.</p>
+  {% else %}
+    <table class="table is-fullwidth stacked-table" id="homes">
+      <thead><tr><th scope="col">Familia</th><th scope="col">Email</th><th scope="col">Ocupación</th><th scope="col">Disponibilidad</th></tr></thead>
+      <tbody>
+        {% for item in homes %}
+          {% set current = item.home.periods|filter(p => not p.over(today)) %}
+          <tr>
+            <td data-label="Familia">{{ item.home.family.name }}</td>
+            <td data-label="Email">{{ item.home.family.email }}</td>
+            <td data-label="Ocupación">{{ item.occupied }} de {{ item.home.capacity }}</td>
+            <td data-label="Disponibilidad">{% for p in current %}{{ p.startsOn|date('d/m/Y', false) }} – {{ p.endsOn|date('d/m/Y', false) }}{% if not loop.last %}<br>{% endif %}{% else %}Sin periodos vigentes{% endfor %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+</section>
+{% endblock %}

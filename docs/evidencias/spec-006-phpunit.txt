@@ -1,0 +1,90 @@
+# Evidencia de spec-006 (HU-06): pruebas automáticas
+
+Fecha: 2026-11-19, ejecución completa a las 14:01 UTC. Rama `spec-006`, base 87a78a0 (main con HU-01 a HU-05),
+con los cambios de implementación del commit que añade este fichero. Responsable: `abcb5-ua`, con asistencia
+de Claude Code. Datos de prueba ficticios.
+Entorno: sin PHP local; contenedor `huellas-php-ci:latest` (PHP 8.3.36, pdo_pgsql, gd, intl) y PostgreSQL 16
+(`postgres:16-alpine`, contenedor `huellas-spec006-db`) en una red Docker propia. Base `huellas_spec006_test`
+(sufijo `_test`), borrada y creada de nuevo antes de la ejecución. No se usa ni se modifica la base normal.
+Variables: APP_ENV=test y DATABASE_URL hacia esa base, pasadas al contenedor (sin `.env.test.local`).
+
+## Línea base antes de implementar (T601)
+
+    vendor/bin/phpunit   (main 87a78a0, base _test recién migrada)
+      -> OK (58 tests, 493 assertions)
+
+## Comandos y resultado (APP_ENV=test)
+
+    composer validate --strict -> ./composer.json is valid
+    php bin/console doctrine:migrations:migrate --no-interaction
+      -> 7 migraciones, 77 consultas; versión Version20261119120000
+    php bin/console doctrine:migrations:migrate prev --no-interaction  -> Version20261118230000 (down de HU-06)
+    php bin/console doctrine:migrations:migrate --no-interaction       -> Version20261119120000 (24 consultas)
+    php bin/console doctrine:schema:validate
+      -> [OK] The mapping files are correct. [OK] The database schema is in sync with the mapping files.
+         (incluye el índice parcial uniq_foster_active_animal declarado en el mapeo)
+    php -l (src, tests, migrations, tools, config, public) -> 58 ficheros sin errores
+    php bin/console lint:container -> OK; lint:twig templates -> 21 ficheros OK; lint:yaml config -> 6 ficheros OK
+    vendor/bin/phpunit --testdox
+      -> OK (81 tests, 778 assertions), 9 min 06 s
+         Spec001 7/7, Spec002 8/8, Spec003 11/11, Spec004 13/13, Spec005 19/19 (sin modificar sus pruebas),
+         Spec006 23/23
+
+Las líneas «[error] Uncaught PHP Exception …» de la salida son los 403/404 esperados que el núcleo de
+Symfony registra durante las pruebas de permisos y CSRF; no son fallos.
+
+## Spec006
+
+ ✔ Family records capacity and availability periods                CA-06-01
+ ✔ Coordinator places animal in available home with capacity       CA-06-02
+ ✔ Placement starts on madrid calendar day                         CA-06-02 (MockClock 22:30 UTC del 31-mar-2027)
+ ✔ Placement refused when home is not available for the period     CA-06-03 (fuera de periodo, desde mañana, hueco; 409)
+ ✔ Placement refused when capacity would be exceeded               CA-06-03 (409; conserva lo escrito)
+ ✔ Consecutive periods cover the placement                         CA-06-03 (AvailabilityCalendar)
+ ✔ Fostered available animal stays public with foster badge        CA-06-04
+ ✔ Placement does not change quarantine or reservation             CA-06-04 (cuarentena, reserva y su liberación)
+ ✔ Adoption ends active placement                                  CA-06-04 / D25 (T611)
+ ✔ Family notes are associated with the animal                     CA-06-05
+ ✔ Invalid conditions are rejected                                 CA-06-06 (422)
+ ✔ Invalid placement and note are rejected                         CA-06-06 (422)
+ ✔ Condition changes respect active placements                     CA-06-07 (409)
+ ✔ Coordinator ends placement                                      CA-06-08 (incluye doble envío, 409)
+ ✔ Overdue placement stays active and is flagged                   CA-06-08
+ ✔ Concurrent placements do not exceed capacity                    CA-06-09
+ ✔ Concurrent placements of one animal create one                  CA-06-09
+ ✔ Concurrent adoption and placement leave no active placement     CA-06-09 (T611)
+ ✔ Only foster families manage conditions and notes                CA-06-10
+ ✔ Only coordinator places ends and lists placements               CA-06-10
+ ✔ Family cannot touch another home                                CA-06-10 (404)
+ ✔ Notes are not public                                            CA-06-10 y caso límite (HTML escapado)
+ ✔ Foster forms require csrf                                       CA-06-10
+
+## Comprobación de que las pruebas detectan fallos (antes y después)
+
+Mutaciones temporales del código, revertidas después de cada ejecución (`git diff` limpio al terminar):
+
+1. Sin `FOR UPDATE` en la lectura de la casa (`FosterService::place`):
+   testConcurrentPlacementsDoNotExceedCapacity -> FALLA (las dos acogidas «place:ok»: capacidad superada).
+2. Sin el cambio de T611 en `AdoptionService::formalize`:
+   testAdoptionEndsActivePlacement y testConcurrentAdoptionAndPlacementLeaveNoActivePlacement -> FALLAN
+   (la acogida queda activa tras la adopción).
+3. Con T611 pero sin escribir `fostered = FALSE` por SQL (solo en la entidad):
+   testConcurrentAdoptionAndPlacementLeaveNoActivePlacement -> FALLA ('fostered' => true con el animal adoptado).
+   Motivo: la formalización parte de una entidad cargada antes de la acogida (fostered = false en memoria);
+   Doctrine no detecta el cambio y no escribe nada. Con el código completo, las tres pasan.
+
+Ajustes de las pruebas durante la implementación (registrados por transparencia):
+- La carrera adopción/acogida empezaba ambos procesos a la vez y ganaba la formalización, de modo que la
+  mutación 2 no se detectaba. Se hizo determinista: la acogida empieza primero y la formalización 1,5 s
+  después. Con 0,5 s falló una vez porque el arranque recompiló el contenedor tras cambiar un fichero; con
+  5 s de espera inicial y 1,5 s de separación pasó 3 de 3 veces.
+- El proceso auxiliar inicializa el animal de la solicitud antes de esperar; sin eso Doctrine lo cargaba de
+  forma perezosa tras el bloqueo y la mutación 3 no se detectaba.
+
+## Repetición tras las tareas de converge T626–T627 (2026-11-19, 14:27 UTC)
+
+Base `huellas_spec006_test` borrada y creada de nuevo. Mismos comandos:
+
+    doctrine:migrations:migrate -> Version20261119120000; doctrine:schema:validate -> OK (mapeo y esquema)
+    php -l -> sin errores; lint:container, lint:twig (21), lint:yaml (6) -> OK
+    vendor/bin/phpunit --testdox -> OK (81 tests, 778 assertions); Spec001–Spec006 sin fallos

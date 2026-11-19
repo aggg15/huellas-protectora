@@ -19,6 +19,7 @@ class SecurityController extends AbstractController
     public function dashboard(): Response
     {
         if ($this->isGranted('ROLE_STAFF')) { return $this->redirectToRoute('admin_animals'); }
+        if ($this->isGranted('ROLE_FOSTER')) { return $this->redirectToRoute('foster_home'); }
         return $this->redirectToRoute($this->getUser() ? 'application_mine' : 'login');
     }
     #[Route('/', name: 'home', methods: ['GET'])]

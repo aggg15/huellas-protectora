@@ -1,0 +1,111 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mi acogida · Huellas{% endblock %}
+
+{% macro invalid(errors, field) %}{% if errors[field] is defined %} aria-invalid="true" aria-describedby="error-{{ field }}"{% endif %}{% endmacro %}
+
+{% block body %}
+{% set occupied = placements|length %}
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">CASA DE ACOGIDA</p>
+    <h1 class="title">Mi acogida</h1>
+    <p class="subtitle is-6">Indica cuántos animales puedes atender y cuándo, y cuéntanos cómo evolucionan los que cuidas.</p>
+  </div>
+  {% if home %}<span class="tag is-medium is-light" id="occupancy">{{ occupied }} de {{ home.capacity }} {{ home.capacity == 1 ? 'plaza ocupada' : 'plazas ocupadas' }}</span>{% endif %}
+</div>
+
+<div class="detail-grid">
+  <div>
+    <section class="box" aria-labelledby="animals-title">
+      <h2 class="title is-5" id="animals-title">Animales que acojo</h2>
+      {% for placement in placements %}
+        {% set animal = placement.animal %}
+        <article class="foster-animal" id="placement-{{ placement.id }}">
+          <div class="is-flex is-justify-content-space-between is-align-items-center is-flex-wrap-wrap mb-2">
+            <h3 class="title is-6 mb-0">{{ animal.code }}</h3>
+            {% if placement.overdue(today) %}<span class="tag is-danger is-light">Fin previsto superado</span>{% endif %}
+          </div>
+          <p class="is-size-7 has-text-grey mb-3">{{ animal.species == 'dog' ? 'Perro' : 'Gato' }} · {{ animal.ageMonths }} meses · {{ {small:'Pequeño',medium:'Mediano',large:'Grande'}[animal.size] }} · desde el {{ placement.startedOn|date('d/m/Y', false) }}, fin previsto el {{ placement.plannedEndOn|date('d/m/Y', false) }}</p>
+          {% for note in placement.notes %}
+            <div class="review"><strong>{{ note.writtenAt|date('d/m/Y H:i', 'Europe/Madrid') }}</strong><p class="answer">{{ note.body }}</p></div>
+          {% else %}
+            <p class="is-size-7 has-text-grey">Todavía no has anotado novedades.</p>
+          {% endfor %}
+          {% set noteForm = 'note-' ~ placement.id %}
+          <form method="post" action="{{ path('foster_note_add', {id: placement.id}) }}" class="mt-3" id="form-{{ noteForm }}" novalidate>
+            {% if form == noteForm %}{% include 'partials/errors.html.twig' %}{% endif %}
+            <input type="hidden" name="_token" value="{{ csrf_token('foster-note-' ~ placement.id) }}">
+            <div class="field">
+              <label class="label" for="body-{{ placement.id }}">Anotar novedad sobre {{ animal.code }}</label>
+              <textarea class="textarea" id="body-{{ placement.id }}" name="body" rows="3" maxlength="2000" required placeholder="Carácter, salud, hábitos, cómo se relaciona…"{{ form == noteForm ? _self.invalid(errors, 'body') }}>{{ form == noteForm ? formData.body ?? '' }}</textarea>
+            </div>
+            <button class="button is-primary is-small">Guardar novedad</button>
+          </form>
+        </article>
+      {% else %}
+        <div class="empty-state"><p>Ahora mismo no acoges ningún animal. La coordinadora te asignará uno cuando tu casa esté disponible.</p></div>
+      {% endfor %}
+    </section>
+  </div>
+
+  <aside>
+    <section class="box" aria-labelledby="capacity-title">
+      <h2 class="title is-5" id="capacity-title">Capacidad</h2>
+      {% if not home %}<p class="mb-3">Todavía no has indicado tus condiciones. Empieza por el número de animales que puedes atender a la vez.</p>{% endif %}
+      <form method="post" action="{{ path('foster_capacity') }}" id="form-capacity" novalidate>
+        {% if form == 'capacity' %}{% include 'partials/errors.html.twig' %}{% endif %}
+        <input type="hidden" name="_token" value="{{ csrf_token('foster-capacity') }}">
+        <div class="field">
+          <label class="label" for="capacity">Animales que puedo atender a la vez</label>
+          <input class="input" id="capacity" name="capacity" type="number" min="1" max="10" step="1" inputmode="numeric" required value="{{ form == 'capacity' ? formData.capacity ?? '' : home.capacity ?? '' }}"{{ form == 'capacity' ? _self.invalid(errors, 'capacity') }}>
+          <p class="help">De 1 a 10.</p>
+        </div>
+        <button class="button is-primary">Guardar capacidad</button>
+      </form>
+    </section>
+
+    <section class="box" aria-labelledby="periods-title">
+      <h2 class="title is-5" id="periods-title">Periodos de disponibilidad</h2>
+      {% if form == 'periods' %}{% include 'partials/errors.html.twig' %}{% endif %}
+      {% if periods is empty %}
+        <p class="mb-3">No tienes periodos de disponibilidad.</p>
+      {% else %}
+        <table class="table is-fullwidth stacked-table" id="periods">
+          <thead><tr><th scope="col">Desde</th><th scope="col">Hasta</th><th scope="col"><span class="is-sr-only">Acciones</span></th></tr></thead>
+          <tbody>
+            {% for period in periods %}
+              <tr>
+                <td data-label="Desde">{{ period.startsOn|date('d/m/Y', false) }}</td>
+                <td data-label="Hasta">{{ period.endsOn|date('d/m/Y', false) }}{% if period.over(today) %} <span class="tag is-light">Terminado</span>{% endif %}</td>
+                <td data-label="Acción">
+                  <form method="post" action="{{ path('foster_period_remove', {id: period.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('foster-period-remove-' ~ period.id) }}">
+                    <button class="button is-small is-light">Retirar<span class="is-sr-only"> el periodo del {{ period.startsOn|date('d/m/Y', false) }} al {{ period.endsOn|date('d/m/Y', false) }}</span></button>
+                  </form>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+      {% if home %}
+        <form method="post" action="{{ path('foster_period_add') }}" id="form-period" novalidate>
+          {% if form == 'period' %}{% include 'partials/errors.html.twig' %}{% endif %}
+          <input type="hidden" name="_token" value="{{ csrf_token('foster-period') }}">
+          <div class="columns is-variable is-2">{# Sin is-mobile: en móvil los campos de fecha se apilan y no ensanchan la tarjeta (T626). #}
+            <div class="column field"><label class="label" for="startsOn">Desde</label><input class="input" id="startsOn" name="startsOn" type="date" min="{{ today|date('Y-m-d', false) }}" required value="{{ form == 'period' ? formData.startsOn ?? '' }}"{{ form == 'period' ? _self.invalid(errors, 'startsOn') }}></div>
+            <div class="column field"><label class="label" for="endsOn">Hasta</label><input class="input" id="endsOn" name="endsOn" type="date" min="{{ today|date('Y-m-d', false) }}" required value="{{ form == 'period' ? formData.endsOn ?? '' }}"{{ form == 'period' ? _self.invalid(errors, 'endsOn') }}></div>
+          </div>
+          <p class="help mb-3">Días completos, ambos incluidos. Los periodos no pueden solaparse.</p>
+          <button class="button is-primary">Añadir periodo</button>
+        </form>
+      {% elseif form == 'period' %}
+        {% include 'partials/errors.html.twig' %}
+      {% else %}
+        <p class="is-size-7 has-text-grey">Guarda primero tu capacidad para añadir periodos.</p>
+      {% endif %}
+    </section>
+  </aside>
+</div>
+{% endblock %}

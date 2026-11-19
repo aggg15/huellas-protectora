@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace App\Controller;
 use App\Entity\{Animal, AnimalPhoto, VeterinaryReview};
-use App\Service\{AnimalService, ValidationError};
+use App\Service\{AnimalService, FosterService, ValidationError};
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\{Request, Response};
@@ -12,7 +12,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_STAFF')]
 class AnimalController extends AbstractController
 {
-    public function __construct(private EntityManagerInterface $em, private AnimalService $animals) {}
+    public function __construct(private EntityManagerInterface $em, private AnimalService $animals, private FosterService $fosters) {}
     #[Route('/admin/animales', name: 'admin_animals', methods: ['GET'])]
     public function index(): Response
     {
@@ -35,7 +35,8 @@ class AnimalController extends AbstractController
         return $this->render('animal/new.html.twig', ['data'=>$data, 'errors'=>$errors], new Response(status: $errors ? 422 : 200));
     }
     #[Route('/admin/animales/{id}', name: 'animal_show', methods: ['GET'])]
-    public function show(string $id, array $errors = []): Response
+    /** `fosterErrors` y `fosterData` los pasa FosterAdminController al reenviar un error de acogida (HU-06). */
+    public function show(string $id, array $errors = [], array $fosterErrors = [], array $fosterData = []): Response
     {
         $this->animals->releaseDueAnimals();
         $animal = $this->em->find(Animal::class, $id) ?? throw $this->createNotFoundException();
@@ -43,7 +44,11 @@ class AnimalController extends AbstractController
             'animal'=>$animal, 'errors'=>$errors,
             'photos'=>$this->em->getRepository(AnimalPhoto::class)->findBy(['animal'=>$animal]),
             'reviews'=>$this->em->getRepository(VeterinaryReview::class)->findBy(['animal'=>$animal], ['reviewedAt'=>'DESC']),
-        ], new Response(status: $errors ? 422 : 200));
+            'fosterHistory'=>$this->fosters->historyOf($animal),
+            'fosterHomes'=>$this->isGranted('ROLE_COORDINATOR') ? $this->fosters->homesOverview() : [],
+            'fosterToday'=>$this->fosters->today(),
+            'fosterErrors'=>$fosterErrors, 'fosterData'=>$fosterData,
+        ], new Response(status: $errors || $fosterErrors ? 422 : 200));
     }
     #[Route('/admin/animales/{id}/revision', name: 'animal_review', methods: ['POST'])]
     #[IsGranted('ROLE_VET')]

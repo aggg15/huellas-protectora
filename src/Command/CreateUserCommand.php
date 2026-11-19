@@ -17,13 +17,13 @@ class CreateUserCommand extends Command
     protected function configure(): void
     {
         $this->addArgument('email', InputArgument::REQUIRED)->addArgument('name', InputArgument::REQUIRED)
-            ->addOption('role', null, InputOption::VALUE_REQUIRED, 'ROLE_USER / ROLE_VOLUNTEER / ROLE_VET / ROLE_COORDINATOR', 'ROLE_USER');
+            ->addOption('role', null, InputOption::VALUE_REQUIRED, 'ROLE_USER / ROLE_VOLUNTEER / ROLE_VET / ROLE_COORDINATOR / ROLE_FOSTER', 'ROLE_USER');
     }
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $role = $input->getOption('role');
         $email = mb_strtolower(trim($input->getArgument('email')));
-        if (!in_array($role, ['ROLE_USER','ROLE_VOLUNTEER','ROLE_VET','ROLE_COORDINATOR'], true) || !filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($email)>180 || trim($input->getArgument('name')) === '') {
+        if (!in_array($role, ['ROLE_USER','ROLE_VOLUNTEER','ROLE_VET','ROLE_COORDINATOR','ROLE_FOSTER'], true) || !filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($email)>180 || trim($input->getArgument('name')) === '') {
             $output->writeln('<error>Datos o rol no válidos.</error>'); return Command::INVALID;
         }
         if ($this->em->getRepository(User::class)->findOneBy(['email'=>$email])) { $output->writeln('<error>El email ya existe.</error>'); return Command::FAILURE; }
