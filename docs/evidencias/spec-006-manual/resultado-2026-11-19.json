@@ -1,0 +1,262 @@
+{
+  "base": "http://127.0.0.1:8096",
+  "failures": 0,
+  "log": [
+    {
+      "route": "R1 satisfactorio",
+      "step": "La familia accede y llega a «Mi acogida» (D19)",
+      "expected": "/acogida",
+      "observed": "/acogida",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Estado vacío inicial",
+      "expected": "Todavía no has indicado tus condiciones",
+      "observed": "mensaje visible",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Capacidad 2 y periodo de 30 días guardados (CA-06-01)",
+      "expected": "0 de 2 plazas ocupadas; 19/11/2026 – 19/12/2026",
+      "observed": "0 de 2 plazas ocupadas; 19/11/2026 19/12/2026 Retirar el periodo del 19/11/2026 al 19/12/2026",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "La coordinadora ve la casa con su ocupación (CA-06-01)",
+      "expected": "Familia Encina Ficticia · 0 de 2",
+      "observed": "Familia Encina Ficticia familia.encina@example.test 0 de 2 19/11/2026 – 19/12/2026",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Registrar la acogida de A hasta dentro de 20 días (CA-06-02)",
+      "expected": "éxito; Familia Encina, desde 19/11/2026, fin 09/12/2026",
+      "observed": "éxito; Familia Familia Encina Ficticia Desde 19/11/2026 Fin previsto 09/12/2026",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Catálogo anónimo: A sigue visible con «En casa de acogida» (CA-06-04)",
+      "expected": "tarjeta con la indicación",
+      "observed": "tarjeta con la indicación",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Página de la familia en móvil sin desplazamiento horizontal",
+      "expected": "sin scroll horizontal",
+      "observed": "sin scroll horizontal",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Teclado: el campo de la novedad se alcanza con Tab",
+      "expected": "foco en la novedad",
+      "observed": "foco en #body-01a1f42c-4d02-7d68-ae6e-a1a104fe1799 tras 6 pulsaciones",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Teclado: Tab lleva al botón y Enter guarda la novedad (CA-06-05)",
+      "expected": "BUTTON:Guardar novedad; mensaje de éxito; novedad visible",
+      "observed": "BUTTON:Guardar novedad; novedad visible",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "El personal ve la novedad en la ficha interna (CA-06-05)",
+      "expected": "novedad y autora",
+      "observed": "novedad y autora",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "La novedad no aparece en la ficha pública (D24)",
+      "expected": "ausente",
+      "observed": "ausente",
+      "result": "OK"
+    },
+    {
+      "route": "R2 error",
+      "step": "Registrar B en la casa completa de Álamo (CA-06-03)",
+      "expected": "409; «ya atiende su máximo de 1 animal»",
+      "observed": "409; «La casa de Familia Álamo Ficticia ya atiende su máximo de 1 animal.»",
+      "result": "OK"
+    },
+    {
+      "route": "R2 error",
+      "step": "B sigue sin acogida y el formulario conserva la fecha",
+      "expected": "formulario visible; fin 2026-11-29",
+      "observed": "formulario visible; fin 2026-11-29",
+      "result": "OK"
+    },
+    {
+      "route": "R2 error",
+      "step": "Ficha con error en móvil sin desplazamiento horizontal",
+      "expected": "sin scroll horizontal",
+      "observed": "sin scroll horizontal",
+      "result": "OK"
+    },
+    {
+      "route": "R2 error",
+      "step": "La familia indica capacidad 0 (CA-06-06)",
+      "expected": "422; campo marcado como no válido; capacidad guardada sin cambios",
+      "observed": "422; aria-invalid=true",
+      "result": "OK"
+    },
+    {
+      "route": "R2 error",
+      "step": "Tras el error sigue la capacidad anterior (1 de 1)",
+      "expected": "1 de 1 plaza ocupada",
+      "observed": "1 de 1 plaza ocupada",
+      "result": "OK"
+    },
+    {
+      "route": "R2 error",
+      "step": "Persona anónima en /acogida (CA-06-10)",
+      "expected": "redirección a /acceso",
+      "observed": "redirección",
+      "result": "OK"
+    }
+  ],
+  "responses": [
+    {
+      "url": "http://127.0.0.1:8096/acceso",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8096/acogida",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8096/acogida",
+      "status": 200,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8096/acogida",
+      "status": 200,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8096/acceso",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8096/admin/animales",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8096/admin/acogidas",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8096/admin/animales/01a1f42a-ef25-70e1-a211-c17e78df004f",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8096/admin/animales/01a1f42a-ef25-70e1-a211-c17e78df004f",
+      "status": 200,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8096/animales",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8096/acceso",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8096/acogida",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8096/acogida",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8096/acogida",
+      "status": 200,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8096/acceso",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8096/admin/animales",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8096/admin/animales/01a1f42a-ef25-70e1-a211-c17e78df004f",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8096/animales/01a1f42a-ef25-70e1-a211-c17e78df004f",
+      "status": 200,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8096/acceso",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8096/admin/animales",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8096/admin/animales/01a1f42a-f022-735d-8956-c38d26ee6272",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8096/admin/animales/01a1f42a-f022-735d-8956-c38d26ee6272/acogida",
+      "status": 409,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8096/acceso",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8096/acogida",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8096/acogida",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8096/acogida/capacidad",
+      "status": 422,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8096/acogida",
+      "status": 200,
+      "type": "Document"
+    }
+  ]
+}

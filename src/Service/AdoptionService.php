@@ -73,6 +73,13 @@ class AdoptionService
                     "UPDATE adoptionapplication SET status = 'cancelled', cancellationReason = ? WHERE animal_id = ? AND status IN ('pending','waiting') AND id <> ?",
                     [self::ADOPTED_REASON, $animal->id, $application->id],
                 );
+                // HU-06 (D25): la acogida activa termina el día de la entrega y libera la plaza de la casa. El
+                // indicador se escribe por SQL porque la entidad en memoria puede tenerlo ya a false sin estarlo en la base.
+                $connection->executeStatement(
+                    "UPDATE fosterplacement SET endedOn = ?, endReason = 'adopted' WHERE animal_id = ? AND endedOn IS NULL",
+                    [AvailabilityCalendar::madridDay($adoption->deliveredAt)->format('Y-m-d'), $animal->id],
+                );
+                $connection->executeStatement('UPDATE animal SET fostered = FALSE WHERE id = ?', [$animal->id]);
                 $this->em->flush();
                 return $adoption;
             });

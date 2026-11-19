@@ -1,0 +1,25 @@
+{
+  "base": "http://127.0.0.1:8096",
+  "label": "despues",
+  "date": "2026-11-19T14:27:24.641Z",
+  "results": [
+    {
+      "width": 390,
+      "boxes": 3,
+      "maxRight": 374,
+      "contentWidth": 390,
+      "innerWidth": 390,
+      "expected": "borde derecho de las tarjetas ≤ 390 px y ancho del contenido ≤ 390 px",
+      "result": "OK"
+    },
+    {
+      "width": 1280,
+      "boxes": 3,
+      "maxRight": 1213,
+      "contentWidth": 1265,
+      "innerWidth": 1280,
+      "expected": "borde derecho de las tarjetas ≤ 1280 px y ancho del contenido ≤ 1280 px",
+      "result": "OK"
+    }
+  ]
+}
