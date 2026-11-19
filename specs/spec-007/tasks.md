@@ -83,7 +83,7 @@ sustituye la evidencia: el cierre se acredita con `docs/evidencias/spec-007-phpu
 
 - [x] **T719** · Redactar `implement.md` y `converge.md`; añadir aquí las tareas correctivas que salgan de converge
   sin borrar las anteriores.
-- [ ] **T720** · Abrir la PR hacia `main` con la plantilla, señalando el cambio en la cabecera común y
+- [x] **T720** · Abrir la PR hacia `main` con la plantilla, señalando el cambio en la cabecera común y
   `data-model.md`, y pedir la revisión de `abcb5-ua`.
 
 ## Ejecución del 2026-11-19
@@ -103,6 +103,8 @@ Detalle de componentes en [implement](implement.md).
 - T718 → recorridos R1 y R2 en Chrome real, escritorio y 390 px, con teclado: 19/19 comprobaciones correctas y una
   observación visual. Véase ../../docs/evidencias/spec-007-manual/README.md.
 - T719 → [implement](implement.md) y [converge](converge.md): 2 hallazgos (C1 MEDIUM, C2 LOW), añadidos debajo como T721–T722.
+
+- T720 → [PR #11](https://github.com/aggg15/huellas-protectora/pull/11), con revisión pedida a `abcb5-ua` (pendiente).
 
 ## Phase 8: Convergence
 
