@@ -88,6 +88,25 @@ eligieron entre opciones, en cada caso la recomendada; el resto las concreta. De
 | D32 | El listado muestra los turnos que todavía no han terminado, por hora de inicio, con tipo, fecha y horas, mínimo, máximo, inscripciones y plazas libres, y señala aquellos en los que figura quien consulta. La ficha del turno muestra los nombres de las personas inscritas al personal con acceso. Un turno empezado figura «En curso» y no admite inscripciones ni bajas. | CA-07-01: se conocen las inscripciones registradas; información interna, no pública. |
 | D33 | Inscribirse bloquea la cuenta del voluntario y después el turno, y vuelve a comprobar bajo bloqueo plazas, inscripción previa, coincidencias e inicio; modificar o darse de baja bloquea el turno. Un índice único impide dos inscripciones de la misma cuenta en un turno. Peticiones simultáneas no superan el máximo ni dejan cambios parciales. | Plan común: releer el estado después del bloqueo; Constitution III. |
 
+Actualización del 2026-11-19 (noche): HU-07 está integrada en `main` (PR #11, aprobada por `abcb5-ua`). `abcb5-ua`
+asume HU-08 por encargo expreso; sus decisiones se registran a partir de D34.
+
+## Decisiones de HU-08 (2026-11-19)
+
+Planteadas en clarify y elegidas por `abcb5-ua` (responsable de HU-08): D34, D35, D37 y D38 se eligieron entre
+opciones, en cada caso la recomendada; el resto las concreta. Detalle en specs/spec-008/clarify.md.
+
+| ID | Decisión | Motivo / historias |
+|---|---|---|
+| D34 | Apadrina una persona con cuenta pública (registro de HU-03, solo `ROLE_USER`) desde la ficha pública del animal. Las cuentas de personal y de familias de acogida no apadrinan. Una cuenta identifica, no acredita identidad legal (D06). | La historia está escrita desde el padrino; reutiliza el registro existente. |
+| D35 | Solo se apadrinan animales disponibles (también en acogida). Varios padrinos por animal y varios animales por padrino, con un único apadrinamiento activo por cuenta y animal (índice único parcial). | Pregunta 3 de la ficha; la cuarentena no es pública y un animal reservado o adoptado ya tiene familia. |
+| D36 | La aportación mensual es un compromiso registrado de 10,00 € a 9 999,99 € (dos decimales como máximo), con fecha de inicio. Sin cobros, recibos ni pasarela; el importe no se modifica (se termina y se apadrina de nuevo). | SI-30: mínimo de diez euros; contabilidad excluida; el máximo solo evita errores de tecleo, como D14. |
+| D37 | La coordinadora publica novedades para los padrinos de cada animal con apadrinamientos activos (1 a 2000 caracteres, inmutables). Cada padrino las ve en «Mis apadrinamientos», solo las escritas mientras su apadrinamiento estaba activo, también tras terminarlo. Las notas de acogida siguen siendo internas (D24). Sin correo. | Pregunta 1 de la ficha: la coordinadora prepara y valida lo que se comparte; sin servicio de mensajería. |
+| D38 | Un apadrinamiento activo cuyo animal se adopta queda «pendiente de decisión», con la aportación en pausa desde la fecha de entrega (D18). Se calcula al consultar; HU-05 no cambia. | La narrativa pide ofrecer la elección; sin tareas programadas. |
+| D39 | El padrino elige: otro animal disponible que no apadrina (el anterior termina con «Cambio a otro animal» y se crea uno nuevo con la misma aportación, enlazado, en una transacción) o terminar («Fin de la colaboración»). Puede terminar en cualquier momento. Nada se asigna ni termina automáticamente. | CA-08-05: elección del padrino sin asignaciones unilaterales; el enlace conserva el historial. |
+| D40 | Cada padrino ve sus apadrinamientos; la coordinadora, los activos por animal (persona, importe, desde y pausa) en `/admin/apadrinamientos`. Nadie más. | Preparar las novedades sin publicar datos de los padrinos; Constitution V. |
+| D41 | Apadrinar bloquea la cuenta y después el animal; cambiar y terminar bloquean la cuenta, el apadrinamiento y, al cambiar, el animal elegido; publicar una novedad bloquea el animal. Se vuelve a comprobar todo bajo bloqueo. | Plan común: releer después del bloqueo; mismo orden que HU-03 y HU-07; sin ciclos con la formalización de HU-05. |
+
 ## Reparto y material vigente
 
 El nuevo enunciado v1 mezcla cuatro integrantes/dos historias con dos integrantes/cuatro historias.
@@ -99,4 +118,4 @@ implementación actual. La revisión actual deja de usar Práctica 1 como fuente
 
 El enunciado v1 requiere specs/ y docs/agrupamiento.md y docs/memoria.md, además de dos ZIP finales
 (proyecto y vídeo, máximo conjunto 100 MB). Esta iteración prepara la aplicación y documentación
-de las historias integradas; no declara terminadas HU-07 y HU-08, la memoria ni la demo final.
+de las historias integradas; no declara terminada HU-08 (pendiente de revisión), la memoria ni la demo final.
