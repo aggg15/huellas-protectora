@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Apadrinar a {{ animal.code }} · Huellas{% endblock %}
+
+{% block body %}
+<a class="back-link" href="{{ path('public_animal_show', {id: animal.id}) }}">← Volver a la ficha de {{ animal.code }}</a>
+<p class="eyebrow">APADRINAMIENTO</p>
+<h1 class="title">Apadrinar a {{ animal.code }}</h1>
+<p class="subtitle is-6">{{ animal.species == 'dog' ? 'Perro' : 'Gato' }} · {{ {small: 'Pequeño', medium: 'Mediano', large: 'Grande'}[animal.size] }}{% if animal.fostered %} · En casa de acogida{% endif %}</p>
+<div class="box form-wide">
+  {% include 'partials/errors.html.twig' %}
+  <p class="mb-4">Tu aportación mensual ayuda a su cuidado mientras busca familia. Recibirás sus novedades en
+    «Mis apadrinamientos». Si encuentra un hogar, podrás elegir otro animal o terminar tu colaboración.</p>
+  <form method="post" id="form-sponsorship" novalidate>
+    <input type="hidden" name="_token" value="{{ csrf_token('sponsorship-new-' ~ animal.id) }}">
+    <div class="field">
+      <label class="label" for="amount">Aportación mensual (€)</label>
+      <input class="input" id="amount" name="amount" type="text" inputmode="decimal" autocomplete="off" placeholder="10,00" required value="{{ data.amount }}"{% if errors.amount is defined %} aria-invalid="true" aria-describedby="error-amount"{% endif %}>
+      <p class="help">Mínimo 10,00 € al mes. La protectora no cobra a través de esta web: se registra tu compromiso.</p>
+    </div>
+    <button class="button is-primary">Apadrinar a {{ animal.code }}</button>
+  </form>
+</div>
+{% endblock %}

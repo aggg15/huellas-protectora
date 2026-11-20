@@ -1,11 +1,12 @@
 # Especificación HU-07 · spec-007
 
 Fecha: 2026-11-05 (especificación inicial); concretada el 2026-11-19 por encargo de `aggg15`.
-Responsable GitHub: `aggg15`. Revisión prevista: `abcb5-ua` (pendiente).
+Responsable GitHub: `aggg15`. Revisión: `abcb5-ua` aprobó la PR #11 el 2026-11-19 y la integró en `main`.
 Estado: especificada, aclarada ([clarify](clarify.md)) y planificada ([plan](plan.md)) en la rama `spec-007`,
 creada desde `main` (edc7941, con HU-01 a HU-06 integradas). Con [tareas](tasks.md), [analyze](analyze.md),
 [implementación](implement.md) (T705–T718) y verificación manual; [converge](converge.md) con T721–T722 completadas
-y convergido. Pendiente la revisión de `abcb5-ua`.
+y convergido. Integrada en `main` con la [PR #11](https://github.com/aggg15/huellas-protectora/pull/11)
+(estado actualizado el 2026-11-19 en la rama `spec-008`, T801).
 
 ## Historia de usuario
 

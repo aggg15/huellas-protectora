@@ -1,0 +1,81 @@
+# Evidencia de spec-008 (HU-08): pruebas automáticas
+
+Fecha: 2026-11-19. Rama `spec-008`, base 5e379e6 (main con HU-01 a HU-07), con los cambios de implementación del
+commit que añade este fichero. Responsable: `abcb5-ua`, con asistencia de Claude Code. Datos de prueba ficticios.
+Entorno: Windows 11 sin PHP local; contenedores equivalentes al CI: `php:8.3-cli` (PHP 8.3.37 con pdo_pgsql, gd e
+intl; imagen local `huellas-php:8.3`) y `postgres:16-alpine` en una red Docker propia. El código se copia al
+contenedor como instantánea exacta (`git archive main` para la línea base; ficheros versionados y nuevos de la rama
+para HU-08), con el `vendor/` de `composer.lock`. Bases propias con sufijo `_test`, borradas y creadas de nuevo antes
+de cada ejecución: `huellas_main20261119_test` (línea base) y `huellas_spec008_test`. No se usa ni se modifica la base
+normal. Variables: APP_ENV=test, APP_DEBUG=1 y DATABASE_URL hacia esa base, pasadas al contenedor.
+
+## Línea base antes de especificar (T801), comprobación de spec-007
+
+    main 5e379e6 (HU-07 integrada con la PR #11), 17:51–17:53 UTC
+    composer validate --strict -> ./composer.json is valid
+    php -l (src, tests, migrations, tools, config, public) -> 67 ficheros sin errores
+    doctrine:migrations:migrate -> 8 migraciones; doctrine:schema:validate -> [OK] mapping / [OK] in sync
+    lint:container OK; lint:twig templates -> 26 ficheros OK; lint:yaml config -> 6 ficheros OK
+    vendor/bin/phpunit --testdox -> OK (99 tests, 1039 assertions), 1 min 25 s
+      Spec001 7, Spec002 8, Spec003 11, Spec004 13, Spec005 19, Spec006 23, Spec007 18
+
+Coincide con lo registrado en docs/evidencias/spec-007-phpunit.txt y con el CI de la PR #11 y de main (correctos).
+Una primera ejecución montando la carpeta de trabajo se descartó: leía los ficheros mientras se añadía HU-08 y no era
+una instantánea de main.
+
+## Comandos y resultado tras la implementación (18:09–18:11 UTC)
+
+    composer validate --strict -> ./composer.json is valid
+    php -l (src, tests, migrations, tools, config, public) -> 76 ficheros sin errores
+    php bin/console doctrine:migrations:migrate --no-interaction -> 9 migraciones; versión Version20261119190000
+    php bin/console doctrine:schema:validate
+      -> [OK] The mapping files are correct. [OK] The database schema is in sync with the mapping files.
+         (incluye el único parcial uniq_sponsorship_active y el índice idx_sponsor_update_animal_written del mapeo)
+    php bin/console lint:container -> OK; lint:twig templates -> 29 ficheros OK; lint:yaml config -> 6 ficheros OK
+    vendor/bin/phpunit --testdox
+      -> OK (112 tests, 1301 assertions), 1 min 38 s
+         Spec001 7/7, Spec002 8/8, Spec003 11/11, Spec004 13/13, Spec005 19/19, Spec006 23/23, Spec007 18/18
+         (sin modificar sus pruebas), Spec008 13/13
+
+    Migraciones down/up sobre la misma base:
+    doctrine:migrations:migrate prev -> Version20261119180000 (down de HU-08: 2 consultas; quedan 0 tablas de HU-08)
+    doctrine:migrations:migrate      -> Version20261119190000 (18 consultas)
+    doctrine:schema:validate         -> [OK] / [OK]
+
+Defecto detectado por esta comprobación antes de cerrar T806: la migración se generó con el nombre
+`Version20261119174701` (hora del contenedor) y ordenaba antes que la de HU-07 (`Version20261119180000`); `migrate prev`
+deshacía la de HU-07. Se renombró a `Version20261119190000` sin cambiar su SQL y se repitió todo lo anterior.
+
+Las líneas «[error] Uncaught PHP Exception …» que PHPUnit muestra son los 403/404 esperados que el núcleo de Symfony
+registra durante las pruebas de permisos y CSRF; se filtran de la salida y no son fallos.
+
+## Spec008
+
+ ✔ Empty states are explained                                  Constitution V (converge C2, T823)
+ ✔ Sponsor registers monthly contribution for animal           CA-08-01 (ficha pública, 15,50 € y 10 € exactos)
+ ✔ Contribution below ten euros is rejected                    CA-08-02 (9 importes no válidos, 422, valor conservado)
+ ✔ Sponsor receives updates published by coordinator           CA-08-03 (escapado; nota de acogida interna oculta, A1)
+ ✔ Updates are validated and limited to the sponsorship period CA-08-03 (422; 2000 caracteres; periodo; mismo segundo;
+                                                               sin padrinos activos 409)
+ ✔ Adopted animal offers sponsor to continue or finish         CA-08-04 (reservado sigue activo; formalización real de
+                                                               HU-05; pausa con la fecha; vista de la coordinadora)
+ ✔ Sponsor choice is recorded without unilateral assignment    CA-08-05 (cambio enlazado con el mismo importe; fin)
+ ✔ Sponsorship cardinality and voluntary end                   CA-08-06
+ ✔ Only available animals can be sponsored                     CA-08-07 (404 cuarentena/reservado/adoptado; 409;
+                                                               cuarentena vencida promocionada)
+ ✔ Invalid continuity choices are rejected                     CA-08-08 (422 y 409 en seis casos; sin cambios)
+ ✔ Concurrent sponsorships of same animal create one           CA-08-09
+ ✔ Concurrent continuity choices apply only one                CA-08-09 (dos cambios y un fin a la vez)
+ ✔ Only public accounts sponsor and only coordinator publishes CA-08-10 (anónimo, 4 roles de trabajo, ajeno 404 al
+                                                               terminar y al cambiar, CSRF)
+
+## Mutaciones de las pruebas de concurrencia (T816), 17:57 UTC
+
+Cambios temporales en `SponsorshipService`, revertidos después (comprobado con `cmp` contra la copia guardada):
+
+1. `lockActive` sin bloquear la cuenta ni el apadrinamiento (lectura sin `FOR UPDATE` y una espera de 300 ms):
+   `testConcurrentContinuityChoicesApplyOnlyOne` falla con «finish:ok, move:ok, move:rechazada» (dos decisiones
+   aplicadas). Con el código: pasa.
+2. `sponsor` sin bloquear la cuenta ni el animal y sin traducir la violación del índice único: falla
+   `testConcurrentSponsorshipsOfSameAnimalCreateOne` (el proceso perdedor termina con una excepción no controlada).
+   Con el código: pasa; el índice parcial garantiza un único apadrinamiento activo y se informa con 409.

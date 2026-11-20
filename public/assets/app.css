@@ -34,3 +34,5 @@ body { background:var(--paper); color:var(--ink); min-height:100vh; display:flex
 /* Turnos (HU-07): turno falto de voluntarios en las próximas 48 horas (D31). */
 .shift-undercovered { background:#fdf0ef; box-shadow:inset 4px 0 0 #c0392b; }.shift-undercovered td:first-child { padding-left:1rem; }.shift-alert-tag { font-weight:700; white-space:normal; height:auto; }.shift-tags { display:flex; flex-wrap:wrap; gap:.3rem; align-items:center; }
 @media(max-width:760px) { .stacked-table tr.shift-undercovered { padding-left:.8rem; padding-right:.6rem; } .stacked-table tr.shift-undercovered td:first-child { padding-left:0!important; } }
+.sponsorship-head { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:.6rem; margin-bottom:.8rem; }.sponsorship-pending { border-color:#e8c46a; }.sponsorship-facts dd { overflow-wrap:anywhere; }
+.sponsor-updates li { padding:.6rem 0; border-bottom:1px solid #e4e8de; }.sponsor-updates li:last-child { border-bottom:0; }

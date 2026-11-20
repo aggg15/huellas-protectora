@@ -1,0 +1,269 @@
+{
+  "when": "2026-11-19T18:13:26.328Z",
+  "base": "http://127.0.0.1:8098",
+  "checks": [
+    {
+      "route": "R1 satisfactorio",
+      "step": "Teclado (390 px): el enlace «Apadrinar» de la ficha pública se alcanza con Tab",
+      "expected": "foco en «Apadrinar a HUE-456C41B00A69»",
+      "observed": "«Apadrinar a HUE-456C41B00A69» tras 8 pulsaciones",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Formulario de apadrinamiento en móvil sin desbordar",
+      "expected": "scrollWidth y borde ≤ 390",
+      "observed": {
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "maxRight": 374
+      },
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Importe de 9,99 € rechazado y conservado (CA-08-02)",
+      "expected": "422; error del importe; valor 9,99; aria-invalid",
+      "observed": "422; «Indica una aportación mensual de al menos 10,00 € y hasta 9 999,99 €, con dos decimales como máximo.»; valor 9,99; aria-invalid=true",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Apadrinamiento con 15,50 € al mes (CA-08-01)",
+      "expected": "«Ya apadrinas…»; tarjeta Activo con 15,50 €",
+      "observed": "Activo; HUE-456C41B00A69 Activo Aportación mensual 15,50 € Desde 19/11/2026 Terminar mi colaboración Novedades Todavía no hay novedades.",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "«Mis apadrinamientos» en móvil sin desbordar",
+      "expected": "scrollWidth y borde ≤ 390",
+      "observed": {
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "maxRight": 374
+      },
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "La coordinadora ve el animal con su madrina e importe (D40)",
+      "expected": "Lucía Madrina Ficticia · 15,50 €",
+      "observed": "Persona que apadrina Aportación mensual Desde Lucía Madrina Ficticia 15,50 € 19/11/2026",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Teclado: textarea → Tab → «Publicar novedad» y Enter (CA-08-03)",
+      "expected": "éxito; la novedad aparece en la lista",
+      "observed": "foco «Publicar novedad»; 19/11/2026 19:13 · Coordinadora Ficticia Esta semana ha aprendido a pasear con correa y ya juega con otros perros. <b>Muy contento</b>.",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "La madrina recibe la novedad, escapada (CA-08-03)",
+      "expected": "novedad visible con su fecha; sin HTML interpretado",
+      "observed": "HUE-456C41B00A69 Activo Aportación mensual 15,50 € Desde 19/11/2026 Terminar mi colaboración Novedades 19/11/2026 19:13 Esta semana ha aprendido a pasear con correa y ya juega con otros perros. <b>Muy contento</b>.",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Tras la adopción (HU-05) queda pendiente de decisión con la aportación en pausa (CA-08-04)",
+      "expected": "«Pendiente de tu decisión»; fecha de adopción; aportación en pausa",
+      "observed": "Pendiente de tu decisión; HUE-456C41B00A69 Pendiente de tu decisión Aportación mensual 15,50 € Desde 19/11/2026 ¡HUE-456C41B00A69 ha encontrado familia! Fue adoptado el 19/11/2026. Tu aportación está en pausa desde la adopción hasta que decidas cómo continuar: apadrinar a otro animal o terminar tu colaboración. Apadrinar a otro animal con la misma aportación (15,50 €) Elige un animal HUE-169844931674 · Gato, pequeño HUE-169845302742 · Perro, grande Apadrinar al animal elegido Terminar mi colaboración Novedades 19/11/2026 19:13 Esta semana ha aprendido a pasear con correa y ya juega con otros perros. <b>Muy contento</b>.",
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Se ofrecen los animales disponibles que no apadrina y «Terminar mi colaboración»",
+      "expected": "HUE-169844931674 y HUE-169845302742",
+      "observed": [
+        "Elige un animal",
+        "HUE-169844931674",
+        "HUE-169845302742"
+      ],
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Decisión pendiente en móvil sin desbordar",
+      "expected": "scrollWidth y borde ≤ 390",
+      "observed": {
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "maxRight": 374
+      },
+      "result": "OK"
+    },
+    {
+      "route": "R1 satisfactorio",
+      "step": "Teclado: selector → Tab → botón y Enter; la elección queda reflejada (CA-08-05)",
+      "expected": "HUE-169844931674 activo con 15,50 €; HUE-456C41B00A69 terminado «Cambio a otro animal (HUE-169844931674)»",
+      "observed": "foco «Apadrinar al animal elegido»; Activo HUE-169844931674 Activo Aportación mensual 15,50 € Desde 19/11/2026 Terminar mi colaboración Novedades Todavía no hay novedades. | Terminado HUE-456C41B00A69 Terminado Aportación mensual 15,50 € Desde 19/11/2026 Terminado 19/11/2026 · Cambio a otro animal (HUE-169844931674) Novedades 19/11/2026 19:13 Esta semana ha aprendido a pasear con correa y ya juega con otros perros. <b>Muy contento</b>.",
+      "result": "OK"
+    },
+    {
+      "route": "R2 permisos y estado",
+      "step": "La ficha pública no ofrece apadrinar a una cuenta de personal (D34)",
+      "expected": "sin recuadro «Apadrinar»",
+      "observed": "sin recuadro",
+      "result": "OK"
+    },
+    {
+      "route": "R2 permisos y estado",
+      "step": "Una cuenta de personal no apadrina (CA-08-10)",
+      "expected": "403",
+      "observed": "403",
+      "result": "OK"
+    },
+    {
+      "route": "R2 permisos y estado",
+      "step": "Un voluntario no ve los apadrinamientos (CA-08-10)",
+      "expected": "403",
+      "observed": "403",
+      "result": "OK"
+    },
+    {
+      "route": "R2 permisos y estado",
+      "step": "Anónimo dirigido a la página de acceso (CA-08-10)",
+      "expected": "/acceso",
+      "observed": "/acceso",
+      "result": "OK"
+    },
+    {
+      "route": "R2 permisos y estado",
+      "step": "Un animal adoptado no se puede apadrinar (CA-08-07)",
+      "expected": "404",
+      "observed": "404",
+      "result": "OK"
+    }
+  ],
+  "failures": 0,
+  "responses": [
+    {
+      "url": "http://127.0.0.1:8098/acceso",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8098/mis-solicitudes",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8098/animales/01a1f503-23d4-77b5-915a-456c41b00a69",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8098/animales/01a1f503-23d4-77b5-915a-456c41b00a69/apadrinar",
+      "status": 200,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8098/animales/01a1f503-23d4-77b5-915a-456c41b00a69/apadrinar",
+      "status": 422,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8098/mis-apadrinamientos",
+      "status": 200,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8098/acceso",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8098/admin/animales",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8098/admin/apadrinamientos",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8098/admin/apadrinamientos",
+      "status": 200,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8098/acceso",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8098/mis-solicitudes",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8098/mis-apadrinamientos",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8098/mis-apadrinamientos",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8098/mis-apadrinamientos",
+      "status": 200,
+      "type": "Fetch"
+    },
+    {
+      "url": "http://127.0.0.1:8098/acceso",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8098/admin/animales",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8098/animales/01a1f503-23d5-707d-8adb-169845302742",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8098/animales/01a1f503-23d5-707d-8adb-169845302742/apadrinar",
+      "status": 403,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8098/admin/apadrinamientos",
+      "status": 403,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8098/acceso",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8098/acceso",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8098/acceso",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8098/mis-solicitudes",
+      "status": 200,
+      "type": "Document"
+    },
+    {
+      "url": "http://127.0.0.1:8098/animales/01a1f503-23d4-77b5-915a-456c41b00a69/apadrinar",
+      "status": 404,
+      "type": "Document"
+    }
+  ]
+}
