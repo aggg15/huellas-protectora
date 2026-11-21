@@ -7,6 +7,7 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity]
 #[ORM\UniqueConstraint(name: 'uniq_application_approved_animal', columns: ['animal_id'], options: ['where' => "((status)::text = 'approved'::text)"])]
+#[ORM\UniqueConstraint(name: 'uniq_application_open_applicant_animal', columns: ['applicant_id', 'animal_id'], options: ['where' => "((status)::text = ANY ((ARRAY['pending'::character varying, 'waiting'::character varying, 'approved'::character varying])::text[]))"])]
 class AdoptionApplication
 {
     public const OPEN_STATUSES = ['pending', 'waiting', 'approved'];

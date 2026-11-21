@@ -29,6 +29,8 @@ class ApplicationService
         'gt4' => 'Más de 4 horas al día',
     ];
     private const TEXT_LIMIT = 2000;
+    private const TEXT_FIELDS = ['housing', 'experience', 'availability'];
+    private const ANIMAL_STATUS_LABELS = ['quarantine' => 'en cuarentena', 'available' => 'disponible', 'reserved' => 'reservado', 'adopted' => 'adoptado'];
 
     public function __construct(private EntityManagerInterface $em, private ClockInterface $clock) {}
 
@@ -50,22 +52,24 @@ class ApplicationService
     /** @return array<string, string> cuestionario normalizado */
     public function validate(array $data): array
     {
-        $data = array_map(static fn($value) => is_string($value) ? trim($value) : '', $data);
-        $errors = [];
+        $errors = TextNormalizer::invalidFields($data, self::TEXT_FIELDS);
+        $data = TextNormalizer::normalizeAll($data);
         $housingType = $data['housingType'] ?? '';
         $experienceType = $data['experienceType'] ?? '';
         $dailyTime = $data['dailyTime'] ?? '';
         if (!array_key_exists($housingType, self::HOUSING_TYPES)) { $errors['housingType'] = 'Indica el tipo de vivienda.'; }
-        if (!$this->validText($data['housing'] ?? '')) { $errors['housing'] = 'Describe la vivienda y quién convive en ella (máximo 2000 caracteres).'; }
+        if (!isset($errors['housing']) && !$this->validText($data['housing'] ?? '')) { $errors['housing'] = 'Describe la vivienda y quién convive en ella (máximo 2000 caracteres).'; }
         if (!array_key_exists($experienceType, self::EXPERIENCE_TYPES)) { $errors['experienceType'] = 'Indica tu experiencia previa con animales, aunque sea ninguna.'; }
         $experience = $data['experience'] ?? '';
-        if ($experienceType === 'none') {
+        if (isset($errors['experience'])) {
+            // Ya consta el error de codificación del texto.
+        } elseif ($experienceType === 'none') {
             if (mb_strlen($experience) > self::TEXT_LIMIT) { $errors['experience'] = 'El comentario sobre la experiencia admite como máximo 2000 caracteres.'; }
         } elseif (!$this->validText($experience)) {
             $errors['experience'] = 'Explica tu experiencia previa con animales (máximo 2000 caracteres).';
         }
         if (!array_key_exists($dailyTime, self::DAILY_TIMES)) { $errors['dailyTime'] = 'Indica el tiempo diario que podrás dedicar al animal.'; }
-        if (!$this->validText($data['availability'] ?? '')) { $errors['availability'] = 'Describe tu disponibilidad diaria y quién lo cuidará en tus ausencias (máximo 2000 caracteres).'; }
+        if (!isset($errors['availability']) && !$this->validText($data['availability'] ?? '')) { $errors['availability'] = 'Describe tu disponibilidad diaria y quién lo cuidará en tus ausencias (máximo 2000 caracteres).'; }
         if ($errors) { throw new ValidationError($errors); }
         return [
             'housingType' => $housingType, 'housing' => $data['housing'],
@@ -75,7 +79,8 @@ class ApplicationService
     }
 
     /**
-     * Registra la solicitud en una única transacción. Se bloquean la fila de la cuenta y la del animal
+     * Registra la solicitud en una única transacción. Se bloquean la fila de la cuenta (FOR NO KEY UPDATE: serializa
+     * los envíos de la misma cuenta sin chocar con la inserción con clave foránea de la formalización) y la del animal
      * para que dos envíos simultáneos no superen el máximo de dos abiertas ni lleguen a un animal reservado.
      */
     public function submit(User $applicant, Animal $animal, array $data): AdoptionApplication
@@ -83,7 +88,7 @@ class ApplicationService
         $questionnaire = $this->validate($data);
         return $this->em->wrapInTransaction(function () use ($applicant, $animal, $questionnaire): AdoptionApplication {
             $connection = $this->em->getConnection();
-            $connection->executeQuery('SELECT id FROM app_user WHERE id = ? FOR UPDATE', [$applicant->id]);
+            $connection->executeQuery('SELECT id FROM app_user WHERE id = ? FOR NO KEY UPDATE', [$applicant->id]);
             $status = $connection->fetchOne('SELECT status FROM animal WHERE id = ? FOR UPDATE', [$animal->id]);
             $reason = $this->refusal($applicant->id, $animal->id, is_string($status) ? $status : '');
             if ($reason !== null) { throw new ApplicationRefused($reason); }
@@ -95,6 +100,8 @@ class ApplicationService
 
     private function refusal(string $applicantId, string $animalId, string $animalStatus): ?string
     {
+        if ($animalStatus === 'reserved') { return 'Este animal ya no está disponible: está reservado para otra candidatura.'; }
+        if ($animalStatus === 'adopted') { return 'Este animal ya no está disponible: ya ha sido adoptado.'; }
         if ($animalStatus !== 'available') { return 'Este animal ya no está disponible para recibir solicitudes.'; }
         $connection = $this->em->getConnection();
         $open = $connection->fetchAllAssociative(
@@ -118,58 +125,95 @@ class ApplicationService
         }
     }
 
+    /**
+     * Ejecuta una decisión sobre una solicitud (entrevista, rechazo o aprobación) en una única transacción.
+     * Bloquea primero el animal y después la solicitud, como formalize() y cancelReservation(), y recarga ambos
+     * bajo bloqueo: una decisión simultánea sobre la misma solicitud ya ha podido cambiar su estado desde que
+     * la coordinadora abrió la ficha. `$work` recibe el estado del animal leído bajo bloqueo y valida antes de mutar.
+     * Los rechazos se lanzan al terminar la transacción para no dejar cerrado el gestor de entidades.
+     */
+    private function decide(AdoptionApplication $application, callable $work): void
+    {
+        $failure = $this->em->wrapInTransaction(function () use ($application, $work): ?\DomainException {
+            $connection = $this->em->getConnection();
+            $animalStatus = $connection->fetchOne('SELECT status FROM animal WHERE id = ? FOR UPDATE', [$application->animal->id]);
+            $exists = $connection->fetchOne('SELECT id FROM adoptionapplication WHERE id = ? FOR UPDATE', [$application->id]);
+            if ($exists === false) { return new ApplicationRefused('La solicitud no existe.'); }
+            $this->em->refresh($application->animal);
+            $this->em->refresh($application);
+            try {
+                $work(is_string($animalStatus) ? $animalStatus : '');
+            } catch (ValidationError|ApplicationRefused $error) {
+                return $error;
+            }
+            $this->em->flush();
+            return null;
+        });
+        if ($failure !== null) { throw $failure; }
+    }
+
     public function recordInterview(AdoptionApplication $application, array $data): void
     {
-        $this->assertUndecided($application);
-        $data =array_map(static fn($value) => is_string($value) ? trim($value) : '', $data);
-        $errors = [];
-        $rawDate = $data['interviewAt'] ?? '';
-        $interviewAt = \DateTimeImmutable::createFromFormat('!Y-m-d\TH:i', $rawDate, new \DateTimeZone('Europe/Madrid'));
-        if (!$interviewAt || $interviewAt->format('Y-m-d\TH:i') !== $rawDate) {
-            $errors['interviewAt'] = 'Indica una fecha y hora válidas para la entrevista.';
-        }
-        $notes = $data['interviewNotes'] ?? '';
-        if ($notes === '' || mb_strlen($notes) > 5000) {
-            $errors['interviewNotes'] = 'Escribe las observaciones de la entrevista (máximo 5000 caracteres).';
-        }
-        if ($errors) {
-            throw new ValidationError($errors);
-        }
-        $application->interviewAt = $interviewAt->setTimezone(new \DateTimeZone('UTC'));
-        $application->interviewNotes = $notes;
-        $this->em->flush();
+        $this->decide($application, function () use ($application, $data): void {
+            $this->assertUndecided($application);
+            $errors = TextNormalizer::invalidFields($data, ['interviewAt', 'interviewNotes']);
+            $data = TextNormalizer::normalizeAll($data);
+            $madrid = new \DateTimeZone('Europe/Madrid');
+            $rawDate = $data['interviewAt'] ?? '';
+            $interviewAt = \DateTimeImmutable::createFromFormat('!Y-m-d\TH:i', $rawDate, $madrid);
+            if (isset($errors['interviewAt'])) {
+                // Ya consta el error de codificación del texto.
+            } elseif (!$interviewAt || $interviewAt->format('Y-m-d\TH:i') !== $rawDate) {
+                $errors['interviewAt'] = 'Indica una fecha y hora válidas para la entrevista.';
+            } elseif ($interviewAt->getTimestamp() < intdiv($application->submittedAt->getTimestamp(), 60) * 60) {
+                // El formulario trabaja al minuto: una entrevista en el minuto del envío es válida.
+                $errors['interviewAt'] = 'La entrevista no puede ser anterior al envío de la solicitud ('
+                    . $application->submittedAt->setTimezone($madrid)->format('d/m/Y H:i') . ').';
+            }
+            $notes = $data['interviewNotes'] ?? '';
+            if (!isset($errors['interviewNotes']) && ($notes === '' || mb_strlen($notes) > 5000)) {
+                $errors['interviewNotes'] = 'Escribe las observaciones de la entrevista (máximo 5000 caracteres).';
+            }
+            if ($errors) {
+                throw new ValidationError($errors);
+            }
+            $application->interviewAt = $interviewAt->setTimezone(new \DateTimeZone('UTC'));
+            $application->interviewNotes = $notes;
+        });
     }
 
     public function reject(AdoptionApplication $application, array $data): void
     {
-        $this->assertUndecided($application);
-        $reason = trim((string)($data['rejectionReason'] ?? ''));
-        if ($reason === '' || mb_strlen($reason) > 2000) {
-            throw new ValidationError(['rejectionReason' => 'Indica el motivo justificado del rechazo (máximo 2000 caracteres).']);
-        }
-        $application->status = 'rejected';
-        $application->rejectionReason = $reason;
-        $application->decisionAt = $this->clock->now()->setTimezone(new \DateTimeZone('UTC'));
-        $this->em->flush();
+        $this->decide($application, function () use ($application, $data): void {
+            $this->assertUndecided($application);
+            $invalid = TextNormalizer::invalidFields($data, ['rejectionReason']);
+            if ($invalid) { throw new ValidationError($invalid); }
+            $reason = TextNormalizer::normalize($data['rejectionReason'] ?? '');
+            if ($reason === '' || mb_strlen($reason) > 2000) {
+                throw new ValidationError(['rejectionReason' => 'Indica el motivo justificado del rechazo (máximo 2000 caracteres).']);
+            }
+            $application->status = 'rejected';
+            $application->rejectionReason = $reason;
+            $application->decisionAt = $this->clock->now()->setTimezone(new \DateTimeZone('UTC'));
+        });
     }
 
     public function approve(AdoptionApplication $application): void
     {
-        $this->assertUndecided($application);
-        $now = $this->clock->now();
-        if (!$application->hasValidInterview($now)) {
-            throw new ValidationError([
-                'interview' => 'Para aprobar la solicitud es imprescindible haber realizado y registrado previamente la entrevista (con fecha no futura).',
-            ]);
-        }
-
-        $this->em->wrapInTransaction(function () use ($application, $now): void {
-            $connection = $this->em->getConnection();
-            $animalStatus = $connection->fetchOne('SELECT status FROM animal WHERE id = ? FOR UPDATE', [$application->animal->id]);
-            if ($animalStatus !== 'available') {
-                throw new ApplicationRefused('El animal ya no está disponible para reserva (estado actual: ' . $animalStatus . ').');
+        $this->decide($application, function (string $animalStatus) use ($application): void {
+            $this->assertUndecided($application);
+            $now = $this->clock->now();
+            if (!$application->hasValidInterview($now)) {
+                throw new ValidationError([
+                    'interview' => 'Para aprobar la solicitud es imprescindible haber realizado y registrado previamente la entrevista (con fecha no futura).',
+                ]);
             }
-
+            if ($animalStatus !== 'available') {
+                throw new ApplicationRefused($animalStatus === 'reserved'
+                    ? 'El animal ya está reservado para otra candidatura.'
+                    : 'El animal ya no está disponible para reserva (estado actual: ' . (self::ANIMAL_STATUS_LABELS[$animalStatus] ?? 'desconocido') . ').');
+            }
+            $connection = $this->em->getConnection();
             $alreadyApproved = (int) $connection->fetchOne(
                 "SELECT COUNT(*) FROM adoptionapplication WHERE animal_id = ? AND status = 'approved' AND id <> ?",
                 [$application->animal->id, $application->id]
@@ -186,8 +230,6 @@ class ApplicationService
                 "UPDATE adoptionapplication SET status = 'waiting' WHERE animal_id = ? AND status = 'pending' AND id <> ?",
                 [$application->animal->id, $application->id]
             );
-
-            $this->em->flush();
         });
     }
 
@@ -196,7 +238,9 @@ class ApplicationService
         if ($application->status !== 'approved') {
             throw new ValidationError(['cancellationReason' => 'Solo se puede liberar la reserva de una solicitud previamente aprobada.']);
         }
-        $reason = trim((string)($data['cancellationReason'] ?? ''));
+        $invalid = TextNormalizer::invalidFields($data, ['cancellationReason']);
+        if ($invalid) { throw new ValidationError($invalid); }
+        $reason = TextNormalizer::normalize($data['cancellationReason'] ?? '');
         if ($reason === '' || mb_strlen($reason) > 2000) {
             throw new ValidationError(['cancellationReason' => 'Indica el motivo de la cancelación de la reserva (máximo 2000 caracteres).']);
         }

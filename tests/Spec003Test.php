@@ -2,7 +2,8 @@
 declare(strict_types=1);
 namespace App\Tests;
 
-use App\Entity\{AdoptionApplication, Animal, User};
+use App\Entity\{AdoptionApplication, Animal, User, VeterinaryReview};
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use App\Service\{ApplicationRefused, ApplicationService};
 
 class Spec003Test extends WebTestBase
@@ -298,5 +299,195 @@ class Spec003Test extends WebTestBase
     private function formToken(Animal $animal): string
     {
         return $this->client->request('GET', '/animales/'.$animal->id.'/solicitud')->filter('input[name="_token"]')->attr('value');
+    }
+
+    // ---- Revisión previa a la entrega (2026-11-21) ----
+
+    // C1-04: reservado o adoptado entre abrir y enviar el formulario da 409; en cuarentena o sin token válido, 404.
+    public function testAnimalReservedOrAdoptedWhileTheFormIsOpenAnswersConflict(): void
+    {
+        $this->client->loginUser($this->user());
+        foreach (['reserved' => 'reservado para otra candidatura', 'adopted' => 'ya ha sido adoptado'] as $status => $expected) {
+            $animal = $this->animal(0, 'available');
+            $token = $this->formToken($animal);
+            $this->refreshEm()->getConnection()->executeStatement('UPDATE animal SET status = ? WHERE id = ?', [$status, $animal->id]);
+
+            $this->client->request('POST', '/animales/'.$animal->id.'/solicitud', ['_token' => $token, ...self::ANSWERS]);
+            self::assertResponseStatusCodeSame(409, $status);
+            self::assertSelectorTextContains('[role="alert"]', 'ya no está disponible');
+            self::assertSelectorTextContains('[role="alert"]', $expected);
+            self::assertSelectorNotExists('main form');
+
+            // Sin el token del formulario no se revela nada: 404.
+            $this->client->request('POST', '/animales/'.$animal->id.'/solicitud', ['_token' => 'no-es-valido', ...self::ANSWERS]);
+            self::assertResponseStatusCodeSame(404);
+        }
+        $quarantined = $this->animal(0, 'available');
+        $token = $this->formToken($quarantined);
+        $this->refreshEm()->getConnection()->executeStatement("UPDATE animal SET status = 'quarantine' WHERE id = ?", [$quarantined->id]);
+        $this->client->request('POST', '/animales/'.$quarantined->id.'/solicitud', ['_token' => $token, ...self::ANSWERS]);
+        self::assertResponseStatusCodeSame(404);
+        $this->client->request('POST', '/animales/00000000-0000-4000-8000-000000000000/solicitud', ['_token' => $token, ...self::ANSWERS]);
+        self::assertResponseStatusCodeSame(404);
+        self::assertCount(0, $this->refreshEm()->getRepository(AdoptionApplication::class)->findAll());
+    }
+
+    // C1-09: espacios Unicode recortados; NUL y UTF-8 inválido dan 422, no 500.
+    public function testQuestionnaireTextsAreNormalizedAndRejectNulAndInvalidUtf8(): void
+    {
+        $user = $this->user();
+        $this->client->loginUser($user);
+        $space = "\u{00A0}\u{2003}\u{3000} ";
+        $first = $this->animal(0, 'available');
+        $this->client->request('POST', '/animales/'.$first->id.'/solicitud', [
+            '_token' => $this->formToken($first), ...self::ANSWERS,
+            'housing' => $space.'Casa con jardín'.$space, 'experience' => $space.'Perros'.$space, 'availability' => $space.'Por las tardes'.$space,
+        ]);
+        self::assertResponseRedirects('/mis-solicitudes', 303);
+        $application = $this->refreshEm()->getRepository(AdoptionApplication::class)->findOneBy([]);
+        self::assertSame(['Casa con jardín', 'Perros', 'Por las tardes'], [$application->housing, $application->experience, $application->availability]);
+
+        $second = $this->animal(0, 'available');
+        $token = $this->formToken($second);
+        $this->client->request('POST', '/animales/'.$second->id.'/solicitud', ['_token' => $token, ...self::ANSWERS, 'housing' => $space]);
+        self::assertResponseStatusCodeSame(422);
+        self::assertSelectorTextContains('#error-housing', 'Describe la vivienda');
+
+        foreach (['housing', 'experience', 'availability'] as $field) {
+            foreach (["con\0nulo", "inv\xC3\x28alido"] as $bad) {
+                $this->client->request('POST', '/animales/'.$second->id.'/solicitud', ['_token' => $token, ...self::ANSWERS, $field => $bad]);
+                self::assertResponseStatusCodeSame(422, $field);
+                self::assertSelectorTextContains('#error-'.$field, 'caracteres no admitidos');
+            }
+        }
+        self::assertCount(1, $this->refreshEm()->getRepository(AdoptionApplication::class)->findAll());
+    }
+
+    // C1-20c: límite de 2000 caracteres de los campos de texto de la solicitud.
+    public function testQuestionnaireTextsAreLimitedToTwoThousandCharacters(): void
+    {
+        $this->client->loginUser($this->user());
+        $exact = str_repeat('ñ', 2000);
+        $first = $this->animal(0, 'available');
+        $this->client->request('POST', '/animales/'.$first->id.'/solicitud', [
+            '_token' => $this->formToken($first), ...self::ANSWERS, 'housing' => $exact, 'experience' => $exact, 'availability' => $exact,
+        ]);
+        self::assertResponseRedirects('/mis-solicitudes', 303);
+        $stored = $this->refreshEm()->getRepository(AdoptionApplication::class)->findOneBy([]);
+        self::assertSame(2000, mb_strlen($stored->housing));
+
+        $second = $this->animal(0, 'available');
+        $token = $this->formToken($second);
+        $tooLong = str_repeat('ñ', 2001);
+        foreach (['housing', 'experience', 'availability'] as $field) {
+            $this->client->request('POST', '/animales/'.$second->id.'/solicitud', ['_token' => $token, ...self::ANSWERS, $field => $tooLong]);
+            self::assertResponseStatusCodeSame(422, $field);
+            self::assertSelectorExists('#error-'.$field);
+            self::assertSame($tooLong, $this->client->getCrawler()->filter('#'.$field)->text(), 'Se conserva lo escrito en '.$field);
+        }
+        // Sin experiencia el comentario sigue limitado.
+        $this->client->request('POST', '/animales/'.$second->id.'/solicitud', ['_token' => $token, ...self::ANSWERS, 'experienceType' => 'none', 'experience' => $tooLong]);
+        self::assertResponseStatusCodeSame(422);
+        self::assertSelectorExists('#error-experience');
+        self::assertCount(1, $this->refreshEm()->getRepository(AdoptionApplication::class)->findAll());
+    }
+
+    // C1-10: la base de datos impide dos solicitudes abiertas de la misma persona para el mismo animal.
+    public function testDatabaseRejectsTwoOpenApplicationsOfTheSameApplicantForTheSameAnimal(): void
+    {
+        $user = $this->user();
+        $animal = $this->animal(0, 'available');
+        $this->application($user, $animal, 'pending');
+        // Las cerradas no cuentan: puede volver a solicitar después de un rechazo o una cancelación.
+        $rejected = $this->application($user, $animal, 'rejected');
+        $this->application($user, $animal, 'cancelled');
+        $connection = $this->refreshEm()->getConnection();
+
+        foreach (['waiting', 'approved', 'pending'] as $open) {
+            try {
+                $connection->executeStatement('UPDATE adoptionapplication SET status = ? WHERE id = ?', [$open, $rejected->id]);
+                self::fail('Se esperaba la violación del índice único parcial (estado '.$open.').');
+            } catch (UniqueConstraintViolationException $error) {
+                self::assertStringContainsString('uniq_application_open_applicant_animal', $error->getMessage());
+            }
+        }
+        // Otra persona sí puede solicitar el mismo animal.
+        $this->application($this->user('ROLE_USER', 'otra@example.test'), $animal, 'pending');
+        self::assertSame(1, (int) $connection->fetchOne("SELECT COUNT(*) FROM adoptionapplication WHERE applicant_id = ? AND status = 'pending'", [$user->id]));
+    }
+
+    // C2-03: enviar una solicitud no espera a una inserción con clave foránea sobre la misma cuenta
+    // (FOR NO KEY UPDATE no choca con el FOR KEY SHARE de la formalización), aunque sigue serializando los envíos de la cuenta.
+    public function testSubmissionDoesNotWaitForForeignKeyInsertsOnTheSameAccount(): void
+    {
+        $user = $this->user();
+        $animal = $this->animal(0, 'available');
+        $other = $this->animal(0, 'available');
+        $connection = $this->em->getConnection();
+
+        // Otra conexión inserta una fila con clave foránea hacia la cuenta y la deja sin confirmar (toma FOR KEY SHARE sobre ella).
+        $holder = \Doctrine\DBAL\DriverManager::getConnection($connection->getParams());
+        $holder->beginTransaction();
+        try {
+            $holder->executeStatement(
+                "INSERT INTO adoptionapplication (id, animal_id, applicant_id, housingtype, housing, experiencetype, experience, dailytime, availability, status, submittedat) VALUES (?, ?, ?, 'flat', 'x', 'none', '', 'lt2', 'x', 'rejected', now())",
+                ['00000000-0000-4000-8000-0000000000a1', $other->id, $user->id],
+            );
+            $connection->executeStatement("SET lock_timeout = '2s'");
+            $application = self::getContainer()->get(ApplicationService::class)->submit($user, $animal, self::ANSWERS);
+            self::assertSame('pending', $application->status);
+        } finally {
+            $connection->executeStatement('SET lock_timeout = 0');
+            $holder->rollBack();
+            $holder->close();
+        }
+    }
+
+    // ---- HU-01 (revisión previa a la entrega): los textos de la ficha y de la revisión veterinaria ----
+
+    // C1-09
+    public function testAnimalOriginIsNormalizedAndRejectsNulAndInvalidUtf8(): void
+    {
+        $this->client->loginUser($this->user('ROLE_VOLUNTEER', 'voluntaria@example.test'));
+        $crawler = $this->client->request('GET', '/admin/animales/nuevo');
+        $token = $crawler->filter('input[name="_token"]')->attr('value');
+        $data = ['_token' => $token, 'species' => 'cat', 'ageMonths' => '6', 'size' => 'small', 'origin' => '', 'receivedAt' => '2026-01-01T10:00'];
+
+        foreach (["con\0nulo", "inv\xC3\x28alido"] as $bad) {
+            $this->client->request('POST', '/admin/animales/nuevo', ['origin' => $bad] + $data, ['photos' => [$this->photo()]]);
+            self::assertResponseStatusCodeSame(422);
+            self::assertSelectorTextContains('#error-origin', 'caracteres no admitidos');
+        }
+        self::assertCount(0, $this->refreshEm()->getRepository(Animal::class)->findAll());
+
+        $this->client->request('POST', '/admin/animales/nuevo', ['origin' => "\u{00A0}\u{3000}Hallado en la calle\u{2003}"] + $data, ['photos' => [$this->photo()]]);
+        self::assertResponseRedirects(null, 303);
+        self::assertSame('Hallado en la calle', $this->refreshEm()->getRepository(Animal::class)->findOneBy([])->origin);
+    }
+
+    // C1-09 y C1-18
+    public function testVeterinaryReviewKeepsTypedValuesAndRejectsNulAndInvalidUtf8(): void
+    {
+        $animal = $this->animal(3);
+        $this->client->loginUser($this->user('ROLE_VET', 'veterinaria@example.test'));
+        $crawler = $this->client->request('GET', '/admin/animales/'.$animal->id);
+        $token = $crawler->filter('form[action$="/revision"] input[name="_token"]')->attr('value');
+        $reviewedAt = (new \DateTimeImmutable('now', new \DateTimeZone('Europe/Madrid')))->format('Y-m-d\TH:i');
+
+        $this->client->request('POST', '/admin/animales/'.$animal->id.'/revision', ['_token' => $token, 'reviewedAt' => '2099-01-01T10:00', 'notes' => 'Texto que no debe perderse']);
+        self::assertResponseStatusCodeSame(422);
+        self::assertSelectorTextContains('#notes', 'Texto que no debe perderse');
+        self::assertSame('2099-01-01T10:00', $this->client->getCrawler()->filter('#reviewedAt')->attr('value'));
+
+        foreach (["con\0nulo", "inv\xC3\x28alido"] as $bad) {
+            $this->client->request('POST', '/admin/animales/'.$animal->id.'/revision', ['_token' => $token, 'reviewedAt' => $reviewedAt, 'notes' => $bad]);
+            self::assertResponseStatusCodeSame(422);
+            self::assertSelectorTextContains('#error-notes', 'caracteres no admitidos');
+        }
+        self::assertCount(0, $this->refreshEm()->getRepository(VeterinaryReview::class)->findAll());
+
+        $this->client->request('POST', '/admin/animales/'.$animal->id.'/revision', ['_token' => $token, 'reviewedAt' => $reviewedAt, 'notes' => "\u{00A0} Todo bien\u{3000}"]);
+        self::assertResponseRedirects(null, 303);
+        self::assertSame('Todo bien', $this->refreshEm()->getRepository(VeterinaryReview::class)->findOneBy([])->notes);
     }
 }

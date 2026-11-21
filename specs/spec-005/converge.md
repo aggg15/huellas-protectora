@@ -82,3 +82,5 @@ Origen: revisión de código previa a la entrega. Ejecutada por `aggg15` asistid
 | Hallazgo | Gravedad | Corrección | Prueba | Resultado antes → después |
 |---|---|---|---|---|
 | C2-12a · la prueba de formalización rechazada no comprobaba efectos colaterales | LOW | Solo se modifica la prueba: crea otra solicitud en espera y, tras cada rechazo, comprueba que sigue en espera, que no hay adopción y que no hay seguimiento | `Spec005Test::testFormalizationRequiresApprovedApplicationAndReservedAnimal` (ampliada; no se renombra ninguna prueba) | Antes y después: pasa. Es una prueba de refuerzo: el código ya se comportaba bien, así que no puede fallar antes de una corrección de código |
+
+Nota del 2026-11-21 (revisión previa a la entrega, C1-01): las decisiones de HU-04 (aprobar, rechazar y entrevista) pasan a bloquear animal y solicitud como la formalización de esta historia; véase `specs/spec-004/tasks.md`, T414. El botón «Liberar reserva» ya no lleva «(D11)» (T418).

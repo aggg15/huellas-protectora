@@ -67,21 +67,21 @@
       {% endif %}
 
       {% if application.undecided %}
-        <details class="mt-3">
+        <details class="mt-3"{% if errors.interviewAt is defined or errors.interviewNotes is defined %} open{% endif %}>
           <summary class="button is-small is-light">{% if application.hasInterview %}Modificar entrevista{% else %}Registrar entrevista{% endif %}</summary>
           <form method="post" action="{{ path('admin_application_interview', {id: application.id}) }}" class="mt-3">
             <input type="hidden" name="_token" value="{{ csrf_token('interview-' ~ application.id) }}">
             <div class="field">
               <label class="label is-small" for="interviewAt">Fecha y hora de la entrevista</label>
               <div class="control">
-                <input class="input is-small {{ errors.interviewAt is defined ? 'is-danger' : '' }}" type="datetime-local" id="interviewAt" name="interviewAt" value="{{ application.interviewAt ? application.interviewAt|date('Y-m-d\\TH:i', 'Europe/Madrid') : '' }}" required>
+                <input class="input is-small {{ errors.interviewAt is defined ? 'is-danger' : '' }}" type="datetime-local" id="interviewAt" name="interviewAt" value="{{ formData.interviewAt is defined ? formData.interviewAt : (application.interviewAt ? application.interviewAt|date('Y-m-d\\TH:i', 'Europe/Madrid') : '') }}" required>
               </div>
               {% if errors.interviewAt is defined %}<p class="help is-danger" id="error-interviewAt">{{ errors.interviewAt }}</p>{% endif %}
             </div>
             <div class="field">
               <label class="label is-small" for="interviewNotes">Notas y valoración</label>
               <div class="control">
-                <textarea class="textarea is-small {{ errors.interviewNotes is defined ? 'is-danger' : '' }}" id="interviewNotes" name="interviewNotes" rows="3" maxlength="5000" placeholder="Observaciones de la conversación, adecuación de la familia..." required>{{ application.interviewNotes }}</textarea>
+                <textarea class="textarea is-small {{ errors.interviewNotes is defined ? 'is-danger' : '' }}" id="interviewNotes" name="interviewNotes" rows="3" maxlength="5000" placeholder="Observaciones de la conversación, adecuación de la familia..." required>{{ formData.interviewNotes is defined ? formData.interviewNotes : application.interviewNotes }}</textarea>
               </div>
               {% if errors.interviewNotes is defined %}<p class="help is-danger" id="error-interviewNotes">{{ errors.interviewNotes }}</p>{% endif %}
             </div>
@@ -143,7 +143,7 @@
           <div class="field">
             <label class="label is-small" for="rejectionReason">Motivo de rechazo (obligatorio)</label>
             <div class="control">
-              <textarea class="textarea is-small {{ errors.rejectionReason is defined ? 'is-danger' : '' }}" id="rejectionReason" name="rejectionReason" rows="2" maxlength="2000" placeholder="Indica el motivo..." required></textarea>
+              <textarea class="textarea is-small {{ errors.rejectionReason is defined ? 'is-danger' : '' }}" id="rejectionReason" name="rejectionReason" rows="2" maxlength="2000" placeholder="Indica el motivo..." required>{{ formData.rejectionReason|default('') }}</textarea>
             </div>
             {% if errors.rejectionReason is defined %}<p class="help is-danger" id="error-rejectionReason">{{ errors.rejectionReason }}</p>{% endif %}
           </div>
@@ -179,14 +179,14 @@
 
         <hr>
 
-        <details>
-          <summary class="button is-small is-warning is-outlined is-fullwidth">Liberar reserva (D11)</summary>
+        <details{% if errors.cancellationReason is defined %} open{% endif %}>
+          <summary class="button is-small is-warning is-outlined is-fullwidth">Liberar reserva</summary>
           <form method="post" action="{{ path('admin_application_cancel_reservation', {id: application.id}) }}" class="mt-3">
             <input type="hidden" name="_token" value="{{ csrf_token('cancel-' ~ application.id) }}">
             <div class="field">
               <label class="label is-small" for="cancellationReason">Motivo de liberación</label>
               <div class="control">
-                <textarea class="textarea is-small {{ errors.cancellationReason is defined ? 'is-danger' : '' }}" id="cancellationReason" name="cancellationReason" rows="2" maxlength="2000" placeholder="Motivo de la cancelación..." required></textarea>
+                <textarea class="textarea is-small {{ errors.cancellationReason is defined ? 'is-danger' : '' }}" id="cancellationReason" name="cancellationReason" rows="2" maxlength="2000" placeholder="Motivo de la cancelación..." required>{{ formData.cancellationReason|default('') }}</textarea>
               </div>
               {% if errors.cancellationReason is defined %}<p class="help is-danger" id="error-cancellationReason">{{ errors.cancellationReason }}</p>{% endif %}
             </div>

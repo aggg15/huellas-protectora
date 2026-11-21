@@ -23,3 +23,19 @@ Metodología: Spec-Driven Development.
 - [x] **T411**: Declarar el índice parcial `uniq_application_approved_animal` en el mapeo de `AdoptionApplication` para que `doctrine:schema:validate` pase.
 - [x] **T412**: Limitar entrevista, aprobación y rechazo a solicitudes sin decisión (`pending`/`waiting`) en vista y servicio; mostrar el panel de reserva y la liberación (D11) en solicitudes aprobadas.
 - [x] **T413**: Añadir pruebas de regresión (solicitud resuelta, índice parcial en BD, liberación sin motivo) y registrar la evidencia real en `docs/evidencias/spec-004-phpunit.txt`.
+
+## Phase 5: Revisión previa a la entrega (2026-11-21)
+
+Origen: revisión de código previa a la entrega, hallazgos C1-01, C1-02, C1-03, C1-08, C1-09, C1-12, C1-17 y C1-18
+(con C2-02, C2-06 y C2-07; informe en [converge](converge.md), «Pasada de revisión previa a la entrega»). Las
+secciones anteriores se cuentan como fases 1 a 4. Responsable de la ejecución: `aggg15` (asistido por Claude Code);
+revisión: pendiente en la PR de `revision-entrega`.
+
+- [x] T414 C1-01 / C2-02: `ApplicationService::approve`, `reject` y `recordInterview` se ejecutan en `wrapInTransaction`, bloquean primero el animal y después la solicitud (`FOR UPDATE`, como `AdoptionService::formalize`), recargan ambos bajo bloqueo y revalidan antes de mutar. El conflicto de estado responde 409, como la liberación y la formalización. `Spec004Test::testSimultaneousApproveAndRejectOfTheSameApplicationNeverMix` (con `tests/Support/application-race.php`), `testDecisionsReReadTheStateUnderLock` y `testStateConflictsAnswerConflict`
+- [x] T415 C1-02 / C2-06: el rechazo de la aprobación por el estado del animal dice «ya está reservado para otra candidatura» o nombra el estado en español, no el código interno; `Spec004Test::testApprovalRefusalNamesTheAnimalStateInSpanish` y `testCannotApproveApplicationForAlreadyReservedAnimal` (ajustada)
+- [x] T416 C1-03: los formularios de entrevista y de liberar reserva salen abiertos tras un 422 y conservan lo escrito (también el motivo de rechazo); `admin_show.html.twig` y `ApplicationReviewController` pasan los datos enviados; `Spec004Test::testInterviewFormStaysOpenWithTypedValuesAfterValidationError` y `testRejectionAndReleaseFormsKeepTypedValuesAfterValidationError`
+- [x] T417 C1-12: `recordInterview` exige `interviewAt >= submittedAt` (al minuto, como el formulario); `Spec004Test::testInterviewCannotPrecedeTheSubmission`
+- [x] T418 C1-17 / C2-07: se quita «(D11)» del texto del botón «Liberar reserva»; comprobado en `testRejectionAndReleaseFormsKeepTypedValuesAfterValidationError`
+- [x] T419 C1-18: «Mis solicitudes» muestra la entrevista como «realizada» si la fecha ya pasó y «programada» si es futura; `Spec004Test::testMyApplicationsShowsPastInterviewAsDone`. La repoblación del formulario de revisión veterinaria (HU-01) consta en T311 de spec-003
+- [x] T420 C1-08: pruebas de POST de entrevista, aprobar, rechazar y liberar con token CSRF inválido o ausente y con usuarios que no son coordinadora (403); `Spec004Test::testReviewActionsRequireValidCsrfTokenAndCoordinatorRole`
+- [x] T421 C1-09: motivo de rechazo, motivo de liberación y notas de la entrevista normalizados con `TextNormalizer` (el NUL y el UTF-8 inválido dan 422); `Spec004Test::testReviewTextsAreNormalizedAndRejectNulAndInvalidUtf8`
