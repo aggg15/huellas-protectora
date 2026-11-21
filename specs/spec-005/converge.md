@@ -74,3 +74,5 @@ correctos ([evidencia](../../docs/evidencias/spec-005-phpunit.txt)).
 Hallazgos nuevos: ninguno (0 missing, 0 partial, 0 contradicts, 0 unrequested). Según el método, esta
 pasada no añade tareas ni fase a tasks.md. Resultado: **convergido**. Quedan fuera del alcance de HU-05 el
 desbordamiento de «Liberar reserva (D11)» (HU-04) y la revisión de `abcb5-ua` (T527).
+
+Nota del 2026-11-21 (revisión previa a la entrega, C1-01): las decisiones de HU-04 (aprobar, rechazar y entrevista) pasan a bloquear animal y solicitud como la formalización de esta historia; véase `specs/spec-004/tasks.md`, T414. El botón «Liberar reserva» ya no lleva «(D11)» (T418).
