@@ -11,3 +11,8 @@ services:
   App\Service\PhotoStorage:
     arguments:
       $directory: '%kernel.project_dir%/var/uploads'
+when@test:
+  services:
+    App\Service\PhotoStorage:
+      arguments:
+        $directory: '%kernel.project_dir%/var/uploads_test'

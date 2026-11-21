@@ -60,6 +60,14 @@ php bin/console doctrine:migrations:migrate --no-interaction
 php -d upload_max_filesize=5M -d post_max_size=32M -d max_file_uploads=20 -S 127.0.0.1:8086 -t public public/router.php
 ```
 
+**Límites de subida.** Cada fotografía admite como máximo 5 MiB y cada alta entre 1 y 6 fotos. Los valores
+`-d` del servidor integrado deben cubrirlo: `upload_max_filesize` ≥ 5M, `post_max_size` ≥ 32M (6 × 5 MiB más el
+formulario) y `max_file_uploads` ≥ 6. Con PHP-FPM o Apache hay que fijarlos en `php.ini`. Si se superan,
+PHP descarta los ficheros antes de llegar a la aplicación (con `post_max_size` superado, también los campos
+del formulario y el token CSRF): la aplicación responde con un error de validación o de formulario caducado
+y no guarda nada; con los valores por defecto de PHP (`upload_max_filesize=2M`) las fotos de entre 2 y 5 MiB
+se rechazarán aunque el límite de la aplicación sea mayor.
+
 Abre http://127.0.0.1:8086. Esta versión proporciona PostgreSQL en Compose y ejecuta PHP localmente. No se cargan cuentas
 ni animales automáticamente. Las cuentas internas se crean mediante un comando con contraseña oculta:
 

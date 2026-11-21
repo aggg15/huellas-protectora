@@ -30,7 +30,7 @@ class PublicAnimalController extends AbstractController
 
         $primaryPhotos = [];
         if ($animalsList !== []) {
-            $photos = $this->em->getRepository(AnimalPhoto::class)->findBy(['animal' => $animalsList]);
+            $photos = $this->em->getRepository(AnimalPhoto::class)->findBy(['animal' => $animalsList], ['id' => 'ASC']);
             foreach ($photos as $photo) {
                 if (!isset($primaryPhotos[$photo->animal->id])) {
                     $primaryPhotos[$photo->animal->id] = $photo;
@@ -57,7 +57,7 @@ class PublicAnimalController extends AbstractController
             throw $this->createNotFoundException('El animal no está disponible para adopción.');
         }
 
-        $photos = $this->em->getRepository(AnimalPhoto::class)->findBy(['animal' => $animal]);
+        $photos = $this->em->getRepository(AnimalPhoto::class)->findBy(['animal' => $animal], ['id' => 'ASC']);
 
         return $this->render('public/show.html.twig', [
             'animal' => $animal,
