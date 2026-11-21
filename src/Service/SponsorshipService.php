@@ -11,7 +11,9 @@ use Symfony\Component\Clock\ClockInterface;
  * Apadrinamientos y novedades para padrinos (HU-08, D34 a D41). Los datos no válidos lanzan ValidationError (422)
  * y las reglas de estado, SponsorshipRefused (409). Las decisiones se toman con lo leído después del bloqueo.
  * Orden de bloqueo: cuenta del padrino → apadrinamiento → animal (alta, cambio y fin); solo el animal al
- * publicar una novedad. La formalización de la adopción (HU-05) bloquea el animal y no la cuenta: sin ciclos.
+ * publicar una novedad. La formalización de la adopción (HU-05) bloquea el animal y no la cuenta: sin ciclos. La cuenta se bloquea con
+ * FOR NO KEY UPDATE para no chocar con la clave foránea de Adoption hacia ella, sin perder la serialización entre
+ * operaciones de la misma cuenta.
  */
 class SponsorshipService
 {
@@ -52,7 +54,7 @@ class SponsorshipService
         try {
             return $this->em->wrapInTransaction(function () use ($animal, $sponsor, $cents): Sponsorship {
                 $connection = $this->em->getConnection();
-                $connection->fetchOne('SELECT id FROM app_user WHERE id = ? FOR UPDATE', [$sponsor->id]);
+                $connection->fetchOne('SELECT id FROM app_user WHERE id = ? FOR NO KEY UPDATE', [$sponsor->id]);
                 $this->lockAvailableAnimal($animal);
                 $this->refuseDuplicate($animal, $sponsor);
                 $sponsorship = new Sponsorship($animal, $sponsor, $cents, $this->now());
@@ -257,7 +259,7 @@ class SponsorshipService
     private function lockActive(Sponsorship $sponsorship, User $sponsor): array
     {
         $connection = $this->em->getConnection();
-        $connection->fetchOne('SELECT id FROM app_user WHERE id = ? FOR UPDATE', [$sponsor->id]);
+        $connection->fetchOne('SELECT id FROM app_user WHERE id = ? FOR NO KEY UPDATE', [$sponsor->id]);
         $row = $connection->fetchAssociative('SELECT sponsor_id, animal_id, monthlyCents, endedAt FROM sponsorship WHERE id = ? FOR UPDATE', [$sponsorship->id]);
         if ($row === false || $row['sponsor_id'] !== $sponsor->id) { throw new SponsorshipRefused('El apadrinamiento no existe.'); }
         if ($row['endedat'] !== null) { throw new SponsorshipRefused('Este apadrinamiento ya ha terminado.'); }

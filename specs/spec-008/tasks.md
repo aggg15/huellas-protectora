@@ -109,3 +109,13 @@ fases 1 a 8. Responsable: `abcb5-ua`; revisor: `aggg15`.
 
 - [x] T822 Comprobar en `tests/Spec008Test.php` el 404 al cambiar un apadrinamiento ajeno (`/mis-apadrinamientos/{id}/cambiar`) per spec CA-08-10 (partial)
 - [x] T823 Probar los estados vacíos de «Mis apadrinamientos» y de `/admin/apadrinamientos`, incluido que un apadrinamiento terminado deja de figurar, per Constitution V, plan «Vistas» (partial)
+
+## Phase 10: Revisión previa a la entrega (2026-11-21)
+
+Origen: revisión de código previa a la entrega, hallazgos C2-01, C2-03, C2-04 y C2-05 (LOW/MEDIUM). Responsable de la
+ejecución: `aggg15` (asistido por Claude Code); revisión: pendiente en la PR de `revision-entrega`. Detalle en [converge](converge.md).
+
+- [x] T824 Rellenar `amount` con '' si falta en el POST de apadrinar para que responda 422 y no 500 con `twig.strict_variables`, con prueba con CSRF válido per Constitution V, CA-08-02 (partial)
+- [x] T825 Cambiar el bloqueo de la cuenta del padrino de `FOR UPDATE` a `FOR NO KEY UPDATE` en `SponsorshipService` y corregir el comentario de la clase, para no interbloquear con la inserción de `Adoption` y conservar la serialización por cuenta per plan «Concurrencia» (partial)
+- [x] T826 Pintar los errores a nivel de la tarjeta en `sponsorship/mine.html.twig` para que terminar un apadrinamiento ya terminado muestre el motivo del 409, con prueba HTTP per Constitution V (partial)
+- [x] T827 Llamar a `AnimalService::releaseDueAnimals()` en `mine()` y `move()` de `SponsorshipController` para que un animal con la cuarentena recién cumplida sea destino válido, con prueba per CA-08-05 (partial)

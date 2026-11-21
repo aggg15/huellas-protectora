@@ -129,3 +129,10 @@ fases 1 a 7. Responsable: `aggg15`; revisor: `abcb5-ua`.
 - [x] T528 Presentar «Mis solicitudes» en móvil (≤ 760 px) sin desplazamiento interno de la tabla, con estado, motivo y enlace al contrato visibles; comprobarlo con una captura a 390 px. *Coordinar HU-03/04* per CA-05-08, Constitution V (partial)
 - [x] T529 Añadir una prueba que cambie el nombre y el email de la cuenta y los datos del animal después de formalizar y compruebe que el contrato muestra los datos de la entrega per R3 / D13 (partial)
 - [x] T530 Eliminar `AdoptionApplication::isFormalized()`, que no se usa, o justificar su uso per plan: estado formalized (unrequested)
+
+## Phase 9: Revisión previa a la entrega (2026-11-21)
+
+Origen: revisión de código previa a la entrega, hallazgo C2-12a (LOW). Responsable de la ejecución: `aggg15`
+(asistido por Claude Code); revisión: pendiente en la PR de `revision-entrega`. Detalle en [converge](converge.md).
+
+- [x] T531 Ampliar `testFormalizationRequiresApprovedApplicationAndReservedAnimal` con otra solicitud en espera y comprobar, tras cada formalización rechazada, que sigue en espera y que no se ha creado adopción ni seguimiento per CA-05-04 y plan «Formalización» (partial)

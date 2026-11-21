@@ -17,7 +17,16 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_VOLUNTEER')]
 class ShiftController extends AbstractController
 {
+    /** Claves que espera la plantilla del formulario (twig.strict_variables): las que falten en el POST se rellenan con ''. */
+    private const EMPTY_FORM = ['kind' => '', 'date' => '', 'startTime' => '', 'endTime' => '', 'minVolunteers' => '', 'maxVolunteers' => ''];
+
     public function __construct(private EntityManagerInterface $em, private ShiftService $shifts) {}
+
+    /** @param array<string, string> $data @return array<string, string> */
+    private static function complete(array $data): array
+    {
+        return array_intersect_key($data, self::EMPTY_FORM) + self::EMPTY_FORM;
+    }
 
     #[Route('/admin/turnos', name: 'shifts', methods: ['GET'])]
     public function index(?string $refusal = null): Response
@@ -30,10 +39,10 @@ class ShiftController extends AbstractController
     #[IsGranted('ROLE_COORDINATOR')]
     public function create(Request $request): Response
     {
-        $data = ['kind' => '', 'date' => '', 'startTime' => '', 'endTime' => '', 'minVolunteers' => '', 'maxVolunteers' => ''];
+        $data = self::EMPTY_FORM;
         $errors = [];
         if ($request->isMethod('POST')) {
-            $data = $this->data($request, 'shift-new');
+            $data = self::complete($this->data($request, 'shift-new'));
             try {
                 $shift = $this->shifts->create($this->volunteer(), $data);
                 $this->addFlash('success', 'Turno creado: '.ShiftService::describe($shift->kind, $shift->startsAt, $shift->endsAt).'.');
@@ -62,7 +71,7 @@ class ShiftController extends AbstractController
     #[IsGranted('ROLE_COORDINATOR')]
     public function edit(string $id, Request $request): Response
     {
-        $data = $this->data($request, 'shift-edit-'.$id);
+        $data = self::complete($this->data($request, 'shift-edit-'.$id));
         $shift = $this->find($id);
         try {
             $this->shifts->update($shift, $data);

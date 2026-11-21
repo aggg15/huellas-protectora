@@ -308,6 +308,7 @@ class Spec007Test extends WebTestBase
         $day = $this->madridDay(5);
         $valid = ['kind' => 'walk', 'date' => $day, 'startTime' => '10:00', 'endTime' => '12:00', 'minVolunteers' => '2', 'maxVolunteers' => '4'];
         $springForward = $this->nextLastSunday(3);
+        $fallBack = $this->nextLastSunday(10);
         $cases = [
             'kind' => [['kind' => 'paseo'], 'Elige el tipo de turno'],
             'date' => [['date' => '2027-02-30'], 'Indica una fecha real'],
@@ -315,12 +316,14 @@ class Spec007Test extends WebTestBase
             'endTime' => [['endTime' => '09:00'], 'posterior a la de inicio'],
             'past' => [['date' => $this->madridDay(-1)], 'después de este momento'],
             'far' => [['date' => $this->madridDay(400)], 'como máximo dentro de un año'],
-            'dst' => [['date' => $springForward, 'startTime' => '02:30', 'endTime' => '04:00'], 'no existe ese día por el cambio de hora'],
             'min' => [['minVolunteers' => '0'], 'El mínimo es un número entero'],
             'minText' => [['minVolunteers' => 'dos'], 'El mínimo es un número entero'],
             'maxBelowMin' => [['maxVolunteers' => '1'], 'no menor que el mínimo'],
             'maxHigh' => [['maxVolunteers' => '21'], 'de 1 a 20'],
         ];
+        if ($springForward !== null) {
+            $cases['dst'] = [['date' => $springForward, 'startTime' => '02:30', 'endTime' => '04:00'], 'no existe ese día por el cambio de hora'];
+        }
         foreach ($cases as $case => [$changes, $message]) {
             $this->client->request('POST', '/admin/turnos/nuevo', ['_token' => $this->newShiftForm()] + $changes + $valid);
             self::assertResponseStatusCodeSame(422, $case);
@@ -333,21 +336,28 @@ class Spec007Test extends WebTestBase
         self::assertSame(0, (int) $this->em->getConnection()->fetchOne('SELECT COUNT(*) FROM shift'));
 
         // Hora repetida al volver al horario de invierno: se toma la primera (horario de verano, UTC+2).
-        $fallBack = $this->nextLastSunday(10);
+        // Al menos uno de los dos cambios de hora cae siempre dentro de la ventana de 360 días.
+        self::assertTrue($springForward !== null || $fallBack !== null);
+        if ($fallBack === null) { return; }
         $this->client->request('POST', '/admin/turnos/nuevo', ['_token' => $this->newShiftForm(), 'date' => $fallBack, 'startTime' => '02:30', 'endTime' => '04:00'] + $valid);
         self::assertResponseRedirects('/admin/turnos', 303);
         self::assertSame($fallBack.' 00:30:00', (string) $this->em->getConnection()->fetchOne('SELECT startsAt FROM shift'));
     }
 
-    /** Último domingo del mes indicado que todavía no ha pasado (cambios de hora en Madrid). */
-    private function nextLastSunday(int $month): string
+    /**
+     * Último domingo del mes indicado (cambios de hora en Madrid) que está después de mañana y dentro de los 360 días
+     * siguientes, la ventana válida de un turno (como máximo un año). Null si el próximo queda fuera de ella; marzo y
+     * octubre distan 7 y 5 meses, así que al menos uno de los dos siempre cae dentro.
+     */
+    private function nextLastSunday(int $month): ?string
     {
+        $zone = new \DateTimeZone(ShiftService::ZONE);
         $year = (int) date('Y');
         do {
-            $sunday = new \DateTimeImmutable(sprintf('last sunday of %d-%02d', $year, $month), new \DateTimeZone(ShiftService::ZONE));
+            $sunday = new \DateTimeImmutable(sprintf('last sunday of %d-%02d', $year, $month), $zone);
             $year++;
         } while ($sunday <= new \DateTimeImmutable('+1 day'));
-        return $sunday->format('Y-m-d');
+        return $sunday <= new \DateTimeImmutable('+360 days') ? $sunday->format('Y-m-d') : null;
     }
 
     // CA-07-08: baja y vuelta del destacado.
@@ -611,5 +621,47 @@ class Spec007Test extends WebTestBase
         $this->client->request('GET', '/admin/turnos/'.$shift->id);
         self::assertStringContainsString('&lt;script&gt;alert(1)&lt;/script&gt;', (string) $this->client->getResponse()->getContent());
         self::assertSelectorNotExists('#signups script');
+    }
+
+    // Revisión previa a la entrega, C2-01: un campo ausente del POST es un 422 y no un 500 (twig.strict_variables).
+    public function testShiftFormsWithMissingFieldAreRejectedWith422(): void
+    {
+        $day = $this->madridDay(5);
+        $valid = ['kind' => 'walk', 'date' => $day, 'startTime' => '10:00', 'endTime' => '12:00', 'minVolunteers' => '2', 'maxVolunteers' => '4'];
+        $shift = $this->shift($this->madrid($this->madridDay(9).' 10:00'), $this->madrid($this->madridDay(9).' 12:00'));
+        $before = $this->shiftRow($shift);
+        $this->client->loginUser($this->coordinator());
+        foreach (array_keys($valid) as $missing) {
+            $fields = $valid;
+            unset($fields[$missing]);
+            $this->client->request('POST', '/admin/turnos/nuevo', ['_token' => $this->newShiftForm()] + $fields);
+            self::assertResponseStatusCodeSame(422, 'Alta sin '.$missing);
+            self::assertSelectorExists('.notification.is-danger #error-'.$missing, 'Alta sin '.$missing);
+
+            $crawler = $this->client->request('GET', '/admin/turnos/'.$shift->id);
+            $token = $crawler->filter('#form-shift-edit input[name="_token"]')->attr('value');
+            $this->client->request('POST', '/admin/turnos/'.$shift->id.'/editar', ['_token' => $token] + $fields);
+            self::assertResponseStatusCodeSame(422, 'Edición sin '.$missing);
+            self::assertSelectorExists('.notification.is-danger #error-'.$missing, 'Edición sin '.$missing);
+        }
+        self::assertSame(1, (int) $this->em->getConnection()->fetchOne('SELECT COUNT(*) FROM shift'));
+        self::assertSame($before, $this->shiftRow($shift));
+    }
+
+    // Revisión previa a la entrega, C2-08: un turno terminado no se muestra «En curso».
+    public function testEndedShiftIsShownAsEnded(): void
+    {
+        $ended = $this->shift($this->at('-3 hours'), $this->at('-1 hour'), 1, 3);
+        $running = $this->shift($this->at('-1 hour'), $this->at('+1 hour'), 1, 3);
+        $this->client->loginUser($this->volunteer());
+        // El tablero solo lista turnos no terminados; el terminado se ve en su ficha.
+        $this->client->request('GET', '/admin/turnos/'.$ended->id);
+        self::assertSelectorTextContains('#shift-status', 'Terminado');
+        self::assertStringNotContainsString('En curso', $this->client->getCrawler()->filter('#shift-status')->text());
+        $this->client->request('GET', '/admin/turnos/'.$running->id);
+        self::assertSelectorTextContains('#shift-status', 'En curso');
+        self::assertStringNotContainsString('Terminado', $this->client->getCrawler()->filter('#shift-status')->text());
+        self::assertTrue($this->service()->coverage($ended, 0)['ended']);
+        self::assertFalse($this->service()->coverage($running, 0)['ended']);
     }
 }
