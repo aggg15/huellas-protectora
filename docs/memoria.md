@@ -508,9 +508,11 @@ Una prueba de concurrencia dentro de un solo proceso PHP no prueba nada (compart
 **Recorridos de verificación integrada.** [`evidencias/verificacion-integrada.md`](evidencias/verificacion-integrada.md) recoge los recorridos que cruzan historias de los dos integrantes, con precondiciones, datos, pasos, resultado esperado y observado, versión del código y regresión (enunciado §5.4). Contiene dos recorridos:
 
 - **R1 · satisfactorio:** HU-01 → HU-02 → HU-03 → HU-04 → HU-05 → HU-08. Un animal registrado por un voluntario (`aggg15`) sale de cuarentena, aparece en el catálogo (`abcb5-ua`), recibe una solicitud (`aggg15`), se entrevista y reserva (`abcb5-ua`), se formaliza con contrato y seguimientos (`aggg15`) y el apadrinamiento activo pasa a «pendiente de decisión» (`abcb5-ua`).
-- **R2 · error, permiso o estado:** recorrido que cruza historias de ambos integrantes y debe fallar con el código y el mensaje previstos por las specs (conflictos de estado 409, validación 422 o permiso 403/404, sin dejar cambios parciales).
+- **R2 · error, permiso o estado:** tercera solicitud y solicitud repetida bloqueadas conservando las dos existentes (HU-03); aprobar sin entrevista (422) y aprobar sobre un animal ya reservado (409, mensaje claro) (HU-04); animal reservado fuera del catálogo y con ficha 404 (HU-02); 403 a voluntaria y solicitante y redirección sin sesión; formalizar sin confirmar el abono (422) y, tras formalizar, la solicitud en espera cancelada con motivo (HU-05); contrato ajeno 404 y apadrinar un animal adoptado 404 (HU-08).
 
-**Demo grabada con Playwright.** Los guiones de [`../tools/demo/`](../tools/demo/) (`guiones-*.mjs`, `grabador.mjs`, `record.mjs`) actúan sobre la aplicación real con datos ficticios ([`seed.php`](../tools/demo/seed.php)), anotan con `g.check(...)` lo que realmente observan (ruta, texto, estado) y escriben un JSON de resultado por vídeo. La demo ([§11](#11-demo)) tiene un vídeo por historia, y cada escenario enlaza con los criterios CA que ilustra.
+**Resultado de la ejecución del 2026-11-21:** R1 **22/22** comprobaciones con el resultado esperado y R2 **23/23**, sobre la aplicación real (Playwright 1.48 + Chromium, PostgreSQL 16), con la versión de código indicada en el propio documento.
+
+**Demo grabada con Playwright.** Los guiones de [`../tools/demo/`](../tools/demo/) (`guiones-*.mjs`, `grabador.mjs`, `record.mjs`) actúan sobre la aplicación real con datos ficticios ([`seed.php`](../tools/demo/seed.php)), anotan con `g.check(...)` lo que realmente observan (ruta, texto, estado) y escriben un JSON de resultado por vídeo. La demo ([§11](#11-demo)) tiene un vídeo por historia, y cada escenario enlaza con los criterios CA que ilustra. En total, **11 vídeos y 258 comprobaciones automáticas, todas correctas**; no se detectó ningún defecto de la aplicación durante la grabación.
 
 **Recorridos manuales previos.** Las historias HU-05 a HU-08 se recorrieron en Chrome real (escritorio y 390 px, con teclado) antes de su PR ([§7.5](#75-validación-manual)).
 
@@ -808,11 +810,26 @@ Mejoras que requerirían entrar antes en la especificación (Constitution I): co
 La demo se entrega aparte en **`DemoSSD_G27.zip`**. Contiene:
 
 - Una página **`index.html`** estática que da acceso a los vídeos: basta abrirla en el navegador, sin servidor ni base de datos.
-- Un **vídeo por historia** (HU-01 a HU-08, en formato `.mp4`), con los escenarios de cada historia indicados con el instante en que empiezan y los criterios `CA-XX-YY` que ilustran; además de un vídeo de acceso a la aplicación (base común).
+- Un **vídeo por historia** (HU-01 a HU-08, en formato `.mp4`, 1280×720), con los escenarios de cada historia indicados con el instante en que empiezan y los criterios `CA-XX-YY` que ilustran; además de un vídeo de acceso a la aplicación (base común), los dos recorridos integrados (`09-flujo-satisfactorio`, `10-flujo-con-error`) y `demo-completa.mp4` (unos 27 minutos).
+
+| Vídeo | Historia | Escenarios | Criterios mostrados |
+|---|---|---|---|
+| 00-acceso | Base común | 6 | Acceso, credenciales erróneas, roles (403), registro no válido |
+| 01-ficha-cuarentena | HU-01 | 7 | CA-01-01 a CA-01-05 |
+| 02-catalogo | HU-02 | 7 | CA-02-01 a CA-02-04 |
+| 03-solicitud | HU-03 | 8 | CA-03-01 a CA-03-05 |
+| 04-decision-reserva | HU-04 | 9 | CA-04-01 a CA-04-05 |
+| 05-formalizacion | HU-05 | 9 | CA-05-01 a 04, 07, 08 y 11 |
+| 06-acogida | HU-06 | 9 | CA-06-01 a 06, 08 y 10 |
+| 07-turnos | HU-07 | 10 | CA-07-01 a 09 y 11 |
+| 08-apadrinamiento | HU-08 | 9 | CA-08-01 a 07 y 10 |
+| 09 / 10 | R1 y R2 | 8 + 8 | Recorridos integrados (§7.4) |
+
+Los criterios de concurrencia (CA-03-06, CA-05-10, CA-06-09, CA-07-10, CA-08-09) y los que dependen del calendario (fin de mes, frontera exacta de 48 h, cambio de hora) no son reproducibles a mano en un vídeo: se demuestran con las pruebas automáticas de [§7.3](#73-pruebas-de-concurrencia-y-de-reglas-críticas).
 
 Los vídeos se graban con **Playwright** sobre la aplicación real y con datos ficticios, con los guiones de [`../tools/demo/`](../tools/demo/): `seed.php` prepara cuentas, animales y estados; `grabador.mjs` y `guiones-*.mjs` realizan los recorridos y comprueban (`g.check(...)`) lo que realmente se observa; `record.mjs` graba y escribe un JSON de resultado por vídeo. Los recorridos incluyen los escenarios satisfactorios y los de error, permiso o estado de cada historia, y el recorrido integrado R1/R2 de [`evidencias/verificacion-integrada.md`](evidencias/verificacion-integrada.md).
 
-Para regenerar los clips: `OUT_DIR=… BASE_URL=… CTL_URL=… node tools/demo/record.mjs [ids]` (cabecera de `record.mjs`).
+Para regenerar la demo completa: `bash tools/demo/run.sh` (o `bash tools/demo/run.sh 04,05` para algunos vídeos); detalle y cuentas de ejemplo en [`../tools/demo/README.md`](../tools/demo/README.md).
 
 ---
 
