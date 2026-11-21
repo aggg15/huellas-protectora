@@ -67,3 +67,14 @@ Efectos colaterales revisados: T822–T823 solo añaden pruebas; el código no c
 
 Hallazgos nuevos: ninguno (0 missing, 0 partial, 0 contradicts, 0 unrequested). Según el método, esta pasada no
 añade tareas ni fase a tasks.md. Resultado: **convergido**. Queda pendiente la revisión de `aggg15` (T821). Estado final: integrada en `main` con la PR #12 (2026-11-20).
+
+## Pasada de revisión previa a la entrega (2026-11-21)
+
+Origen: revisión de código previa a la entrega. Ejecutada por `aggg15` asistido por Claude Code; revisión pendiente.
+
+| Hallazgo | Gravedad | Corrección | Prueba | Resultado antes → después |
+|---|---|---|---|---|
+| C2-01 · POST de apadrinar sin `amount` daba 500 con `twig.strict_variables` | MEDIUM | `SponsorshipController::create` completa `amount` con '' | `Spec008Test::testSponsorFormWithoutAmountFieldIsRejectedWith422` | Antes: error 500. Después: pasa (422) |
+| C2-03 · el bloqueo `FOR UPDATE` de la cuenta podía interbloquearse con la clave foránea de `Adoption` | LOW | `FOR NO KEY UPDATE` en `SponsorshipService` (alta y `lockActive`) y comentario de la clase corregido | Pruebas de concurrencia existentes de `Spec008Test` | Pasan antes y después; no hay prueba nueva del interbloqueo |
+| C2-04 · terminar un apadrinamiento ya terminado daba 409 sin mensaje | LOW | El include de errores pasa al nivel de la tarjeta en `mine.html.twig` | `Spec008Test::testFinishingAnEndedSponsorshipShowsTheRefusal` | Antes: falla. Después: pasa |
+| C2-05 · un animal con la cuarentena recién cumplida no aparecía como destino | LOW | `mine()` y `move()` llaman a `AnimalService::releaseDueAnimals()` | `Spec008Test::testAnimalWhoseQuarantineJustEndedIsOfferedAsTarget` | Antes: falla (lista vacía). Después: pasa |

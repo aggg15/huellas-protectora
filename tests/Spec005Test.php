@@ -260,6 +260,8 @@ class Spec005Test extends WebTestBase
             $cases[] = [$this->application($this->animal(20, $animalStatus), $status)->id, $status, $animalStatus];
         }
         $application = $this->reservation();
+        // Otra solicitud en espera: un rechazo no debe tocarla ni dejar adopción ni seguimiento (revisión previa a la entrega, C2-12a).
+        $bystander = $this->application($this->animal(20, 'available'), 'waiting');
         $doctrine = self::getContainer()->get('doctrine');
 
         foreach ($cases as [$id, $status, $animalStatus]) {
@@ -273,6 +275,9 @@ class Spec005Test extends WebTestBase
             } catch (ApplicationRefused) {
             }
             self::assertSame([$status, $animalStatus], $this->states($candidate));
+            self::assertSame(['waiting', 'available'], $this->states($bystander), 'Solicitud en espera tras rechazar '.$status.'/'.$animalStatus);
+            self::assertSame(0, $this->adoptionCount(), 'Adopción creada tras rechazar '.$status.'/'.$animalStatus);
+            self::assertSame(0, (int) $this->em->getConnection()->fetchOne('SELECT COUNT(*) FROM followup'), 'Seguimiento creado tras rechazar '.$status.'/'.$animalStatus);
         }
         self::assertSame(0, $this->adoptionCount());
 

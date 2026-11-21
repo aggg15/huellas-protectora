@@ -73,7 +73,7 @@ class ShiftService
         try {
             return $this->em->wrapInTransaction(function () use ($shift, $volunteer): ShiftSignup {
                 $connection = $this->em->getConnection();
-                $connection->fetchOne('SELECT id FROM app_user WHERE id = ? FOR UPDATE', [$volunteer->id]);
+                $connection->fetchOne('SELECT id FROM app_user WHERE id = ? FOR NO KEY UPDATE', [$volunteer->id]);
                 $row = $connection->fetchAssociative('SELECT startsAt, endsAt, maxVolunteers FROM shift WHERE id = ? FOR UPDATE', [$shift->id]);
                 if ($row === false) { throw new ShiftRefused('El turno ya no existe.'); }
                 $startsAt = self::utc($row['startsat']);
@@ -169,6 +169,7 @@ class ShiftService
             'free' => max(0, $shift->maxVolunteers - $signups),
             'missing' => max(0, $shift->minVolunteers - $signups),
             'started' => $started,
+            'ended' => $now->getTimestamp() >= $shift->endsAt->getTimestamp(),
             'full' => $signups >= $shift->maxVolunteers,
             'undercovered' => ShiftCoverage::isUndercovered($shift->startsAt, $signups, $shift->minVolunteers, $now),
         ];

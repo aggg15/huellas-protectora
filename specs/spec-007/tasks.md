@@ -114,3 +114,13 @@ fases 1 a 7. Responsable: `aggg15`; revisora: `abcb5-ua`.
 
 - [x] T721 Ajustar las celdas de `shift/index.html.twig` para que a 390 px todos sus datos («(N plazas libres)», «Te has apuntado») queden en la columna de valores de la fila apilada, y comprobarlo midiendo su posición en Chrome per Constitution V, plan «Vistas» (partial)
 - [x] T722 Eliminar `ShiftService::signupCount`, sin llamadas, y alinear la lista de consultas del plan con las implementadas (`board`, `coverage`, `signupsOf`) per plan «Servicio» (partial)
+
+## Phase 9: Revisión previa a la entrega (2026-11-21)
+
+Origen: revisión de código previa a la entrega, hallazgos C2-01, C2-08 y C2-11 (LOW/MEDIUM). Responsable de la
+ejecución: `aggg15` (asistido por Claude Code); revisión: pendiente en la PR de `revision-entrega`. Detalle en [converge](converge.md).
+
+- [x] T723 Rellenar con '' las claves del formulario de turnos que falten en el POST (alta y modificación) para que responda 422 y no 500 con `twig.strict_variables`, y probar cada campo ausente con CSRF válido per Constitution V, CA-07-07 (partial)
+- [x] T724 Añadir el estado `ended` (`now >= endsAt`) a `ShiftService::coverage` y la etiqueta «Terminado» en `shift/_status.html.twig`, con prueba, para que un turno terminado no se muestre «En curso» per D31 (partial)
+- [x] T725 Hacer que `Spec007Test::nextLastSunday` elija siempre un cambio de hora dentro de la ventana de 360 días y que se pruebe la hora inexistente o la repetida en cada ejecución según cuál caiga dentro per CA-07-07 (partial)
+- [x] T726 Bloquear la cuenta con `FOR NO KEY UPDATE` en `ShiftService::signUp` para no interbloquear con la clave foránea de `Adoption`, manteniendo la serialización por cuenta (misma causa que C2-03 de spec-008) per plan «Concurrencia» (partial)

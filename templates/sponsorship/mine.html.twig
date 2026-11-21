@@ -28,6 +28,7 @@
       {% elseif row.state == 'pending' %}<span class="tag is-warning is-light">Pendiente de tu decisión</span>
       {% else %}<span class="tag is-light">Terminado</span>{% endif %}
     </div>
+    {% if formId == s.id %}{% include 'partials/errors.html.twig' %}{% endif %}
     <dl class="facts sponsorship-facts">
       <dt>Aportación mensual</dt><dd>{{ s.amountLabel }}</dd>
       <dt>Desde</dt><dd>{{ s.startedAt|date('d/m/Y', 'Europe/Madrid') }}</dd>
@@ -41,7 +42,6 @@
         <p><strong>¡{{ s.animal.code }} ha encontrado familia!</strong>{% if row.adoption %} Fue adoptado el {{ row.adoption.deliveredAt|date('d/m/Y', 'Europe/Madrid') }}.{% endif %}
           Tu aportación está en pausa desde la adopción hasta que decidas cómo continuar: apadrinar a otro animal o terminar tu colaboración.</p>
       </div>
-      {% if formId == s.id %}{% include 'partials/errors.html.twig' %}{% endif %}
       {% if targets is empty %}
         <p class="mb-3">Ahora mismo no hay otros animales disponibles para apadrinar. Puedes volver más tarde o terminar tu colaboración.</p>
       {% else %}
@@ -57,8 +57,6 @@
           <button class="button is-primary">Apadrinar al animal elegido</button>
         </form>
       {% endif %}
-    {% elseif row.state == 'active' and formId == s.id %}
-      {% include 'partials/errors.html.twig' %}
     {% endif %}
 
     {% if row.state != 'ended' %}

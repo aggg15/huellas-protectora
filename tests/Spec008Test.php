@@ -570,4 +570,54 @@ class Spec008Test extends WebTestBase
         self::assertSame(0, (int) $this->em->getConnection()->fetchOne('SELECT COUNT(*) FROM sponsorupdate'));
         self::assertNull($this->em->getConnection()->fetchOne('SELECT endedAt FROM sponsorship WHERE id = ?', [$sponsorship->id]));
     }
+
+    // Revisión previa a la entrega, C2-01: un campo ausente del POST es un 422 y no un 500 (twig.strict_variables).
+    public function testSponsorFormWithoutAmountFieldIsRejectedWith422(): void
+    {
+        $animal = $this->available();
+        $this->client->loginUser($this->sponsorAccount());
+        $this->client->request('POST', '/animales/'.$animal->id.'/apadrinar', ['_token' => $this->newFormToken($animal)]);
+        self::assertResponseStatusCodeSame(422);
+        self::assertSelectorTextContains('#error-amount', 'al menos 10,00 €');
+        self::assertSame('', $this->client->getCrawler()->filter('#amount')->attr('value'));
+        self::assertSame([], $this->rows());
+    }
+
+    // Revisión previa a la entrega, C2-04: terminar un apadrinamiento ya terminado explica el rechazo.
+    public function testFinishingAnEndedSponsorshipShowsTheRefusal(): void
+    {
+        $sponsor = $this->sponsorAccount();
+        $sponsorship = $this->sponsorship($this->available(), $sponsor);
+        $this->client->loginUser($sponsor);
+        $token = $this->mineToken('#sponsorship-'.$sponsorship->id.' form[action$="/terminar"]');
+        $this->client->request('POST', '/mis-apadrinamientos/'.$sponsorship->id.'/terminar', ['_token' => $token]);
+        self::assertResponseRedirects('/mis-apadrinamientos', 303);
+
+        // Segundo envío del mismo formulario: ya terminado, 409 con mensaje dentro de la tarjeta.
+        $this->client->request('POST', '/mis-apadrinamientos/'.$sponsorship->id.'/terminar', ['_token' => $token]);
+        self::assertResponseStatusCodeSame(409);
+        self::assertSelectorTextContains('#sponsorship-'.$sponsorship->id.' #error-sponsorship', 'Este apadrinamiento ya ha terminado.');
+    }
+
+    // Revisión previa a la entrega, C2-05: un animal con la cuarentena recién cumplida es destino válido.
+    public function testAnimalWhoseQuarantineJustEndedIsOfferedAsTarget(): void
+    {
+        $sponsor = $this->sponsorAccount();
+        $adopted = $this->available();
+        $sponsorship = $this->sponsorship($adopted, $sponsor, 1800);
+        $this->adopt($adopted);
+        $this->client->loginUser($sponsor);
+
+        $due = $this->animal(11, 'quarantine');
+        $crawler = $this->client->request('GET', '/mis-apadrinamientos');
+        self::assertSame(['', $due->id], $crawler->filter('#animal-'.$sponsorship->id.' option')->each(static fn($o) => $o->attr('value')));
+        $token = $crawler->filter('#form-move-'.$sponsorship->id.' input[name="_token"]')->attr('value');
+
+        // También al elegirlo directamente: la cuarentena vence después de cargar la página.
+        $this->em->getConnection()->executeStatement("UPDATE animal SET status = 'quarantine' WHERE id = ?", [$due->id]);
+        $this->client->request('POST', '/mis-apadrinamientos/'.$sponsorship->id.'/cambiar', ['_token' => $token, 'animal' => $due->id]);
+        self::assertResponseRedirects('/mis-apadrinamientos', 303);
+        self::assertSame('available', $this->em->getConnection()->fetchOne('SELECT status FROM animal WHERE id = ?', [$due->id]));
+        self::assertCount(2, $this->rows($sponsor));
+    }
 }
