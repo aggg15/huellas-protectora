@@ -6,9 +6,9 @@
 - [x] T104: validar los criterios de aceptación con PostgreSQL y pruebas HTTP.
 - [x] T105: registrar analyze, converge, resultados y commit.
 
-Responsable académico y revisor: pendientes de identificación; desarrollo asistido por Codex a solicitud del usuario. No se atribuye revisión humana realizada.
+Responsable académico y revisor: pendientes de identificación; desarrollo asistido por Codex a solicitud del usuario. No se atribuye revisión humana realizada. Actualización 2026-11-21: integrada en `main` con la PR #1; revisión aprobada por `abcb5-ua` (según `docs/agrupamiento.md`).
 
-Resultado T104: 7 pruebas / 32 aserciones correctas. Véase ../../docs/evidencias/spec-001-phpunit.txt. La revisión humana queda pendiente.
+Resultado T104: 7 pruebas / 32 aserciones correctas. Véase ../../docs/evidencias/spec-001-phpunit.txt. La revisión humana queda pendiente. Actualización 2026-11-21: la revisión de la PR #1 consta como aprobada por `abcb5-ua` (según `docs/agrupamiento.md`).
 
 - [x] T106: limitar la publicación a spec-001 por la corrección de alcance del usuario tras consultar
   al profesor; actualizar README, plan y responsabilidades, y repetir las comprobaciones sobre

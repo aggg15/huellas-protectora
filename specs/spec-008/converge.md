@@ -66,4 +66,4 @@ Efectos colaterales revisados: T822–T823 solo añaden pruebas; el código no c
 ([evidencia](../../docs/evidencias/spec-008-phpunit.txt)).
 
 Hallazgos nuevos: ninguno (0 missing, 0 partial, 0 contradicts, 0 unrequested). Según el método, esta pasada no
-añade tareas ni fase a tasks.md. Resultado: **convergido**. Queda pendiente la revisión de `aggg15` (T821).
+añade tareas ni fase a tasks.md. Resultado: **convergido**. Queda pendiente la revisión de `aggg15` (T821). Estado final: integrada en `main` con la PR #12 (2026-11-20).

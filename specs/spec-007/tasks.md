@@ -88,7 +88,7 @@ sustituye la evidencia: el cierre se acredita con `docs/evidencias/spec-007-phpu
 
 ## Ejecución del 2026-11-19
 
-Implementación de T705–T718 asistida por Claude Code a petición de `aggg15`; revisión de `abcb5-ua` pendiente.
+Implementación de T705–T718 asistida por Claude Code a petición de `aggg15`; revisión de `abcb5-ua` pendiente. Actualización 2026-11-21: integrada en `main` con la PR #11; aprobada e integrada por `abcb5-ua` (según `docs/agrupamiento.md`).
 Detalle de componentes en [implement](implement.md).
 
 - T705–T706 → entidades `Shift` y `ShiftSignup` y migración `Version20261119180000` (up/down/up comprobados;
@@ -105,7 +105,7 @@ Detalle de componentes en [implement](implement.md).
 - T719 → [implement](implement.md) y [converge](converge.md): 2 hallazgos (C1 MEDIUM, C2 LOW), añadidos debajo como T721–T722.
 
 - T720 → [PR #11](https://github.com/aggg15/huellas-protectora/pull/11), con revisión pedida a `abcb5-ua` (pendiente).
-  Actualización del 2026-11-19 (T801 de spec-008): `abcb5-ua` aprobó la PR #11 y la integró en `main`; CI correcto.
+  Actualización del 2026-11-19 (T801 de spec-008): `abcb5-ua` aprobó la PR #11 y la integró en `main`; CI correcto. Actualización 2026-11-21: integrada en `main` con la PR #11 (merge 5e379e6, 2026-11-19).
 
 ## Phase 8: Convergence
 

@@ -84,6 +84,7 @@ sustituye la evidencia: el cierre se acredita con `docs/evidencias/spec-008-phpu
 ## Ejecución del 2026-11-19
 
 Implementación de T805–T819 asistida por Claude Code a petición de `abcb5-ua`; revisión de `aggg15` pendiente.
+Estado final: integrada en `main` con la PR #12 (2026-11-20).
 Detalle de componentes en [implement](implement.md).
 
 - T801 → línea base de `main` (5e379e6, con HU-07): 99 pruebas / 1039 aserciones; estado de AGENTS, README, CONTRIBUTING,
@@ -101,6 +102,7 @@ Detalle de componentes en [implement](implement.md).
 - T819 → suite completa en una base `_test` nueva; [evidencia](../../docs/evidencias/spec-008-phpunit.txt).
 - T820 → [implement](implement.md) y [converge](converge.md): dos hallazgos (C1 y C2, LOW), añadidos debajo como T822–T823.
 - T821 → [PR #12](https://github.com/aggg15/huellas-protectora/pull/12), con revisión pedida a `aggg15` (pendiente).
+  Estado final: integrada en `main` (2026-11-20); la revisión de la PR #12 no consta en el repositorio (actualización 2026-11-21).
 
 ## Phase 9: Convergence
 
