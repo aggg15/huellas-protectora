@@ -141,7 +141,7 @@ Problema de la revisión previa (D17, CA-05-10): el estado se comprueba antes de
 | CA-05-07 | Validación de `fee` y `feePaid`, 422 | `testFormalizationRequiresValidFeeAndPaymentConfirmation` (vacío, 0, −5, abc, 12,345, 10000; formatos 120,5 / 120.50 válidos) |
 | CA-05-08 | `UPDATE` de abiertas, estado `formalized`, vista sin liberar | `testFormalizationClosesOtherApplicationsAndFreesOpenSlots`, `testFormalizedAdoptionCannotBeReleased` |
 | CA-05-09 | `FollowUpCalendar` | `testFollowUpDatesUseLastDayOfShorterMonths` (31-ago-2027, 31-ene-2027), `testFollowUpDatesUseMadridCalendarDay` (23:30 UTC del 31-mar) |
-| CA-05-10 | `FOR UPDATE`, únicos, ajuste de `cancelReservation` | `testConcurrentFormalizationsCreateOneAdoption`, `testConcurrentReleaseAndFormalizationKeepConsistentState` (`tests/Support/adoption-race.php`) |
+| CA-05-10 | `FOR UPDATE`, únicos, ajuste de `cancelReservation` | `testConcurrentFormalizationsCreateOneAdoption`, `testReleaseAfterConcurrentFormalizationDoesNotUndoAdoption` (`tests/Support/adoption-race.php`) |
 | CA-05-11 | `IsGranted`, CSRF, comprobación de titular | `testOnlyCoordinatorFormalizesAndListsFollowUps`, `testContractVisibleOnlyToCoordinatorAndAdopter`, `testFormalizationRequiresCsrf` |
 
 La regresión ejecuta la suite completa: Spec003 (abiertas) y Spec004 (liberación) dependen de los cambios.

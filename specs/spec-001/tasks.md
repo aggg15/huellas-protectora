@@ -6,9 +6,9 @@
 - [x] T104: validar los criterios de aceptación con PostgreSQL y pruebas HTTP.
 - [x] T105: registrar analyze, converge, resultados y commit.
 
-Responsable académico y revisor: pendientes de identificación; desarrollo asistido por Codex a solicitud del usuario. No se atribuye revisión humana realizada.
+Responsable académico y revisor: pendientes de identificación; desarrollo asistido por Codex a solicitud del usuario. No se atribuye revisión humana realizada. Actualización 2026-11-21: integrada en `main` con la PR #1; revisión aprobada por `abcb5-ua` (según `docs/agrupamiento.md`).
 
-Resultado T104: 7 pruebas / 32 aserciones correctas. Véase ../../docs/evidencias/spec-001-phpunit.txt. La revisión humana queda pendiente.
+Resultado T104: 7 pruebas / 32 aserciones correctas. Véase ../../docs/evidencias/spec-001-phpunit.txt. La revisión humana queda pendiente. Actualización 2026-11-21: la revisión de la PR #1 consta como aprobada por `abcb5-ua` (según `docs/agrupamiento.md`).
 
 - [x] T106: limitar la publicación a spec-001 por la corrección de alcance del usuario tras consultar
   al profesor; actualizar README, plan y responsabilidades, y repetir las comprobaciones sobre
@@ -24,3 +24,17 @@ Doctrine sincronizado. Véase ../../docs/evidencias/spec-001-alcance-corregido.t
 La preparación técnica y sus comprobaciones se registran en
 ../../docs/evidencias/preparacion-equipo-2026-11-16.txt y ../../docs/evidencias/equipo-2026-11-16.json.
 Esta tarea no integra la PR #1 ni acredita aprobación del compañero.
+
+## Phase 2: Revisión previa a la entrega (2026-11-21)
+
+Origen: revisión de código previa a la entrega, hallazgos C1-05, C1-07, C1-14, C1-17 y C1-19.
+Responsable de la ejecución: `aggg15` (asistido por Claude Code); revisión: pendiente en la PR de `revision-entrega`.
+
+- [x] T108 Sustituir la prueba vacía de fotos privadas por `testPrivatePhotosAreOnlyServedForAvailableAnimalsOrStaff`, con PNG reales en el almacén de pruebas (anónimo y `ROLE_USER` reciben 404 en cuarentena y reservado, 200 en disponible; el personal recibe 200) (C1-05)
+- [x] T109 Ampliar `testVeterinaryReviewAndRoleValidation` (veterinario, fecha y notas persistidos; fecha futura, anterior a la recepción, notas vacías, 5001 caracteres y CSRF inválido; límite de 5000 válido) y añadir `testVetCannotCreateAnimals` (C1-07)
+- [x] T110 Fijar `date_default_timezone_set('UTC')` en `Kernel::__construct` y `tests/bootstrap.php`, con una prueba de zona UTC y de visualización en Europe/Madrid (C1-14)
+- [x] T111 Cambiar el mensaje del comando `app:release-quarantine` a «Animales liberados: N» (C1-17)
+- [x] T112 Usar `var/uploads_test` como almacén en `when@test` y vaciarlo en `WebTestBase::tearDown` sin tocar `var/uploads` (C1-19)
+- [x] T113 Añadir `testReleaseDueAnimalsSqlBoundaryAt240Hours` para el límite de 240 h de la consulta SQL (C1-20a)
+- [x] T114 Documentar en el README los límites de subida y sus efectos (C1-16, solo documentación)
+- [x] T115 Registrar en HU-01 los cambios de `AnimalService` hechos al corregir HU-03 (T311 de spec-003): la procedencia y las observaciones veterinarias se normalizan con `TextNormalizer` (NUL y UTF-8 inválido dan 422) y la ficha repuebla el formulario de revisión tras un 422; pruebas `testAnimalOriginIsNormalizedAndRejectsNulAndInvalidUtf8` y `testVeterinaryReviewKeepsTypedValuesAndRejectsNulAndInvalidUtf8` en `tests/Spec003Test.php` (C1-09, C1-18)

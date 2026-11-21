@@ -61,4 +61,4 @@ Verificación manual (T525) y converge (T526) realizados el 2026-11-19.
 - **T530.** Eliminado `AdoptionApplication::isFormalized()`, que no se usaba.
 
 Resultado: 58 pruebas y 493 aserciones correctas (Spec005 19/19), esquema y linters correctos.
-Pendiente: la PR con revisión de `abcb5-ua` (T527).
+Pendiente: la PR con revisión de `abcb5-ua` (T527). Actualización 2026-11-21: integrada en `main` con la PR #9 (revisión aprobada por `abcb5-ua`, según docs/agrupamiento.md).

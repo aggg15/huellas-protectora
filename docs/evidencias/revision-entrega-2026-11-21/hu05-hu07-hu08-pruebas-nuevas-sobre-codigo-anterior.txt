@@ -1,0 +1,40 @@
+.[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Access Denied. The user doesn't have ROLE_COORDINATOR." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Access Denied. The user doesn't have ROLE_COORDINATOR." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Access Denied. The user doesn't have ROLE_COORDINATOR." at ExceptionListener.php line 126
+.[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Formulario caducado." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Formulario caducado." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Formulario caducado." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Formulario caducado." at ExceptionListener.php line 126
+..E........[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "El animal no está disponible." at AbstractController.php line 331
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "El animal no está disponible." at AbstractController.php line 331
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "El animal no está disponible." at AbstractController.php line 331
+....[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Solo las cuentas de padrinos apadrinan animales." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Solo las cuentas de padrinos apadrinan animales." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Solo las cuentas de padrinos apadrinan animales." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Solo las cuentas de padrinos apadrinan animales." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Solo las cuentas de padrinos apadrinan animales." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Solo las cuentas de padrinos apadrinan animales." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Solo las cuentas de padrinos apadrinan animales." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Solo las cuentas de padrinos apadrinan animales." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "Not Found" at AbstractController.php line 331
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "Not Found" at AbstractController.php line 331
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Access Denied. The user doesn't have ROLE_STAFF." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Access Denied. The user doesn't have ROLE_COORDINATOR." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Access Denied. The user doesn't have ROLE_COORDINATOR." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Formulario caducado." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Formulario caducado." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Formulario caducado." at ExceptionListener.php line 126
+....           55 / 55 (100%)
+
+Time: 07:56.066, Memory: 54.50 MB
+
+There was 1 error:
+
+1) App\Tests\Spec007Test::testEndedShiftIsShownAsEnded
+InvalidArgumentException: The current node list is empty.
+
+/app/vendor/symfony/dom-crawler/Crawler.php:575
+/app/tests/Spec007Test.php:658
+
+ERRORS!
+Tests: 55, Assertions: 754, Errors: 1.

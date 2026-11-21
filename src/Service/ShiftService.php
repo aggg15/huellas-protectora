@@ -38,6 +38,13 @@ class ShiftService
     /** Modifica un turno que no ha empezado (D28). */
     public function update(Shift $shift, array $data): void
     {
+        // Un turno empezado es un rechazo de estado (409) aunque los datos enviados ya no sean válidos (analyze A4);
+        // se vuelve a comprobar bajo bloqueo.
+        $startsAt = $this->em->getConnection()->fetchOne('SELECT startsAt FROM shift WHERE id = ?', [$shift->id]);
+        if ($startsAt === false) { throw new ShiftRefused('El turno ya no existe.'); }
+        if (ShiftCoverage::hasStarted(self::utc($startsAt), $this->now())) {
+            throw new ShiftRefused('El turno ya ha empezado; no se puede modificar.');
+        }
         $values = $this->validate($data, $shift);
         $this->em->wrapInTransaction(function () use ($shift, $values): void {
             $connection = $this->em->getConnection();
@@ -73,7 +80,7 @@ class ShiftService
         try {
             return $this->em->wrapInTransaction(function () use ($shift, $volunteer): ShiftSignup {
                 $connection = $this->em->getConnection();
-                $connection->fetchOne('SELECT id FROM app_user WHERE id = ? FOR UPDATE', [$volunteer->id]);
+                $connection->fetchOne('SELECT id FROM app_user WHERE id = ? FOR NO KEY UPDATE', [$volunteer->id]);
                 $row = $connection->fetchAssociative('SELECT startsAt, endsAt, maxVolunteers FROM shift WHERE id = ? FOR UPDATE', [$shift->id]);
                 if ($row === false) { throw new ShiftRefused('El turno ya no existe.'); }
                 $startsAt = self::utc($row['startsat']);
@@ -169,6 +176,7 @@ class ShiftService
             'free' => max(0, $shift->maxVolunteers - $signups),
             'missing' => max(0, $shift->minVolunteers - $signups),
             'started' => $started,
+            'ended' => $now->getTimestamp() >= $shift->endsAt->getTimestamp(),
             'full' => $signups >= $shift->maxVolunteers,
             'undercovered' => ShiftCoverage::isUndercovered($shift->startsAt, $signups, $shift->minVolunteers, $now),
         ];

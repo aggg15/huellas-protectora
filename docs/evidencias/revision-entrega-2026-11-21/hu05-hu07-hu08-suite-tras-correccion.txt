@@ -1,0 +1,34 @@
+No syntax errors detected in src/Controller/ShiftController.php
+No syntax errors detected in src/Controller/SponsorshipController.php
+No syntax errors detected in src/Service/ShiftService.php
+No syntax errors detected in src/Service/SponsorshipService.php
+No syntax errors detected in tests/Spec005Test.php
+No syntax errors detected in tests/Spec007Test.php
+No syntax errors detected in tests/Spec008Test.php
+      values that are compatible with their type declarations.                  
+
+ [OK] All 29 Twig files contain valid syntax.                                   
+
+ [OK] All 6 YAML files contain valid syntax.                                    
+
+ [OK] Already at the latest version ("DoctrineMigrations\Version20261119190000")
+
+--------
+
+ [OK] The database schema is in sync with the mapping files.                    
+
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Solo las cuentas de padrinos apadrinan animales." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Solo las cuentas de padrinos apadrinan animales." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "Not Found" at AbstractController.php line 331
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "Not Found" at AbstractController.php line 331
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Access Denied. The user doesn't have ROLE_STAFF." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Access Denied. The user doesn't have ROLE_COORDINATOR." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Access Denied. The user doesn't have ROLE_COORDINATOR." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Formulario caducado." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Formulario caducado." at ExceptionListener.php line 126
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Formulario caducado." at ExceptionListener.php line 126
+....          117 / 117 (100%)
+
+Time: 12:31.915, Memory: 40.50 MB
+
+OK (117 tests, 1376 assertions)

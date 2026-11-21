@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Acceso no permitido · Huellas{% endblock %}
+
+{% block body %}
+<div class="page-heading"><div>
+  <p class="eyebrow">ERROR 403</p>
+  <h1 class="title">Acceso no permitido</h1>
+  <p class="subtitle is-6">No tienes permiso para ver esta página. Si crees que es un error, contacta con la protectora.</p>
+</div></div>
+<p><a class="button is-primary" href="{{ path('home') }}">Volver al inicio</a> <a class="button is-light" href="{{ path('public_catalog') }}">Ver animales en adopción</a></p>
+{% endblock %}

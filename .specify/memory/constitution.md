@@ -3,9 +3,8 @@
 Reglas comunes para desarrollar el sistema de gestión de adopciones de la protectora Huellas.
 Corresponde al paso 2.1 de la guía del proyecto SDD, parte I.
 
-**Estado:** propuesta inicial preparada para revisión conjunta de los dos integrantes.
-La redacción de este documento no acredita una ratificación del equipo ni la ejecución de
-`/speckit.constitution`.
+**Estado:** ratificada el 2026-11-21 por los dos integrantes del grupo G27, Antonio García Gómez
+(`aggg15`) y Ana Bernabeu Castillo (`abcb5-ua`).
 
 ## Principios fundamentales
 
@@ -159,9 +158,9 @@ redefiniciones incompatibles de principios incrementarán la versión mayor; las
 menor; y las aclaraciones sin cambio de obligación, el parche. No se reescribirá el historial de
 decisiones para presentar un acuerdo posterior como si hubiera existido desde el inicio.
 
-La ratificación se registrará cuando ambos integrantes revisen el documento. Siguen pendientes de
-esa preparación conjunta los nombres, el reparto nominal y la resolución de las ambigüedades de las
-historias. Su ausencia no se sustituye por datos inventados en esta propuesta.
+La Constitution quedó ratificada el 2026-11-21 por ambos integrantes, Antonio García Gómez (`aggg15`) y
+Ana Bernabeu Castillo (`abcb5-ua`). El reparto nominal figura en `docs/agrupamiento.md` y la resolución de las
+ambigüedades de las historias, en `docs/decisiones.md`.
 
 ## Fuentes
 
@@ -171,7 +170,7 @@ historias. Su ausencia no se sustituye por datos inventados en esta propuesta.
 - Las ocho fichas `spec-001/historia.md` a `spec-008/historia.md`: contexto y preguntas pendientes.
 - `docs/decisiones.md`: interpretación de las contradicciones del enunciado vigente y decisiones de esta iteración.
 
-**Versión:** 1.1.1 | **Ratificación:** pendiente de revisión conjunta | **Última modificación:** 2026-11-18
+**Versión:** 1.1.2 | **Ratificación:** 2026-11-21, por Antonio García Gómez (`aggg15`) y Ana Bernabeu Castillo (`abcb5-ua`) | **Última modificación:** 2026-11-21
 
 Cambio 1.1.0: actualización de fuentes y ubicación specs/ por el enunciado vigente; el usuario autoriza el desarrollo de HU-01 a HU-04. La revisión conjunta y el reparto nominal no se atribuyen como realizados.
 
@@ -184,3 +183,9 @@ limitación anterior, el usuario encargó expresamente publicar HU-02 a HU-04, i
 mediante las PR #5, #6 y #8 con aprobación en GitHub del otro integrante; el usuario (`aggg15`) asume
 HU-05. Documentos afectados: README, CONTRIBUTING, AGENTS, plan.md, docs/decisiones.md y
 docs/agrupamiento.md. La ratificación conjunta y el reparto de HU-06 a HU-08 siguen pendientes.
+
+Actualización 2026-11-21: reparto completo, ver docs/agrupamiento.md.
+
+Cambio 1.1.2 (2026-11-21, aclaración sin cambio de obligaciones, por tanto parche): se registra la
+ratificación de la Constitution por los dos integrantes. Las menciones anteriores a la ratificación pendiente
+(1.1.0 y 1.1.1) se conservan como historial.

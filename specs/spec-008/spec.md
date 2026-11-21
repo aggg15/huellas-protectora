@@ -5,6 +5,7 @@ Responsable GitHub: `abcb5-ua`. Revisión prevista: `aggg15` (pendiente).
 Estado: especificada, aclarada ([clarify](clarify.md)) y planificada ([plan](plan.md)) en la rama `spec-008`,
 creada desde `main` (5e379e6, con HU-01 a HU-07 integradas). Con [tareas](tasks.md), [analyze](analyze.md),
 [implementación](implement.md) y [converge](converge.md). Pendiente la revisión de `aggg15`.
+Estado final: integrada en `main` con la PR #12 (2026-11-20); aprobada por `aggg15` en GitHub el 2026-11-20 (actualización 2026-11-21: antes constaba como no registrada).
 
 ## Historia de usuario
 

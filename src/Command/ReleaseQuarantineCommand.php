@@ -13,6 +13,6 @@ class ReleaseQuarantineCommand extends Command
     public function __construct(private AnimalService $animals) { parent::__construct(); }
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln('Animales disponibles: '.$this->animals->releaseDueAnimals()); return Command::SUCCESS;
+        $output->writeln('Animales liberados: '.$this->animals->releaseDueAnimals()); return Command::SUCCESS;
     }
 }

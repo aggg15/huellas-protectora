@@ -88,7 +88,7 @@ sustituye la evidencia: el cierre se acredita con `docs/evidencias/spec-007-phpu
 
 ## Ejecución del 2026-11-19
 
-Implementación de T705–T718 asistida por Claude Code a petición de `aggg15`; revisión de `abcb5-ua` pendiente.
+Implementación de T705–T718 asistida por Claude Code a petición de `aggg15`; revisión de `abcb5-ua` pendiente. Actualización 2026-11-21: integrada en `main` con la PR #11; aprobada e integrada por `abcb5-ua` (según `docs/agrupamiento.md`).
 Detalle de componentes en [implement](implement.md).
 
 - T705–T706 → entidades `Shift` y `ShiftSignup` y migración `Version20261119180000` (up/down/up comprobados;
@@ -105,7 +105,7 @@ Detalle de componentes en [implement](implement.md).
 - T719 → [implement](implement.md) y [converge](converge.md): 2 hallazgos (C1 MEDIUM, C2 LOW), añadidos debajo como T721–T722.
 
 - T720 → [PR #11](https://github.com/aggg15/huellas-protectora/pull/11), con revisión pedida a `abcb5-ua` (pendiente).
-  Actualización del 2026-11-19 (T801 de spec-008): `abcb5-ua` aprobó la PR #11 y la integró en `main`; CI correcto.
+  Actualización del 2026-11-19 (T801 de spec-008): `abcb5-ua` aprobó la PR #11 y la integró en `main`; CI correcto. Actualización 2026-11-21: integrada en `main` con la PR #11 (merge 5e379e6, 2026-11-19).
 
 ## Phase 8: Convergence
 
@@ -114,3 +114,15 @@ fases 1 a 7. Responsable: `aggg15`; revisora: `abcb5-ua`.
 
 - [x] T721 Ajustar las celdas de `shift/index.html.twig` para que a 390 px todos sus datos («(N plazas libres)», «Te has apuntado») queden en la columna de valores de la fila apilada, y comprobarlo midiendo su posición en Chrome per Constitution V, plan «Vistas» (partial)
 - [x] T722 Eliminar `ShiftService::signupCount`, sin llamadas, y alinear la lista de consultas del plan con las implementadas (`board`, `coverage`, `signupsOf`) per plan «Servicio» (partial)
+
+## Phase 9: Revisión previa a la entrega (2026-11-21)
+
+Origen: revisión de código previa a la entrega, hallazgos C2-01, C2-08 y C2-11 (LOW/MEDIUM). Responsable de la
+ejecución: `aggg15` (asistido por Claude Code); revisión: pendiente en la PR de `revision-entrega`. Detalle en [converge](converge.md).
+
+- [x] T723 Rellenar con '' las claves del formulario de turnos que falten en el POST (alta y modificación) para que responda 422 y no 500 con `twig.strict_variables`, y probar cada campo ausente con CSRF válido per Constitution V, CA-07-07 (partial)
+- [x] T724 Añadir el estado `ended` (`now >= endsAt`) a `ShiftService::coverage` y la etiqueta «Terminado» en `shift/_status.html.twig`, con prueba, para que un turno terminado no se muestre «En curso» per D31 (partial)
+- [x] T725 Hacer que `Spec007Test::nextLastSunday` elija siempre un cambio de hora dentro de la ventana de 360 días y que se pruebe la hora inexistente o la repetida en cada ejecución según cuál caiga dentro per CA-07-07 (partial)
+- [x] T726 Bloquear la cuenta con `FOR NO KEY UPDATE` en `ShiftService::signUp` para no interbloquear con la clave foránea de `Adoption`, manteniendo la serialización por cuenta (misma causa que C2-03 de spec-008) per plan «Concurrencia» (partial)
+- [x] T727 Comprobar en `ShiftService::update` que el turno no ha empezado antes de validar los datos, de modo que un turno empezado responda siempre 409 (analyze A4). Detectado en la suite final del 2026-11-21: `testStartedShiftRejectsSignupLeaveAndChanges` fallaba con 422 si se ejecutaba después de las 21:00 (Europe/Madrid), porque el turno de la prueba (+1 h a +3 h) terminaba al día siguiente y la validación de «mismo día» se evaluaba primero. Antes: falla de forma reproducible a las 21:17; después: Spec007 OK (21 pruebas)
+- [x] T728 Anclar a las 10:00 (Europe/Madrid) los turnos de prueba creados «dentro de N días» en `Spec007Test::at()`: el CI de GitHub de la PR de `revision-entrega` (22:32 Madrid) falló en `testCoordinatorChangesLimitsWithinRules` y `testConcurrentMaximumChangeAndSignupStayWithinLimit` porque el turno de prueba de 2 h cruzaba la medianoche y D27 lo rechazaba al editarlo. Antes: 2 fallos ([evidencia](../../docs/evidencias/revision-entrega-2026-11-21/t728-ci-github-antes.txt)); después, a las 22:37: Spec007 OK (20 pruebas, 302 aserciones)

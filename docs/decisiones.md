@@ -107,15 +107,27 @@ opciones, en cada caso la recomendada; el resto las concreta. Detalle en specs/s
 | D40 | Cada padrino ve sus apadrinamientos; la coordinadora, los activos por animal (persona, importe, desde y pausa) en `/admin/apadrinamientos`. Nadie más. | Preparar las novedades sin publicar datos de los padrinos; Constitution V. |
 | D41 | Apadrinar bloquea la cuenta y después el animal; cambiar y terminar bloquean la cuenta, el apadrinamiento y, al cambiar, el animal elegido; publicar una novedad bloquea el animal. Se vuelve a comprobar todo bajo bloqueo. | Plan común: releer después del bloqueo; mismo orden que HU-03 y HU-07; sin ciclos con la formalización de HU-05. |
 
+
+## Decisiones de la revisión previa a la entrega (2026-11-21)
+
+Aplicadas en la rama `revision-entrega` como corrección de errores. Las propone la revisión y D42 a D45 se confirmaron por el grupo el 2026-11-21 al cerrar las preguntas abiertas de `specs/spec-00N/clarify.md`.
+
+| ID | Decisión | Motivo / historias |
+|---|---|---|
+| D42 | La fecha de la entrevista no puede ser anterior al envío de la solicitud (se compara al minuto). | HU-04 (C1-12; spec-004/clarify.md Q7, decidida por el grupo): una entrevista anterior a la solicitud no tiene sentido y bastaba para aprobar. |
+| D43 | Los conflictos de estado al decidir (solicitud ya decidida, animal ya reservado) responden 409; los errores de validación siguen en 422. Si un animal pasa a reservado o adoptado mientras se rellena la solicitud, el envío responde 409 con el motivo; cuarentena o inexistente siguen en 404. | HU-03/HU-04 (C1-01, C1-04); el mismo criterio que ya aplicaban la liberación de reserva y la formalización. |
+| D44 | Los textos libres se recortan también de espacios Unicode; un byte nulo o un UTF-8 inválido se rechazan con 422. | HU-01/HU-03/HU-04 (C1-09); evitar un 500 y textos «vacíos» admitidos. |
+| D45 | El personal de la protectora (coordinadora, voluntarios y veterinario) no presenta solicitudes de adopción con su cuenta de trabajo (403, y la ficha no le ofrece el botón). Las cuentas públicas y las familias de acogida sí pueden solicitar la adopción. | HU-03 (spec-003/clarify.md Q8, decidida por el grupo el 2026-11-21): la coordinadora no decide sobre su propia candidatura; una familia de acogida puede querer adoptar al animal que acoge. Mismo criterio que D26 y D34 para el personal. |
+
 ## Reparto y material vigente
 
 El nuevo enunciado v1 mezcla cuatro integrantes/dos historias con dos integrantes/cuatro historias.
 Se conserva la guía específica de dos personas. El reparto observado y los encargos vigentes están en
-agrupamiento.md; los nombres académicos siguen pendientes y la revisión cruzada consta en cada PR.
+agrupamiento.md; los integrantes son Antonio García Gómez y Ana Bernabeu Castillo (G27) y la revisión cruzada consta en cada PR.
 La nueva fuente es Practica-SDD-enunciado_v1_IR.pdf y sustituye al archivo anterior retirado por el
 usuario. El informe de octubre y el PDF de historias son antecedentes fechados, no evidencia de la
 implementación actual. La revisión actual deja de usar Práctica 1 como fuente.
 
 El enunciado v1 requiere specs/ y docs/agrupamiento.md y docs/memoria.md, además de dos ZIP finales
 (proyecto y vídeo, máximo conjunto 100 MB). Esta iteración prepara la aplicación y documentación
-de las historias integradas; no declara terminada HU-08 (pendiente de revisión), la memoria ni la demo final.
+de las historias integradas. HU-08 se integró en `main` con la PR #12 (2026-11-20; aprobada por `aggg15`, actualización 2026-11-21). No se declara terminada la memoria ni la demo final.

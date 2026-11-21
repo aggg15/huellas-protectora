@@ -1,7 +1,7 @@
 # Especificación HU-03 · spec-003
 
 Fecha: 2026-11-05; concretada el 2026-11-17 por encargo expreso del usuario (`aggg15`).
-Responsable GitHub: `aggg15`. Revisión del compañero (`abcb5-ua`): pendiente.
+Responsable GitHub: `aggg15`. Revisión del compañero (`abcb5-ua`): pendiente. Actualización 2026-11-21: integrada en `main` con la PR #6 (merge 050bf62, 2026-11-17); revisión aprobada por `abcb5-ua` (según `docs/agrupamiento.md`).
 Estado: implementada en la rama `spec-003`, construida sobre `main` (890d2b3) tras integrar HU-02 (PR #5).
 
 ## Historia de usuario

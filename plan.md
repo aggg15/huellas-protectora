@@ -1,8 +1,8 @@
 # Plan común de Huellas
 
-Fecha: 2026-11-05; actualizado el 2026-11-19. El 2026-11-05 el alcance se limitó a HU-01 tras
+Fecha: 2026-11-05; actualizado el 2026-11-21. El 2026-11-05 el alcance se limitó a HU-01 tras
 consultar al profesor. Después, por encargo expreso del usuario, se han integrado en `main` HU-02 a
-HU-07 (PR #5, #6, #8, #9, #10 y #11). HU-08 se planifica en `specs/spec-008/plan.md` sobre este plan común.
+HU-08 (PR #5, #6, #8, #9, #10, #11 y #12). HU-08 se planificó en `specs/spec-008/plan.md` sobre este plan común.
 
 ## Arquitectura y pila
 
@@ -15,8 +15,7 @@ y migraciones definen el modelo común. No se crean ocho aplicaciones independie
 Se usa la estructura estándar de Symfony en la raíz. La referencia a apps/ y packages/ del índice
 de memoria del enunciado es un ejemplo para monorepos: no exige crear paquetes vacíos en esta app.
 Composer fija las versiones PHP en composer.lock; npm fija los recursos frontend en package-lock.json.
-Docker Compose proporciona PostgreSQL persistente; PHP puede ejecutarse localmente para desarrollar
-y también habrá un servicio web en Compose para reproducir el arranque.
+Compose proporciona solo PostgreSQL; PHP se ejecuta localmente (ver README).
 
 ## Estructura
 
@@ -28,7 +27,7 @@ y también habrá un servicio web en Compose para reproducir el arranque.
 - templates/: vistas Twig en español. public/: entrada web y recursos locales, sin fotos privadas.
 - var/uploads/: fotografías protegidas; la entrega de archivos comprueba la disponibilidad y permisos.
 - migrations/: cambios acumulativos; no se resetean datos de la aplicación al probar.
-- specs/spec-001 a specs/spec-008: especificaciones; HU-01 a HU-07 están implementadas e integradas. Cada plan
+- specs/spec-001 a specs/spec-008: especificaciones; HU-01 a HU-08 están implementadas e integradas. Cada plan
   local referencia este plan común y permite resolver el contexto mediante Spec Kit.
 - tests/: pruebas unitarias y HTTP con PostgreSQL, independientes de la base de demostración.
 

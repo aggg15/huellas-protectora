@@ -95,12 +95,13 @@ sustituye la evidencia: el cierre se acredita con `docs/evidencias/spec-005-phpu
 
 - [x] **T526** · Redactar `implement.md` y `converge.md`; añadir aquí las tareas correctivas que salgan de converge
   sin borrar las anteriores.
-- [ ] **T527** · Abrir la PR hacia `main` con la plantilla, señalando los cambios en código de HU-04
-  (T512, T515, T516), el CHECK común y `data-model.md`, y pedir la revisión de `abcb5-ua`.
+- [x] **T527** · Abrir la PR hacia `main` con la plantilla, señalando los cambios en código de HU-04
+  (T512, T515, T516), el CHECK común y `data-model.md`, y pedir la revisión de `abcb5-ua`. → [PR #9](https://github.com/aggg15/huellas-protectora/pull/9)
 
 ## Ejecución del 2026-11-18
 
 Implementación de T505–T524 asistida por Claude Code a petición de `aggg15`; revisión de `abcb5-ua` pendiente.
+Actualización 2026-11-21: integrada en `main` con la PR #9 (merge 87a78a0, 2026-11-19); revisión aprobada por `abcb5-ua` (según docs/agrupamiento.md).
 Detalle de componentes en [implement](implement.md).
 
 - T505–T507 → `Adoption`, `FollowUp`, estado `formalized`, migración `Version20261118230000` (up/down/up
@@ -113,6 +114,7 @@ Detalle de componentes en [implement](implement.md).
 - T524 → suite completa: 57 pruebas / 484 aserciones; [evidencia](../../docs/evidencias/spec-005-phpunit.txt).
 
 Pendientes: T525 (verificación manual), T526 (converge.md; implement.md ya redactado) y T527 (PR).
+Actualización 2026-11-21: T527 completada; la PR #9 está integrada en `main`.
 
 ## Ejecución del 2026-11-19
 
@@ -129,3 +131,10 @@ fases 1 a 7. Responsable: `aggg15`; revisor: `abcb5-ua`.
 - [x] T528 Presentar «Mis solicitudes» en móvil (≤ 760 px) sin desplazamiento interno de la tabla, con estado, motivo y enlace al contrato visibles; comprobarlo con una captura a 390 px. *Coordinar HU-03/04* per CA-05-08, Constitution V (partial)
 - [x] T529 Añadir una prueba que cambie el nombre y el email de la cuenta y los datos del animal después de formalizar y compruebe que el contrato muestra los datos de la entrega per R3 / D13 (partial)
 - [x] T530 Eliminar `AdoptionApplication::isFormalized()`, que no se usa, o justificar su uso per plan: estado formalized (unrequested)
+
+## Phase 9: Revisión previa a la entrega (2026-11-21)
+
+Origen: revisión de código previa a la entrega, hallazgo C2-12a (LOW). Responsable de la ejecución: `aggg15`
+(asistido por Claude Code); revisión: pendiente en la PR de `revision-entrega`. Detalle en [converge](converge.md).
+
+- [x] T531 Ampliar `testFormalizationRequiresApprovedApplicationAndReservedAnimal` con otra solicitud en espera y comprobar, tras cada formalización rechazada, que sigue en espera y que no se ha creado adopción ni seguimiento per CA-05-04 y plan «Formalización» (partial)

@@ -1,0 +1,218 @@
+commit 114b74d
+
+Mapping
+-------
+
+ [OK] The mapping files are correct.                                            
+
+Database
+--------
+
+ [OK] The database schema is in sync with the mapping files.                    
+
+PHPUnit 11.5.57 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.3.37
+Configuration: /app/phpunit.xml.dist
+
+.[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "El animal no está disponible para adopción." at AbstractController.php line 331
+.[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "Not Found" at AbstractController.php line 331
+.....[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Formulario caducado." at ExceptionListener.php line 126
+.[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Access Denied. The user doesn't have ROLE_VOLUNTEER." at ExceptionListener.php line 126
+..[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Formulario caducado." at ExceptionListener.php line 126
+......[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "El animal no está disponible para adopción." at AbstractController.php line 331
+........[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "No route found for "GET http://localhost/pagina-que-no-existe"" at RouterListener.php line 187
+.......[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "El animal no está disponible para adopción." at AbstractController.php line 331
+...[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Formulario caducado." at ExceptionListener.php line 126
+..[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "El animal no está disponible para adopción." at AbstractController.php line 331
+.......[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Las cuentas del personal de la protectora no pueden solicitar adopciones." at ExceptionListener.php line 126
+.............[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Access Denied. The user doesn't have ROLE_STAFF." at ExceptionListener.php line 126
+.......  63 / 145 ( 43%)
+.[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Formulario caducado." at ExceptionListener.php line 126
+.........[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "El animal no está disponible para adopción." at AbstractController.php line 331
+..........[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Access Denied. The user doesn't have ROLE_STAFF." at ExceptionListener.php line 126
+.[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "Not Found" at AbstractController.php line 331
+.[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Formulario caducado." at ExceptionListener.php line 126
+........[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "El animal no está disponible para adopción." at AbstractController.php line 331
+...........[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Access Denied. The user doesn't have ROLE_FOSTER." at ExceptionListener.php line 126
+.[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Access Denied. The user doesn't have ROLE_STAFF." at ExceptionListener.php line 126
+.[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "Not Found" at AbstractController.php line 331
+..[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Formulario caducado." at ExceptionListener.php line 126
+................[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Access Denied. The user doesn't have ROLE_STAFF." at ExceptionListener.php line 126
+.[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Access Denied. The user doesn't have ROLE_COORDINATOR." at ExceptionListener.php line 126
+. 126 / 145 ( 86%)
+...........[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "El animal no está disponible." at AbstractController.php line 331
+...F[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException: "Solo las cuentas de padrinos apadrinan animales." at ExceptionListener.php line 126
+....                                             145 / 145 (100%)
+
+Time: 12:25.238, Memory: 42.50 MB
+
+Spec001 (App\Tests\Spec001)
+ ✔ Volunteer creates identity and photo in quarantine
+ ✔ Anonymous cannot see quarantine or photos
+ ✔ Private photos are only served for available animals or staff
+ ✔ Release due animals sql boundary at 240 hours
+ ✔ Php timezone is utc and stored dates are utc
+ ✔ Boundary is exactly ten periods of 24 hours
+ ✔ Expired quarantine releases automatically without changing reservations
+ ✔ Veterinary review and role validation
+ ✔ Vet cannot create animals
+ ✔ Invalid animal and spoofed photo leave no partial writes
+ ✔ Csrf required and applicant cannot create animals
+
+Spec002 (App\Tests\Spec002)
+ ✔ Anonymous can view public catalog with available animals
+ ✔ Filter by species
+ ✔ Filter by size and age combined
+ ✔ Filter without matches shows empty state
+ ✔ Quarantine reserved and adopted animals excluded from catalog
+ ✔ Non available animal detail returns 404
+ ✔ Fostered animal shows foster badge in catalog and detail
+ ✔ Expired quarantine promotes automatically on catalog access
+ ✔ Age boundaries at 12 and 84 months
+ ✔ Invalid filters are ignored
+ ✔ Non fostered animal shows no foster badge
+ ✔ Primary photo is stable by id ascending
+ ✔ Custom error templates render in spanish
+ ✔ Error pages are served in spanish without debug
+
+Spec003 (App\Tests\Spec003)
+ ✔ Applicant submits complete questionnaire for available animal
+ ✔ Incomplete questionnaire is not admitted and lists pending data
+ ✔ No previous experience is a valid answer
+ ✔ Third open application is rejected and existing ones are kept
+ ✔ Approved counts as open while rejected and cancelled do not
+ ✔ Duplicate open application for same animal is rejected
+ ✔ Animals that are not available do not receive applications
+ ✔ Concurrent submissions never exceed two open applications
+ ✔ Coordinator accesses received application with complete questionnaire
+ ✔ Permissions and csrf protect applications
+ ✔ Public registration creates applicant account and returns to application
+ ✔ Animal reserved or adopted while the form is open answers conflict
+ ✔ Questionnaire texts are normalized and reject nul and invalid utf 8
+ ✔ Questionnaire texts are limited to two thousand characters
+ ✔ Database rejects two open applications of the same applicant for the same animal
+ ✔ Submission does not wait for foreign key inserts on the same account
+ ✔ Animal origin is normalized and rejects nul and invalid utf 8
+ ✔ Veterinary review keeps typed values and rejects nul and invalid utf 8
+ ✔ Staff cannot apply but foster families can
+
+Spec004 (App\Tests\Spec004)
+ ✔ Coordinator can view application and record interview
+ ✔ Interview requires valid date and notes
+ ✔ Rejection without reason is not admitted
+ ✔ Rejection with reason is recorded and does not alter animal availability
+ ✔ Approval without interview is not admitted
+ ✔ Approval with future interview is not admitted
+ ✔ Approval after valid interview reserves animal and moves other applications to waiting
+ ✔ Cannot approve application for already reserved animal
+ ✔ Release reservation restores animal to available and waiting to pending
+ ✔ Decided application admits no further decisions
+ ✔ Database rejects two approved applications for same animal
+ ✔ Release reservation requires reason
+ ✔ Role access control
+ ✔ Simultaneous approve and reject of the same application never mix
+ ✔ Decisions re read the state under lock
+ ✔ State conflicts answer conflict
+ ✔ Approval refusal names the animal state in spanish
+ ✔ Interview form stays open with typed values after validation error
+ ✔ Rejection and release forms keep typed values after validation error
+ ✔ Interview cannot precede the submission
+ ✔ Review actions require valid csrf token and coordinator role
+ ✔ Review texts are normalized and reject nul and invalid utf 8
+ ✔ My applications shows past interview as done
+
+Spec005 (App\Tests\Spec005)
+ ✔ Formalization generates contract linked to animal and adopter
+ ✔ Contract keeps delivery data after later changes
+ ✔ Formalization records fee and marks animal adopted
+ ✔ Fostered animal leaves foster when adopted
+ ✔ Two follow ups are scheduled at one and six months
+ ✔ Follow up list is ordered by date
+ ✔ Adopted animal disappears from public catalog detail and photos
+ ✔ Adoption is identifiable from the animal
+ ✔ Formalization requires approved application and reserved animal
+ ✔ Formalization requires valid fee and payment confirmation
+ ✔ Formalization closes other applications and frees open slots
+ ✔ Formalized adoption cannot be released
+ ✔ Follow up dates use last day of shorter months
+ ✔ Follow up dates use madrid calendar day
+ ✔ Concurrent formalizations create one adoption
+ ✔ Release after concurrent formalization does not undo adoption
+ ✔ Only coordinator formalizes and lists follow ups
+ ✔ Contract visible only to coordinator and adopter
+ ✔ Formalization requires csrf
+
+Spec006 (App\Tests\Spec006)
+ ✔ Family records capacity and availability periods
+ ✔ Coordinator places animal in available home with capacity
+ ✔ Placement starts on madrid calendar day
+ ✔ Placement refused when home is not available for the period
+ ✔ Placement refused when capacity would be exceeded
+ ✔ Consecutive periods cover the placement
+ ✔ Fostered available animal stays public with foster badge
+ ✔ Placement does not change quarantine or reservation
+ ✔ Adoption ends active placement
+ ✔ Family notes are associated with the animal
+ ✔ Invalid conditions are rejected
+ ✔ Invalid placement and note are rejected
+ ✔ Condition changes respect active placements
+ ✔ Coordinator ends placement
+ ✔ Overdue placement stays active and is flagged
+ ✔ Concurrent placements do not exceed capacity
+ ✔ Concurrent placements of one animal create one
+ ✔ Concurrent adoption and placement leave no active placement
+ ✔ Only foster families manage conditions and notes
+ ✔ Only coordinator places ends and lists placements
+ ✔ Family cannot touch another home
+ ✔ Notes are not public
+ ✔ Foster forms require csrf
+
+Spec007 (App\Tests\Spec007)
+ ✔ Shift shows schedule limits and signups
+ ✔ Volunteer signs up for shift with places
+ ✔ Full shift rejects another signup
+ ✔ Undercovered shift is highlighted within 48 hours
+ ✔ Highlight window is exact and uses real hours
+ ✔ Shift reaching minimum is no longer highlighted
+ ✔ Coordinator creates shift
+ ✔ Coordinator changes limits within rules
+ ✔ Invalid shift data is rejected
+ ✔ Volunteer leaves shift and highlight returns
+ ✔ Started shift rejects signup leave and changes
+ ✔ Duplicate and overlapping signups are rejected
+ ✔ Concurrent signups do not exceed maximum
+ ✔ Concurrent overlapping signups create one
+ ✔ Concurrent maximum change and signup stay within limit
+ ✔ Only volunteers see and join shifts
+ ✔ Only coordinator creates and edits shifts
+ ✔ Shift forms require csrf
+ ✔ Shift forms with missing field are rejected with 422
+ ✔ Ended shift is shown as ended
+
+Spec008 (App\Tests\Spec008)
+ ✔ Empty states are explained
+ ✔ Sponsor registers monthly contribution for animal
+ ✔ Contribution below ten euros is rejected
+ ✔ Sponsor receives updates published by coordinator
+ ✔ Updates are validated and limited to the sponsorship period
+ ✔ Adopted animal offers sponsor to continue or finish
+ ✔ Sponsor choice is recorded without unilateral assignment
+ ✔ Sponsorship cardinality and voluntary end
+ ✔ Only available animals can be sponsored
+ ✔ Invalid continuity choices are rejected
+ ✔ Concurrent sponsorships of same animal create one
+ ✘ Concurrent continuity choices apply only one
+   │
+   │ Failed asserting that 255 is identical to 0.
+   │
+   │ /app/tests/Spec008Test.php:478
+   │ /app/tests/Spec008Test.php:505
+   │
+ ✔ Only public accounts sponsor and only coordinator publishes
+ ✔ Sponsor form without amount field is rejected with 422
+ ✔ Finishing an ended sponsorship shows the refusal
+ ✔ Animal whose quarantine just ended is offered as target
+
+FAILURES!
+Tests: 145, Assertions: 1678, Failures: 1.

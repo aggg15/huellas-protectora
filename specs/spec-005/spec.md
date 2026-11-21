@@ -1,9 +1,9 @@
 # Especificación HU-05 · spec-005
 
 Fecha: 2026-11-05 (especificación inicial); concretada el 2026-11-18 por encargo del usuario.
-Responsable GitHub: `aggg15`. Revisión prevista: `abcb5-ua` (pendiente).
+Responsable GitHub: `aggg15`. Revisión prevista: `abcb5-ua` (pendiente). Actualización 2026-11-21: revisión aprobada por `abcb5-ua` en la PR #9 (según [agrupamiento](../../docs/agrupamiento.md)).
 Estado: especificada, aclarada y planificada ([plan](plan.md)) en la rama `spec-005`, creada desde
-`main` (cdb0416). Con [tareas](tasks.md) e [implementación](implement.md) (T505–T524); verificada manualmente y con [converge](converge.md); tareas de converge T528–T530 completadas; pendiente la revisión.
+`main` (cdb0416). Con [tareas](tasks.md) e [implementación](implement.md) (T505–T524); verificada manualmente y con [converge](converge.md); tareas de converge T528–T530 completadas; pendiente la revisión. Estado final: integrada en `main` con la PR #9 (merge 87a78a0, 2026-11-19).
 
 ## Historia de usuario
 

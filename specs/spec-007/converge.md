@@ -65,3 +65,16 @@ y linters correctos ([evidencia](../../docs/evidencias/spec-007-phpunit.txt)).
 
 Hallazgos nuevos: ninguno (0 missing, 0 partial, 0 contradicts, 0 unrequested). Según el método, esta pasada no
 añade tareas ni fase a tasks.md. Resultado: **convergido**. Queda pendiente la revisión de `abcb5-ua` (T720).
+
+## Pasada de revisión previa a la entrega (2026-11-21)
+
+Origen: revisión de código previa a la entrega. Ejecutada por `aggg15` asistido por Claude Code; revisión pendiente.
+
+| Hallazgo | Gravedad | Corrección | Prueba | Resultado antes → después |
+|---|---|---|---|---|
+| C2-01 · POST sin un campo del formulario de turnos daba 500 con `twig.strict_variables` | MEDIUM | `ShiftController` rellena con '' las claves esperadas (alta y modificación) antes de renderizar | `Spec007Test::testShiftFormsWithMissingFieldAreRejectedWith422` (cada campo ausente, CSRF válido, alta y edición) | Antes: falla (500). Después: pasa (422 con el mensaje) |
+| C2-08 · un turno terminado se mostraba «En curso» | LOW | `ShiftService::coverage` devuelve `ended` (`now >= endsAt`); `_status.html.twig` muestra «Terminado» | `Spec007Test::testEndedShiftIsShownAsEnded` | Antes: falla. Después: pasa |
+| C2-11 · `nextLastSunday` fallaba del 26 al 30 de octubre (siguiente cambio a más de un año) | LOW | Devuelve null si el cambio queda fuera de 360 días; la prueba usa los cambios de marzo y octubre que caen dentro (siempre al menos uno) y comprueba la hora inexistente y la repetida cuando corresponde | `Spec007Test::testInvalidShiftDataIsRejected` | Antes: fallaba en la ventana indicada (comprobado por análisis, no ejecutado con fecha simulada). Después: pasa hoy (21/11) con ambos cambios dentro de la ventana |
+| C2-03 (parte de HU-07) · bloqueo `FOR UPDATE` de la cuenta en la inscripción | LOW | `FOR NO KEY UPDATE` en `ShiftService::signUp` | Pruebas de concurrencia existentes de `Spec007Test` | Pasan antes y después; no hay prueba nueva del interbloqueo |
+| Suite final · `testStartedShiftRejectsSignupLeaveAndChanges` daba 422 en lugar de 409 cuando se ejecutaba después de las 21:00 (la validación de datos precedía a la comprobación del estado) | MEDIUM | `ShiftService::update` comprueba el inicio del turno antes de validar y lo vuelve a comprobar bajo bloqueo (T727) | `Spec007Test::testStartedShiftRejectsSignupLeaveAndChanges` | Antes: falla de forma reproducible a las 21:17 (Europe/Madrid); después: Spec007 OK (21 pruebas, 310 aserciones) |
+| CI de GitHub · dos pruebas de Spec007 creaban de noche turnos que cruzaban la medianoche (datos de prueba, no defecto de la aplicación) | LOW | `Spec007Test::at()` ancla «+N days» a las 10:00 de Madrid (T728) | `testCoordinatorChangesLimitsWithinRules`, `testConcurrentMaximumChangeAndSignupStayWithinLimit` | Antes: 2 fallos en GitHub Actions a las 22:32; después: Spec007 OK a las 22:37 |

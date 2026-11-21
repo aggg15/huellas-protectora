@@ -1,8 +1,7 @@
 # Trabajo en equipo
 
-Fecha: 16 de noviembre de 2026; estado actualizado el 19 de noviembre de 2026. Usuarios GitHub:
-`aggg15` y `abcb5-ua`, con acceso de escritura. `main` integra HU-01 a HU-07 (PR #1, #5, #6, #8, #9, #10 y #11);
-HU-08 se desarrolla en la rama `spec-008`.
+Fecha: 16 de noviembre de 2026; estado actualizado el 21 de noviembre de 2026. Usuarios GitHub:
+`aggg15` y `abcb5-ua`, con acceso de escritura. `main` integra HU-01 a HU-08 (PR #1, #5, #6, #8, #9, #10, #11 y #12).
 Las PR #2 a #4 y #7 están cerradas; sus implementaciones no se recuperan.
 
 ## Preparar una copia propia
@@ -48,8 +47,8 @@ Conserva los CA-0N-XX existentes y el plan común. Registra únicamente hallazgo
 ```
 
 La secuencia docente sigue siendo specify → clarify → plan → tasks → analyze → implement → converge.
-HU-01 a HU-04 ya tienen documentos y código: inicializar la herramienta no significa
-volver a escribirlos ni atribuir retroactivamente ejecuciones automáticas a los informes anteriores.
+Las ocho historias (HU-01 a HU-08) ya tienen documentos y código integrados en `main`; inicializar la herramienta no
+significa volver a escribirlos ni atribuir retroactivamente ejecuciones automáticas a los informes anteriores.
 Converge puede añadir tareas correctivas justificadas, sin borrar las tareas completadas.
 
 ## Selección de historia
@@ -77,11 +76,13 @@ referencia el plan y el modelo comunes de la raíz.
 6. Integrar solo con la aprobación exigida y las comprobaciones correctas. Después, ambos
    actualizan su `main` antes de empezar la historia siguiente.
 
-`main` exige al menos una aprobación, también al administrador. Se bloquean force push y borrado;
-no se cambia la configuración para eludir la revisión. No se crea una aprobación atribuida a Codex.
-Comprobación del 2026-11-19 (API de GitHub): la protección de `main` exige 0 aprobaciones y no se aplica
-al administrador, y la PR #10 se integró sin ninguna revisión registrada. Ambos integrantes deben
-restablecer la regla anterior; este documento no la da por cumplida mientras tanto.
+El acuerdo del equipo es que cada cambio llega a `main` mediante una PR revisada por el otro integrante,
+y que la protección de `main` exige al menos una aprobación, también al administrador. Se bloquean force push
+y borrado; no se cambia la configuración para eludir la revisión. No se crea una aprobación atribuida a Codex.
+La regla de GitHub se relajó el 2026-11-19: según la comprobación de la API de ese día, la protección de `main`
+exigía 0 aprobaciones y no se aplicaba al administrador, y la PR #10 se integró sin ninguna revisión registrada.
+La configuración actual no consta en el repositorio. Ambos integrantes deben restablecer la regla de una
+aprobación; este documento no la da por cumplida mientras tanto.
 
 ## Comprobaciones automáticas
 
@@ -91,8 +92,8 @@ contra PostgreSQL efímero. Se ejecuta al publicar `main` o una rama `spec-001` 
 PR hacia `main`. No utiliza secretos del ordenador de un
 integrante, no despliega la aplicación y no aplica migraciones a una base compartida.
 
-La plantilla de PR recoge historia, criterios, pruebas y revisión pendiente. El reparto observado de las ocho
-historias consta en agrupamiento; los nombres académicos y la ratificación de la Constitution se completarán por ambos integrantes
+La plantilla de PR recoge historia, criterios, pruebas y revisión del otro integrante. El reparto observado de las ocho
+historias y los nombres de los integrantes (Antonio García Gómez y Ana Bernabeu Castillo) constan en agrupamiento; la Constitution fue ratificada por ambos el 2026-11-21
 (véase [agrupamiento](docs/agrupamiento.md)); los permisos GitHub no acreditan esos acuerdos docentes.
 
 ## Archivos compartidos y archivos locales

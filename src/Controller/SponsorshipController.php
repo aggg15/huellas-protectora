@@ -27,7 +27,7 @@ class SponsorshipController extends AbstractController
         $errors = [];
         $status = 200;
         if ($request->isMethod('POST')) {
-            $data = $this->data($request, 'sponsorship-new-'.$id);
+            $data = $this->data($request, 'sponsorship-new-'.$id) + ['amount' => ''];
             // Promociona la cuarentena vencida (D01); un animal que ha dejado de estar disponible responde 409.
             $animal = $this->animals->getPublicAnimal($id) ?? $this->em->find(Animal::class, $id) ?? throw $this->createNotFoundException();
             try {
@@ -50,6 +50,7 @@ class SponsorshipController extends AbstractController
     public function mine(array $errors = [], ?string $formId = null, int $errorStatus = 409): Response
     {
         $sponsor = $this->sponsor();
+        $this->animals->releaseDueAnimals(); // la cuarentena vencida (D01) hace disponibles a los destinos posibles
         return $this->render('sponsorship/mine.html.twig', [
             'rows' => $this->sponsorships->mine($sponsor),
             'targets' => $this->sponsorships->availableFor($sponsor),
@@ -77,6 +78,7 @@ class SponsorshipController extends AbstractController
     {
         $sponsorship = $this->own($id);
         $data = $this->data($request, 'sponsorship-move-'.$id);
+        $this->animals->releaseDueAnimals(); // un animal con la cuarentena recién cumplida ya es un destino válido
         $target = ($data['animal'] ?? '') === '' ? null : $this->em->find(Animal::class, $data['animal']);
         if ($target === null) {
             return $this->mine(['animal' => 'Elige uno de los animales disponibles para seguir apadrinando.'], $id, 422);

@@ -20,14 +20,14 @@ class AnimalService
     public function create(array $data, array $files): Animal
     {
         $data = array_map(static fn($value) => is_string($value) ? $value : '', $data);
-        $errors = [];
+        $errors = TextNormalizer::invalidFields($data, ['origin']);
         $species = $data['species'] ?? ''; $size = $data['size'] ?? '';
         $age = filter_var($data['ageMonths'] ?? null, FILTER_VALIDATE_INT);
-        $origin = trim($data['origin'] ?? '');
+        $origin = TextNormalizer::normalize($data['origin'] ?? '');
         if (!in_array($species, ['dog', 'cat'], true)) { $errors['species'] = 'Selecciona perro o gato.'; }
         if (!in_array($size, ['small', 'medium', 'large'], true)) { $errors['size'] = 'Selecciona un tamaño válido.'; }
         if ($age === false || $age < 0 || $age > 600) { $errors['ageMonths'] = 'La edad debe ser un número de meses entre 0 y 600.'; }
-        if ($origin === '' || mb_strlen($origin) > 1000) { $errors['origin'] = 'Indica la procedencia (máximo 1000 caracteres).'; }
+        if (!isset($errors['origin']) && ($origin === '' || mb_strlen($origin) > 1000)) { $errors['origin'] = 'Indica la procedencia (máximo 1000 caracteres).'; }
         $received = \DateTimeImmutable::createFromFormat('!Y-m-d\TH:i', $data['receivedAt'] ?? '', new \DateTimeZone('Europe/Madrid'));
         if (!$received || $received->format('Y-m-d\TH:i') !== ($data['receivedAt'] ?? '') || $received > $this->clock->now()) {
             $errors['receivedAt'] = 'Indica una fecha de recepción real que no sea futura.';
@@ -54,7 +54,9 @@ class AnimalService
     public function review(Animal $animal, User $vet, array $data): void
     {
         $data = array_map(static fn($value) => is_string($value) ? $value : '', $data);
-        $notes = trim($data['notes'] ?? '');
+        $invalid = TextNormalizer::invalidFields($data, ['notes']);
+        if ($invalid) { throw new ValidationError($invalid); }
+        $notes = TextNormalizer::normalize($data['notes'] ?? '');
         $at = \DateTimeImmutable::createFromFormat('!Y-m-d\TH:i', $data['reviewedAt'] ?? '', new \DateTimeZone('Europe/Madrid'));
         if ($notes === '' || mb_strlen($notes) > 5000) { throw new ValidationError(['notes' => 'Escribe las observaciones (máximo 5000 caracteres).']); }
         if (!$at || $at->format('Y-m-d\TH:i') !== ($data['reviewedAt'] ?? '') || $at > $this->clock->now() || $at < $animal->receivedAt) {
