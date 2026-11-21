@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Algo ha ido mal · Huellas{% endblock %}
+
+{% block body %}
+<div class="page-heading"><div>
+  <p class="eyebrow">ERROR {{ status_code }}</p>
+  <h1 class="title">Algo ha ido mal</h1>
+  <p class="subtitle is-6">No hemos podido completar la petición. Inténtalo de nuevo más tarde.</p>
+</div></div>
+<p><a class="button is-primary" href="{{ path('home') }}">Volver al inicio</a> <a class="button is-light" href="{{ path('public_catalog') }}">Ver animales en adopción</a></p>
+{% endblock %}

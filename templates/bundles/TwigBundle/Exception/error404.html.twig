@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Página no encontrada · Huellas{% endblock %}
+
+{% block body %}
+<div class="page-heading"><div>
+  <p class="eyebrow">ERROR 404</p>
+  <h1 class="title">Página no encontrada</h1>
+  <p class="subtitle is-6">La página que buscas no existe o ya no está disponible.</p>
+</div></div>
+<p><a class="button is-primary" href="{{ path('home') }}">Volver al inicio</a> <a class="button is-light" href="{{ path('public_catalog') }}">Ver animales en adopción</a></p>
+{% endblock %}

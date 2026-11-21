@@ -21,6 +21,30 @@ abstract class WebTestBase extends WebTestCase
         $tables = array_filter($connection->createSchemaManager()->listTableNames(), fn($t)=>$t !== 'doctrine_migration_versions');
         if ($tables) { $connection->executeStatement('TRUNCATE '.implode(', ',array_map($connection->quoteIdentifier(...),$tables)).' CASCADE'); }
     }
+    protected function tearDown(): void
+    {
+        // Solo el almacén de pruebas: nunca var/uploads.
+        $dir = dirname(__DIR__).'/var/uploads_test';
+        if (is_dir($dir)) {
+            foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST) as $item) {
+                $item->isDir() ? @rmdir($item->getPathname()) : @unlink($item->getPathname());
+            }
+            @rmdir($dir);
+        }
+        parent::tearDown();
+    }
+    /** Guarda un PNG real en el almacén de pruebas y lo asocia al animal. */
+    protected function storedPhoto(Animal $animal): AnimalPhoto
+    {
+        $storage = self::getContainer()->get(\App\Service\PhotoStorage::class);
+        $filename = 'prueba-'.bin2hex(random_bytes(6)).'.png';
+        $path = $storage->path($filename);
+        if (!is_dir(dirname($path))) { mkdir(dirname($path), 0700, true); }
+        $image = imagecreatetruecolor(10, 10); imagepng($image, $path); imagedestroy($image);
+        $photo = new AnimalPhoto($animal, $filename, 'image/png');
+        $this->em->persist($photo); $this->em->flush();
+        return $photo;
+    }
     protected function user(string $role='ROLE_USER', string $email='persona@example.test'): User
     {
         $user = new User($email, 'Persona Ficticia'); $user->roles=[$role];

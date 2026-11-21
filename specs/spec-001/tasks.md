@@ -24,3 +24,16 @@ Doctrine sincronizado. Véase ../../docs/evidencias/spec-001-alcance-corregido.t
 La preparación técnica y sus comprobaciones se registran en
 ../../docs/evidencias/preparacion-equipo-2026-11-16.txt y ../../docs/evidencias/equipo-2026-11-16.json.
 Esta tarea no integra la PR #1 ni acredita aprobación del compañero.
+
+## Phase 2: Revisión previa a la entrega (2026-11-21)
+
+Origen: revisión de código previa a la entrega, hallazgos C1-05, C1-07, C1-14, C1-17 y C1-19.
+Responsable de la ejecución: `aggg15` (asistido por Claude Code); revisión: pendiente en la PR de `revision-entrega`.
+
+- [x] T108 Sustituir la prueba vacía de fotos privadas por `testPrivatePhotosAreOnlyServedForAvailableAnimalsOrStaff`, con PNG reales en el almacén de pruebas (anónimo y `ROLE_USER` reciben 404 en cuarentena y reservado, 200 en disponible; el personal recibe 200) (C1-05)
+- [x] T109 Ampliar `testVeterinaryReviewAndRoleValidation` (veterinario, fecha y notas persistidos; fecha futura, anterior a la recepción, notas vacías, 5001 caracteres y CSRF inválido; límite de 5000 válido) y añadir `testVetCannotCreateAnimals` (C1-07)
+- [x] T110 Fijar `date_default_timezone_set('UTC')` en `Kernel::__construct` y `tests/bootstrap.php`, con una prueba de zona UTC y de visualización en Europe/Madrid (C1-14)
+- [x] T111 Cambiar el mensaje del comando `app:release-quarantine` a «Animales liberados: N» (C1-17)
+- [x] T112 Usar `var/uploads_test` como almacén en `when@test` y vaciarlo en `WebTestBase::tearDown` sin tocar `var/uploads` (C1-19)
+- [x] T113 Añadir `testReleaseDueAnimalsSqlBoundaryAt240Hours` para el límite de 240 h de la consulta SQL (C1-20a)
+- [x] T114 Documentar en el README los límites de subida y sus efectos (C1-16, solo documentación)

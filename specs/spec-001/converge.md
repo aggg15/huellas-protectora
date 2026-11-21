@@ -3,3 +3,14 @@
 Contraste posterior del código con los cinco criterios de spec.md y las tareas: todos disponen de comportamiento y comprobación. No se añaden tareas correctivas artificiales. Evidencia: ../../docs/evidencias/spec-001-phpunit.txt.
 
 La revisión cubre alta, persistencia, cuarentena, foto protegida, veterinario y controles de rol/CSRF. La ficha pública y los filtros corresponden a HU-02, que se implementa después. Revisión cruzada del compañero pendiente.
+
+## Pasada de revisión previa a la entrega (2026-11-21)
+
+| Hallazgo | Gravedad | Corrección | Prueba | Resultado antes → después |
+|---|---|---|---|---|
+| C1-05 | media | Prueba con PNG reales en el almacén en lugar de un fichero inexistente | `testPrivatePhotosAreOnlyServedForAvailableAnimalsOrStaff` | Antes: la prueba vacía pasaba por el 404 de un fichero inexistente. Con la comprobación de estado de `MediaController` quitada temporalmente, la nueva falla (200 en lugar de 404 para el anónimo); restaurada, pasa |
+| C1-07 | baja | Prueba ampliada (persistencia y todas las ramas de error) y prueba de `ROLE_VET` en el alta | `testVeterinaryReviewAndRoleValidation`, `testVetCannotCreateAnimals` | Cobertura nueva; pasan sobre el código existente (no había defecto de código) |
+| C1-14 | baja | Zona PHP fijada a UTC en `Kernel` y `tests/bootstrap.php` | `testPhpTimezoneIsUtcAndStoredDatesAreUtc` | Pasa. No se ejecutó sobre el código anterior: el contenedor ya trabaja en UTC, así que la prueba protege contra regresiones pero allí no habría fallado |
+| C1-17 | baja | «Animales liberados: N» en el comando | (cambio de texto, sin prueba específica) | Verificado por lectura |
+| C1-19 | baja | `PhotoStorage` usa `var/uploads_test` en `when@test`, vaciado en `tearDown` | toda la suite | Antes las pruebas escribían en `var/uploads`; después, en `var/uploads_test` |
+| C1-20a | baja | Prueba del límite de 240 h en la consulta SQL | `testReleaseDueAnimalsSqlBoundaryAt240Hours` | Cobertura nueva (márgenes de 30 s); pasa |
