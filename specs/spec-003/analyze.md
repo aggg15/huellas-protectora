@@ -28,3 +28,75 @@ implementar, realizada por Claude Code el 2026-11-17. No se ha ejecutado la skil
    para no alterar la comprobación requerida en `main`.
 
 No se detectan criterios sin tarea ni tareas sin criterio.
+
+## Análisis previo a la entrega (2026-11-21)
+
+Revisión de solo lectura de spec.md, clarify.md, plan.md, tasks.md, converge.md, `tests/Spec003Test.php`,
+../../data-model.md y la Constitution, realizada por Claude Code el 2026-11-21 sobre el commit a74f85f. Se sigue el
+método de `.agents/skills/speckit-analyze/SKILL.md` (inventario, pasadas de duplicación, ambigüedad,
+infraespecificación, Constitution, cobertura e incoherencia; gravedades CRITICAL/HIGH/MEDIUM/LOW), pero la skill
+`$speckit-analyze` no se ha invocado como comando. No existe `.specify/extensions.yml`, así que no hay hooks. El
+análisis anterior (arriba) se conserva sin cambios. Los hallazgos de código C1-0X proceden de la revisión de código
+del mismo día; se registran en `tasks.md` y `converge.md` por el equipo que los corrige, y aquí solo se enlazan.
+
+### Informe inicial
+
+| ID | Categoría | Gravedad | Ubicación | Hallazgo | Recomendación |
+|---|---|---|---|---|---|
+| A1 | Incoherencia | MEDIUM | clarify.md | La «Concreción del 2026-11-17» fija campos y códigos HTTP, pero no hay registro de preguntas, respuestas y criterios ni diferencias con la ficha inicial (enunciado §5.1). | Añadir la tabla y las diferencias en `clarify.md` (hecho en la ronda del 2026-11-21). |
+| A2 | Cobertura | MEDIUM | tasks.md T301–T305 | Las tareas son de fase (T302 implementa los seis criterios) y ninguna nombra un criterio; la relación criterio → tarea solo se deduce de la tabla del análisis anterior. | Mantener `docs/trazabilidad.md` como fuente criterio → decisión → tarea → prueba. |
+| A3 | Incoherencia | LOW | spec.md («Revisión del compañero: pendiente», «implementada en la rama `spec-003`»); tasks.md («pendientes de identificación… Codex»); converge.md | Los textos no reflejan lo que consta en `docs/agrupamiento.md`: HU-03 es de `aggg15` (PR #6) y `abcb5-ua` aprobó la PR; la historia está integrada en `main`. | Actualizar las menciones en la pasada final, sin atribuir nada que no conste. |
+| A4 | Incoherencia | MEDIUM | CA-03-05; clarify.md sección 4; `ApplicationController` | La spec dice que la solicitud de un animal reservado entre la carga y el envío «se rechaza al enviar» y clarify fija 409, pero el controlador resuelve el animal con `getPublicAnimal` y responde 404. La prueba solo comprueba el rechazo llamando al servicio, no por HTTP. Origen: C1-04. | Alinear el código con clarify (409) y añadir la prueba HTTP. |
+| A5 | Cobertura | MEDIUM | CA-03-03, CA-03-05, CA-03-06; plan.md «Diseño» | El límite de dos y el duplicado de la misma cuenta y animal se garantizan solo con bloqueos y comprobaciones de aplicación; el plan menciona CHECK como defensa adicional, pero no hay un índice único que impida dos solicitudes abiertas de la misma cuenta para el mismo animal. Origen: C1-10. | Añadir el índice único parcial y declararlo en el mapeo de la entidad. |
+| A6 | Infraespecificación | LOW | spec.md R1 y R7; CA-03-01 | La spec no dice si una cuenta de personal puede enviar solicitudes (todas las cuentas reciben `ROLE_USER`) ni si la persona puede retirar una solicitud abierta. | Decidir en clarify (Q8 y Q9). |
+| A7 | Cobertura | LOW | Constitution V; converge.md | La comprobación visual en móvil, escritorio y teclado consta como pendiente. La cubre en parte `docs/evidencias/spec-005-manual` (recorridos 1 y 2: alta, solicitud y «Mis solicitudes» a 1280 y 390 px, con una observación sobre la tabla en móvil), sin los errores de validación de HU-03. | Citar ese recorrido con su alcance o registrar uno propio. |
+
+Sin hallazgos CRITICAL ni HIGH propios. No hay conflictos con la Constitution salvo lo señalado en A7: verificación
+de recorrido normal, entradas inválidas y permisos o estado en T304.
+
+### Cobertura
+
+| Requisito | ¿Tarea? | Tareas | Pruebas (`tests/Spec003Test.php`) | Nota |
+|---|---|---|---|---|
+| CA-03-01 envío | Sí | T302, T303, T304 | `testApplicantSubmitsCompleteQuestionnaireForAvailableAnimal`, `testPublicRegistrationCreatesApplicantAccountAndReturnsToApplication` | |
+| CA-03-02 cuestionario incompleto | Sí | T302, T303, T304 | `testIncompleteQuestionnaireIsNotAdmittedAndListsPendingData`, `testNoPreviousExperienceIsAValidAnswer` | Véase C1-09. |
+| CA-03-03 máximo de dos | Sí | T302, T304 | `testThirdOpenApplicationIsRejectedAndExistingOnesAreKept`, `testApprovedCountsAsOpenWhileRejectedAndCancelledDoNot` | |
+| CA-03-04 candidaturas | Sí | T302, T303, T304 | `testCoordinatorAccessesReceivedApplicationWithCompleteQuestionnaire` | |
+| CA-03-05 animal no disponible o duplicado | Sí | T301, T302, T304 | `testAnimalsThatAreNotAvailableDoNotReceiveApplications`, `testDuplicateOpenApplicationForSameAnimalIsRejected` | Véanse A4 y A5. |
+| CA-03-06 concurrencia | Sí | T301, T302, T304 | `testConcurrentSubmissionsNeverExceedTwoOpenApplications` | |
+| Permisos y CSRF (R7) | Sí | T302, T304 | `testPermissionsAndCsrfProtectApplications` | Sin criterio propio. |
+
+Tareas sin requisito: ninguna. T305 corresponde a obligaciones del proceso (Constitution II y V).
+
+Métricas (commit a74f85f): 6 criterios (2 derivados); 5 tareas (T301–T305); 11 pruebas; criterios sin tarea 0;
+criterios sin prueba 0; ambigüedades 1 en los criterios (A6) y 2 decisiones pendientes de confirmar en clarify
+(Q8 y Q9); duplicaciones 0; críticos 0.
+
+### Registro de hallazgos
+
+La gravedad de los C1-0X es provisional: la fija `converge.md` de la rama `revision-entrega`.
+
+| ID | Historia / criterio | Gravedad | Evidencia | Decisión | Responsable | Estado |
+|---|---|---|---|---|---|---|
+| A1 | HU-03 / CA-03-01 a CA-03-06 | MEDIUM | `clarify.md` sin tabla de preguntas ni diferencias | Añadir ambas | `aggg15` | Corregido en clarify.md el 2026-11-21 |
+| A2 | HU-03 / CA-03-01 a CA-03-06 | MEDIUM | `tasks.md` T301–T305 sin criterio por tarea | Matriz en `docs/trazabilidad.md`; sin tareas nuevas | `aggg15` (revisa `abcb5-ua`) | Mitigado en la matriz; revisión pendiente |
+| A3 | HU-03 / documentación | LOW | spec.md, tasks.md y converge.md frente a `docs/agrupamiento.md` | Actualizar responsables y estado | `aggg15` | Abierto |
+| A4 | HU-03 / CA-03-05 | MEDIUM | clarify.md sección 4 (409) frente a `ApplicationController` (404) | Ver C1-04 | `aggg15` | En corrección en la rama `revision-entrega` (C1-04) |
+| A5 | HU-03 / CA-03-03, CA-03-05, CA-03-06 | MEDIUM | Migraciones sin índice único de solicitud abierta por cuenta y animal | Ver C1-10 | `aggg15` | En corrección en la rama `revision-entrega` (C1-10) |
+| A6 | HU-03 / CA-03-01, CA-03-03 | LOW | spec.md R1 y R7 sin regla para el personal ni para la retirada | Decidir en clarify (Q8 y Q9) | `aggg15` | Abierto: decisiones pendientes de confirmar |
+| A7 | HU-03 / Constitution V | LOW | converge.md: comprobación visual pendiente | Citar o registrar un recorrido | `aggg15` | Abierto |
+| C1-04 | HU-03 / CA-03-05 | MEDIUM (provisional) | 404 en lugar de 409 al enviar una solicitud de un animal ya reservado (véase A4) | Revisión de código del 2026-11-21 | `aggg15` | En corrección en la rama `revision-entrega` |
+| C1-06 | HU-03 / CA-03-05 | LOW (provisional) | Las páginas de error 403 y 404 que ve la persona están en inglés | Revisión de código del 2026-11-21 | `aggg15` | En corrección en la rama `revision-entrega` |
+| C1-09 | HU-03 / CA-03-02 | MEDIUM (provisional) | `ApplicationService` usa `trim()` de PHP, que no recorta espacios Unicode ni valida NUL | Revisión de código del 2026-11-21 | `aggg15` | En corrección en la rama `revision-entrega` |
+| C1-10 | HU-03 / CA-03-03, CA-03-05 | MEDIUM (provisional) | Sin índice único de solicitud abierta (véase A5) | Revisión de código del 2026-11-21 | `aggg15` | En corrección en la rama `revision-entrega` |
+
+### Informe final
+
+Este informe se cerrará después de integrar las correcciones de la rama `revision-entrega` y de repetir las
+pasadas sobre los documentos y pruebas corregidos. Hoy, 2026-11-21, el estado es: A1 corregido; A2 mitigado en la
+matriz; A3, A6 y A7 abiertos; A4, A5 y C1-04, C1-06, C1-09 y C1-10 en corrección. No se declara cerrado: el cierre
+exige 0 contradicciones críticas o altas y ningún criterio sin tarea y prueba, con la revisión cruzada de
+`abcb5-ua` (pendiente).
+
+Nota de método: ronda realizada con Claude Code siguiendo el procedimiento de
+`.agents/skills/speckit-analyze/SKILL.md`; no se ha ejecutado la skill de Codex.
