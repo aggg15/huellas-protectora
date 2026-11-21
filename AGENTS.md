@@ -2,9 +2,8 @@
 
 ## Alcance y fuentes
 
-- Estado de las historias (2026-11-19): HU-01 a HU-07 están integradas en `main` (PR #1, #5, #6, #8, #9, #10
-  y #11). HU-08 se desarrolla en la rama `spec-008` por encargo de `abcb5-ua`. Las ocho historias tienen
-  responsable; no se abren historias nuevas sin un encargo expreso.
+- Estado de las historias (2026-11-21): HU-01 a HU-08 están integradas en `main` (PR #1, #5, #6, #8, #9, #10,
+  #11 y #12). Las ocho historias tienen responsable; no se abren historias nuevas sin un encargo expreso.
 - Usar exclusivamente la documentación de Práctica Grupal. Leer la Constitution en
   `.specify/memory/constitution.md`, `plan.md`, `data-model.md` y `docs/decisiones.md`.
 - `specs/spec-00N/spec.md` es la especificación vigente de cada historia. Las ocho carpetas
@@ -48,6 +47,6 @@
   fusionar sin revisión humana. El CI (`.github/workflows/ci.yml`) detecta solo las ramas
   `spec-00*`, las historias con `plan.md` y los ficheros `tests/Spec00NTest.php`; respetar esos nombres.
 - Los usuarios GitHub son `aggg15` y `abcb5-ua`. No inventar sus nombres académicos, reparto de las
-  historias pendientes, ratificación de la Constitution ni aprobaciones del compañero.
+  historias, ratificación de la Constitution ni aprobaciones del compañero.
 
 Consultar `CONTRIBUTING.md` para clonar, seleccionar contexto y revisar los cambios.

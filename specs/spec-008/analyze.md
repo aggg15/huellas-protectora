@@ -47,6 +47,7 @@ prueba, A1–A2); ambigüedades 0; infraespecificaciones 0; duplicaciones 0 (las
 propósito); críticos 0.
 
 Siguiente acción: corregir A1 a A3 en sus fuentes antes de cerrar la verificación.
+Actualización 2026-11-21: A1–A3 se corrigieron en T802–T804 (véase tasks.md). Estado final: integrada en `main` con la PR #12 (2026-11-20).
 
 ## Registro de hallazgos
 

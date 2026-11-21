@@ -1,5 +1,23 @@
 # Agrupamiento y responsabilidad
 
+## Reparto final
+
+| HU | Responsable (usuario GitHub) | Autor de git observado | PR | Revisión registrada | Nombre (a completar por el grupo) |
+|---|---|---|---|---|---|
+| HU-01 | `aggg15` | Antonio | #1 | Aprobada por `abcb5-ua` | |
+| HU-02 | `abcb5-ua` | Ana | #5 | Aprobada por `aggg15` | |
+| HU-03 | `aggg15` | Antonio | #6 | Aprobada por `abcb5-ua` | |
+| HU-04 | `abcb5-ua` | Ana | #8 | Aprobada por `aggg15` | |
+| HU-05 | `aggg15` | Antonio | #9 | Aprobada e integrada por `abcb5-ua` | |
+| HU-06 | `abcb5-ua` | Ana | #10 | No consta: integrada por `aggg15` sin revisión registrada | |
+| HU-07 | `aggg15` | Antonio | #11 | Aprobada e integrada por `abcb5-ua` | |
+| HU-08 | `abcb5-ua` | Ana | #12 | No consta en el repositorio | |
+
+El autor de git es el nombre configurado en cada commit; no se usa como nombre académico. Los nombres académicos
+del grupo no constan y se completarán en la última columna.
+
+## Cronología
+
 La guía específica fija dos integrantes y cuatro historias por persona. El enunciado v1 contiene
 referencias incompatibles a dos y cuatro integrantes, que se registran en decisiones.md.
 
@@ -20,7 +38,7 @@ asume `aggg15` por confirmación expresa del usuario. No se atribuye un acuerdo 
 | HU-05 | `aggg15` (PR #9) | `abcb5-ua` aprobó la PR #9 y la integró | Integrada en `main` |
 | HU-06 | `abcb5-ua` (PR #10) | No consta revisión en GitHub: `aggg15` integró la PR #10 sin aprobarla ni comentarla | Integrada en `main` |
 | HU-07 | `aggg15` (PR #11) | `abcb5-ua` aprobó la PR #11 y la integró | Integrada en `main` |
-| HU-08 | `abcb5-ua` (encargo expreso del usuario el 2026-11-19) | Pendiente; revisor previsto `aggg15` | En desarrollo en la rama `spec-008` |
+| HU-08 | `abcb5-ua` (encargo expreso del usuario el 2026-11-19) | Revisión de la PR #12: no consta en el repositorio (revisor previsto `aggg15`) | Integrada en `main` con la PR #12 (merge a74f85f, 2026-11-20) |
 
 Actualización del 2026-11-19: HU-05 se integró con la PR #9 y `abcb5-ua` asume HU-06. Para cumplir
 cuatro historias por persona, `abcb5-ua` debería asumir también una de HU-07 y HU-08 y `aggg15` la
@@ -35,6 +53,9 @@ ello `aggg15` tiene HU-01, HU-03, HU-05 y HU-07, y la regla de cuatro historias 
 Actualización del 2026-11-19 (noche): HU-07 se integró con la PR #11, aprobada y fusionada por `abcb5-ua`.
 `abcb5-ua` confirma que asume HU-08 al encargar su desarrollo. Con ello el reparto observado queda en cuatro
 historias por persona: `aggg15` HU-01, HU-03, HU-05 y HU-07; `abcb5-ua` HU-02, HU-04, HU-06 y HU-08.
+
+Actualización del 2026-11-21: HU-08 se integró en `main` con la PR #12 (merge a74f85f, 2026-11-20). La revisión
+de la PR #12 no consta en el repositorio.
 
 Codex y Claude Code no son integrantes académicos. Antes de entregar se completarán los nombres, la
 autoría de tareas y commits y las evidencias de revisión.

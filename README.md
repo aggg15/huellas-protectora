@@ -1,8 +1,8 @@
 # Huellas · gestión de adopciones
 
-Estado a 19 de noviembre de 2026: `main` integra **HU-01 a HU-07** (PR #1, #5, #6, #8, #9, #10 y #11). Las
-PR #1 a #9 y #11 constan aprobadas en GitHub por el otro integrante; la PR #10 se integró sin revisión registrada.
-HU-08 se desarrolla en la rama `spec-008`.
+Estado a 21 de noviembre de 2026: `main` integra **HU-01 a HU-08** (PR #1, #5, #6, #8, #9, #10, #11 y #12). Las
+PR #1 a #9 y #11 constan aprobadas en GitHub por el otro integrante; la PR #10 se integró sin revisión registrada
+y la PR #12 (HU-08) no tiene revisión registrada en el repositorio.
 
 | Historia | Contenido implementado | PR | Autoría observada en GitHub |
 |---|---|---|---|
@@ -13,6 +13,7 @@ HU-08 se desarrolla en la rama `spec-008`.
 | HU-05 | Formalización con contrato y cuota, adopción y dos seguimientos | #9 | `aggg15` |
 | HU-06 | Casas de acogida: capacidad, periodos, acogidas y novedades | #10 | `abcb5-ua` |
 | HU-07 | Turnos de paseo y limpieza, inscripción y destacado a 48 horas | #11 | `aggg15` |
+| HU-08 | Apadrinamiento de animales, novedades para padrinos y decisión tras la adopción | #12 | `abcb5-ua` |
 
 El 5 de noviembre se limitó temporalmente la publicación a HU-01 tras consultar al profesor y se
 cerraron las PR #2 a #4. Las historias siguientes se han publicado después por encargo expreso del
@@ -87,9 +88,9 @@ php bin/console lint:container
 php bin/console lint:twig templates
 ```
 
-Con HU-01 a HU-07 la suite completa pasa **99 pruebas y 1039 aserciones** sobre `main` (5e379e6), y con HU-08
-en la rama `spec-008`, **112 pruebas y 1301 aserciones**, ambas el 2026-11-19 en bases `_test` recién migradas
-([evidencia](docs/evidencias/spec-008-phpunit.txt)). Si una base `_test` antigua
+Con HU-01 a HU-08 la suite completa pasa **112 pruebas y 1301 aserciones** sobre `main` (a74f85f, 2026-11-21, en Docker
+con php:8.3 y postgres:16). La evidencia registrada en el repositorio es la del 2026-11-19, en bases `_test` recién
+migradas, sobre la rama `spec-008` ([evidencia](docs/evidencias/spec-008-phpunit.txt)). Si una base `_test` antigua
 conserva tablas de las implementaciones retiradas el 5 de noviembre, las migraciones fallan con
 «relation already exists»: crea otra base terminada en `_test` en lugar de limpiar la existente.
 Las respuestas 403/404/409/422 esperadas se registran como errores HTTP comprobados; no son fallos de PHPUnit.
@@ -111,7 +112,7 @@ las PR hacia `main`. La ratificación de la Constitution y los nombres académic
 - HU-07: la coordinadora crea los turnos de paseo y limpieza y los
   voluntarios se apuntan o se dan de baja en `/admin/turnos`, que destaca los turnos sin el mínimo cuando faltan
   48 horas o menos. Detalle en [spec-007](specs/spec-007/spec.md).
-- HU-08 (rama `spec-008`, pendiente de revisión): las personas con cuenta pública apadrinan un animal disponible
+- HU-08 (PR #12, integrada en `main`; revisión no consta en el repositorio): las personas con cuenta pública apadrinan un animal disponible
   desde su ficha (aportación mensual desde 10 €) y ven sus novedades y la decisión tras la adopción en
   `/mis-apadrinamientos`; la coordinadora publica las novedades en `/admin/apadrinamientos`. Detalle en
   [spec-008](specs/spec-008/spec.md).

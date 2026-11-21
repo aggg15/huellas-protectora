@@ -36,5 +36,5 @@ de creación no dejan filas o ficheros parciales. Los cambios del modelo común 
 
 Código y migraciones ya implementados en el hito 7bcea03. La [evidencia del alcance corregido](../../docs/evidencias/spec-001-alcance-corregido.txt)
 registra 7 pruebas y 32 aserciones correctas. Las [tareas](tasks.md) y los informes existentes conservan
-su historia; la revisión humana de la PR #1 permanece pendiente. La puesta en marcha está en el
+su historia; la revisión humana de la PR #1 permanece pendiente. Actualización 2026-11-21: la PR #1 está integrada en `main` y consta aprobada por `abcb5-ua` (según `docs/agrupamiento.md`). La puesta en marcha está en el
 [README](../../README.md) y el flujo colaborativo en [CONTRIBUTING](../../CONTRIBUTING.md).

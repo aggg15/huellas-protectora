@@ -1,7 +1,7 @@
 # Verificación manual de HU-05 (T525)
 
 Fecha: 2026-11-19, 00:08–00:09 (Europe/Madrid). Versión del código: commit ca68017 de la rama `spec-005`.
-Responsable: `aggg15`, con asistencia de Claude Code. Revisión de `abcb5-ua`: pendiente.
+Responsable: `aggg15`, con asistencia de Claude Code. Revisión de `abcb5-ua`: pendiente. Actualización 2026-11-21: HU-05 integrada en `main` con la PR #9; revisión aprobada por `abcb5-ua` (según `docs/agrupamiento.md`).
 
 ## Cómo se ha hecho
 

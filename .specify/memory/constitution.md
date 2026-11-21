@@ -184,3 +184,5 @@ limitación anterior, el usuario encargó expresamente publicar HU-02 a HU-04, i
 mediante las PR #5, #6 y #8 con aprobación en GitHub del otro integrante; el usuario (`aggg15`) asume
 HU-05. Documentos afectados: README, CONTRIBUTING, AGENTS, plan.md, docs/decisiones.md y
 docs/agrupamiento.md. La ratificación conjunta y el reparto de HU-06 a HU-08 siguen pendientes.
+
+Actualización 2026-11-21: reparto completo, ver docs/agrupamiento.md.

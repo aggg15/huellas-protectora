@@ -6,13 +6,13 @@
 - [x] T304: validar los criterios de aceptación con PostgreSQL y pruebas HTTP.
 - [x] T305: registrar analyze, converge, resultados y commit.
 
-Responsable académico y revisor: pendientes de identificación; desarrollo asistido por Codex a solicitud del usuario. No se atribuye revisión humana realizada.
+Responsable académico y revisor: pendientes de identificación; desarrollo asistido por Codex a solicitud del usuario. No se atribuye revisión humana realizada. Actualización 2026-11-21: revisión de la PR #6 aprobada por `abcb5-ua` (según `docs/agrupamiento.md`).
 
 ## Ejecución del 2026-11-17
 
 Encargo expreso del usuario (`aggg15`) de desarrollar y publicar spec-003; desarrollo asistido por
 Claude Code. Desarrollada sobre `spec-002` (96f1929) y rebasada sobre `main` (890d2b3) tras integrar
-la PR #5, sin conflictos; las pruebas se repitieron sobre la nueva base. Revisión de `abcb5-ua`: pendiente.
+la PR #5, sin conflictos; las pruebas se repitieron sobre la nueva base. Revisión de `abcb5-ua`: pendiente. Actualización 2026-11-21: integrada en `main` con la PR #6; aprobada por `abcb5-ua`.
 
 - T301 → [clarify](clarify.md) y [spec](spec.md): identidad por cuenta (D06), abiertas (D07),
   seis respuestas del cuestionario (D08), animales disponibles (D10); CA-03-05 y CA-03-06 derivados.

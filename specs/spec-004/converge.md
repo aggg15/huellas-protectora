@@ -14,7 +14,7 @@ Contraste del código desarrollado con los criterios de aceptación de `spec.md`
 
 ## Hallazgos de convergencia
 * Se mantiene plena compatibilidad con las historias previas HU-01, HU-02 y HU-03.
-* Todas las tareas de `tasks.md` (T401 a T410) han sido verificadas y completadas.
+* Todas las tareas de `tasks.md` (T401 a T413) han sido verificadas y completadas; T411 a T413 se añadieron tras la primera ejecución del 2026-11-17.
 * La base técnica queda preparada de forma ideal para HU-05 (*Formalizar la adopción y programar los seguimientos*), la cual tomará directamente como punto de partida las solicitudes en estado `approved` y los animales en estado `reserved`.
 
 ## Verificación ejecutada (2026-11-17)

@@ -60,4 +60,4 @@ Se implementan la presentación y la consulta de solicitudes; las decisiones sob
 ## Estado
 
 Implementado y comprobado el 2026-11-17: ver [tareas](tasks.md), [implement](implement.md) y
-[converge](converge.md). Revisión humana del compañero pendiente.
+[converge](converge.md). Revisión humana del compañero pendiente. Actualización 2026-11-21: integrada en `main` con la PR #6; aprobada por `abcb5-ua` (según `docs/agrupamiento.md`).

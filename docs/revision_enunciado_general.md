@@ -1,5 +1,7 @@
 # Revisión de las historias frente al enunciado general
 
+> Documento histórico (octubre de 2026). El estado que describe está superado; la referencia vigente es `docs/decisiones.md` y `docs/agrupamiento.md`.
+
 Revisión documental de las ocho historias iniciales y corrección de compatibilidad del LaTeX. Se conserva el alcance solicitado: definir las historias, no desarrollar todavía las fases posteriores de la práctica.
 
 ## Fuentes contrastadas

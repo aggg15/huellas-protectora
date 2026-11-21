@@ -95,12 +95,13 @@ sustituye la evidencia: el cierre se acredita con `docs/evidencias/spec-005-phpu
 
 - [x] **T526** · Redactar `implement.md` y `converge.md`; añadir aquí las tareas correctivas que salgan de converge
   sin borrar las anteriores.
-- [ ] **T527** · Abrir la PR hacia `main` con la plantilla, señalando los cambios en código de HU-04
-  (T512, T515, T516), el CHECK común y `data-model.md`, y pedir la revisión de `abcb5-ua`.
+- [x] **T527** · Abrir la PR hacia `main` con la plantilla, señalando los cambios en código de HU-04
+  (T512, T515, T516), el CHECK común y `data-model.md`, y pedir la revisión de `abcb5-ua`. → [PR #9](https://github.com/aggg15/huellas-protectora/pull/9)
 
 ## Ejecución del 2026-11-18
 
 Implementación de T505–T524 asistida por Claude Code a petición de `aggg15`; revisión de `abcb5-ua` pendiente.
+Actualización 2026-11-21: integrada en `main` con la PR #9 (merge 87a78a0, 2026-11-19); revisión aprobada por `abcb5-ua` (según docs/agrupamiento.md).
 Detalle de componentes en [implement](implement.md).
 
 - T505–T507 → `Adoption`, `FollowUp`, estado `formalized`, migración `Version20261118230000` (up/down/up
@@ -113,6 +114,7 @@ Detalle de componentes en [implement](implement.md).
 - T524 → suite completa: 57 pruebas / 484 aserciones; [evidencia](../../docs/evidencias/spec-005-phpunit.txt).
 
 Pendientes: T525 (verificación manual), T526 (converge.md; implement.md ya redactado) y T527 (PR).
+Actualización 2026-11-21: T527 completada; la PR #9 está integrada en `main`.
 
 ## Ejecución del 2026-11-19
 
