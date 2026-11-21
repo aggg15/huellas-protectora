@@ -52,3 +52,120 @@ Estado: Precisiones consensuadas e incorporadas al plan y modelo común (`docs/d
   * La solicitud aprobada pasa a `cancelled`.
   * El animal vuelve de `reserved` a `available`.
   * Las solicitudes de ese animal que estaban en `waiting` vuelven automáticamente a `pending` para que la coordinadora pueda evaluarlas.
+
+## Ronda de clarificación previa a la entrega (2026-11-21)
+
+Historia: HU-04 · Evaluar solicitudes, entrevistar y reservar el animal. Responsable: `abcb5-ua`. Revisión de
+`aggg15` de esta ronda: pendiente. Se parte de `specs/spec-004/spec.md`, de la ficha inicial `spec-004/historia.md`,
+de SI-30 (p. 1), de [decisiones](../../docs/decisiones.md) y de las trece pruebas de `tests/Spec004Test.php` en el
+commit a74f85f. Las cinco secciones de arriba recogen las precisiones de entrevista, rechazo, aprobación,
+concurrencia y liberación, pero sin la tabla de preguntas, respuestas y criterios ni las diferencias con la ficha
+inicial: se añaden aquí.
+
+### 1. Tres situaciones de prueba
+
+**Situación 1 · Recorrido habitual**
+
+- CA-04-01. **Dado** una solicitud pendiente, **cuando** la coordinadora abre su ficha y envía una fecha y unas
+  notas de entrevista válidas, **entonces** los datos quedan guardados en la solicitud y la ficha los muestra.
+  Prueba: `Spec004Test::testCoordinatorCanViewApplicationAndRecordInterview`.
+- CA-04-02. **Dado** una solicitud pendiente, **cuando** la coordinadora la rechaza con un motivo escrito,
+  **entonces** pasa a `rejected`, el motivo queda guardado y el animal sigue disponible.
+  Prueba: `Spec004Test::testRejectionWithReasonIsRecordedAndDoesNotAlterAnimalAvailability`.
+- CA-04-03 y CA-04-04. **Dado** un animal disponible con tres solicitudes y entrevista no futura en la que se
+  aprueba, **cuando** la coordinadora aprueba una de ellas, **entonces** esta pasa a `approved`, el animal a
+  `reserved` y las otras dos pendientes a `waiting`, sin rechazarse.
+  Prueba: `Spec004Test::testApprovalAfterValidInterviewReservesAnimalAndMovesOtherApplicationsToWaiting`.
+- D11. **Dado** una solicitud aprobada, **cuando** la coordinadora libera la reserva con motivo, **entonces** la
+  solicitud pasa a `cancelled`, el animal vuelve a `available` y las esperas vuelven a `pending`.
+  Prueba: `Spec004Test::testReleaseReservationRestoresAnimalToAvailableAndWaitingToPending`.
+
+**Situación 2 · Entrada inválida o caso límite**
+
+- CA-04-01 (entrada inválida). **Dado** una solicitud pendiente, **cuando** se envía una entrevista con notas en
+  blanco o con una fecha que no es válida, **entonces** la respuesta es 422, el error aparece junto al campo y la
+  solicitud no cambia.
+  Prueba: `Spec004Test::testInterviewRequiresValidDateAndNotes`.
+- CA-04-02 (entrada inválida). **Dado** una solicitud pendiente, **cuando** se rechaza con el motivo en blanco,
+  **entonces** la respuesta es 422 y la solicitud sigue `pending`, sin motivo guardado.
+  Prueba: `Spec004Test::testRejectionWithoutReasonIsNotAdmitted`.
+- CA-04-03 (caso límite). **Dado** una solicitud sin entrevista, o con una entrevista de fecha futura, **cuando**
+  se intenta aprobar, **entonces** la operación se rechaza y ni la solicitud ni el animal cambian.
+  Pruebas: `Spec004Test::testApprovalWithoutInterviewIsNotAdmitted` y
+  `Spec004Test::testApprovalWithFutureInterviewIsNotAdmitted`.
+- D11 (entrada inválida). **Dado** una solicitud aprobada, **cuando** se libera la reserva con el motivo en
+  blanco, **entonces** la respuesta es 422 y la reserva se mantiene.
+  Prueba: `Spec004Test::testReleaseReservationRequiresReason`.
+
+**Situación 3 · Permisos o estado**
+
+- CA-04-05. **Dado** un animal ya reservado por otra solicitud aprobada, **cuando** se intenta aprobar una segunda
+  por la interfaz, **entonces** la operación se rechaza con un mensaje y las dos solicitudes y el animal conservan
+  su estado; además, la base de datos rechaza dos solicitudes `approved` del mismo animal.
+  Pruebas: `Spec004Test::testCannotApproveApplicationForAlreadyReservedAnimal` y
+  `Spec004Test::testDatabaseRejectsTwoApprovedApplicationsForSameAnimal`.
+- Estado de la solicitud. **Dado** una solicitud ya aprobada, **cuando** se abre su ficha o se fuerza un rechazo,
+  **entonces** la ficha no ofrece aprobar, rechazar ni modificar la entrevista y el rechazo forzado responde 422
+  sin tocar la reserva.
+  Prueba: `Spec004Test::testDecidedApplicationAdmitsNoFurtherDecisions`.
+- Permisos. **Dado** una cuenta solicitante o de voluntario sin `ROLE_COORDINATOR`, **cuando** pide el listado o
+  la ficha de una solicitud, **entonces** recibe 403.
+  Prueba: `Spec004Test::testRoleAccessControl` (solo cubre peticiones GET: las rutas POST de decisión no tienen
+  prueba de rol ni de CSRF, véase [analyze](analyze.md), A4 y C1-08).
+
+### 2. Ambigüedades detectadas
+
+Las filas «PENDIENTE» llevan una recomendación como propuesta, no como decisión: la toma y la explica el
+responsable.
+
+| # | Pregunta | Opciones | Recomendación | Justificación | CA afectado | Estado |
+|---|---|---|---|---|---|---|
+| Q1 | ¿Qué datos mínimos tiene la entrevista y cómo consta que se ha realizado? | Solo fecha; fecha y notas; agenda externa. | Fecha y hora con notas; para aprobar, una entrevista registrada con fecha no futura. | SI-30: la coordinadora «concierta una entrevista» y decide; la ficha excluye una agenda externa. | CA-04-01, CA-04-03 | decidida previamente (D09 de docs/decisiones.md) |
+| Q2 | Si la adopción no llega a formalizarse, ¿quién libera la reserva y qué pasa con las solicitudes en espera? | Liberación automática; liberación por la coordinadora con motivo. | La coordinadora, con motivo: candidata cancelada, esperas a pendientes y animal disponible. | SI-30: las demás quedan en espera «por si la adopción no llega a buen término». | CA-04-04 (D11) | decidida previamente (D11) |
+| Q3 | ¿Se reciben solicitudes nuevas con el animal reservado y qué pasa con las en espera al formalizar? | Sí o no; esperas rechazadas o canceladas. | No se reciben; las otras pendientes pasan a espera y las rechazadas no se reabren; al formalizar se cancelan. | El catálogo ofrece solo animales realmente disponibles. | CA-04-03, CA-04-04 | decidida previamente (D10 y D15) |
+| Q4 | ¿Se puede rechazar antes de la entrevista? | Solo después; en cualquier momento. | En cualquier momento, siempre con motivo. | SI-30 exige motivo escrito, no entrevista previa. | CA-04-02 | decidida previamente (D09) |
+| Q5 | ¿Cómo se evita una doble reserva por aprobaciones simultáneas? | Solo comprobación de aplicación; bloqueo de fila y restricción en base de datos. | Transacción con `SELECT … FOR UPDATE` del animal e índice único parcial de solicitud aprobada por animal. | La ficha dejaba «la forma de resolver el intento» para clarify; el plan común pide releer tras el bloqueo. | CA-04-05 | decidida previamente (clarify de spec-004, sección 4, y D10; D17 para la formalización) |
+| Q6 | ¿Qué notas exige una entrevista que todavía no se ha celebrado? | (a) Notas obligatorias en cualquier caso (hoy); (b) notas opcionales si la fecha es futura y obligatorias para aprobar. | (b), porque «concertar» una entrevista futura no puede tener aún una valoración. | CA-04-01 pide «registrar una entrevista con fecha, hora y notas» y D09 exige la entrevista realizada para aprobar, pero una entrevista futura con notas obligatorias obliga a inventar la valoración. | CA-04-01, CA-04-03 | PENDIENTE de confirmación por el responsable (`abcb5-ua`) |
+| Q7 | ¿Puede registrarse una entrevista con fecha anterior a la de la solicitud? | (a) Admitirla (hoy); (b) exigir fecha igual o posterior a la solicitud. | (b) | Una entrevista anterior a la candidatura no puede referirse a ella; la spec solo exige que no sea futura. Surgió en la revisión de código (C1-12). | CA-04-01, CA-04-03 | PENDIENTE de confirmación por el responsable (`abcb5-ua`) |
+| Q8 | ¿Reprogramar la entrevista sobrescribe la anterior o se conserva el historial? | (a) Sobrescribir mientras la solicitud no esté decidida (hoy); (b) conservar todas las entrevistas. | (a), porque la historia habla de «una entrevista» por solicitud. | La spec dice «registrar y actualizar» sin precisar el historial. | CA-04-01 | PENDIENTE de confirmación por el responsable (`abcb5-ua`) |
+| Q9 | ¿Qué ve la persona solicitante de la decisión? | (a) Estado, fecha de la entrevista y motivos de rechazo o de liberación (hoy en «Mis solicitudes»); (b) solo el estado. | (a) | SI-30 exige dejar escrito el motivo del rechazo, sin decir quién lo lee; los motivos pueden contener valoraciones. | CA-04-02 (y D11) | PENDIENTE de confirmación por el responsable (`abcb5-ua`) |
+
+Cada decisión «PENDIENTE» necesita, además, una explicación breve del responsable (enunciado §5.1): *pendiente de
+redactar por `abcb5-ua`*.
+
+### 3. Diferencias con la especificación inicial
+
+Comparación de `spec-004/historia.md` (ficha inicial de la raíz) con `specs/spec-004/spec.md` (vigente).
+`git log` registra tres versiones: 7bcea03 (2026-11-05), una copia de la ficha inicial con la cabecera
+«Especificación»; e961e92 (2026-11-18), la reescritura vigente; y b001d3f (2026-11-18), que sustituyó
+«Responsable: Implementación spec-004» por el responsable y revisor de GitHub y tradujo al español los pasos
+«When/Then/And» del escenario 3.
+
+- Los cinco identificadores CA-04-01 a CA-04-05 se conservan, pero cuatro redacciones cambian de sentido o de
+  precisión; no se añaden criterios derivados:
+  - CA-04-01: de «consultar el cuestionario y dejar concertada una entrevista» a «revisar las seis respuestas y
+    registrar una entrevista con fecha, hora y notas», sobre solicitudes pendientes o en espera.
+  - CA-04-02: de «no se admite el rechazo sin motivo» a motivo explicativo registrado junto a la fecha de decisión,
+    con 422 y solicitud sin cambios si falta.
+  - CA-04-03: de «solicitud aprobada → animal reservado» a «solicitud recibida sobre un animal disponible con
+    entrevista previa no futura → `approved` y animal `reserved`» (D09).
+  - CA-04-04: precisa que pasan a `waiting` las solicitudes que estaban en `pending`.
+  - CA-04-05: «la forma de resolver el intento se concretará en clarify» pasa a un rechazo con mensaje claro,
+    transacción con bloqueo de fila y restricción única parcial.
+- Se añaden escenarios en Dado, Cuando, Entonces, Y para cada criterio (1.1 a 5.1) y se eliminan las trazas SI-30
+  de cada criterio y la sección «Fuente».
+- El alcance incorpora la liberación de la reserva (D11), que la ficha inicial no contenía, pero no se le asigna
+  ningún criterio: queda sin CA propio (analyze A2).
+- Se pierde el límite de la ficha («sin puntuación automática de candidatos ni agenda externa de entrevistas»): la
+  spec vigente no tiene sección «Límites».
+- Cabecera: de «historia inicial, responsable pendiente de acuerdo» a una spec fechada con responsable
+  (`abcb5-ua`), revisor (`aggg15`) y referencia base (SI-30, plan, modelo y decisiones D07, D09, D10 y D11).
+- Se eliminan «Cuestiones pendientes para clarify» (tres preguntas) y «Encaje en el trabajo grupal», sin sección
+  «Clarificaciones aplicables»: las respuestas están en las secciones de arriba y en la tabla de la sección 2.
+- Dependencias: se detalla que HU-02 deja de mostrar el animal al pasar a `reserved`, que se consumen y actualizan
+  las solicitudes de HU-03 y que la reserva es la precondición de HU-05.
+
+### 4. Nota de método
+
+Ronda realizada con Claude Code siguiendo el procedimiento de `.agents/skills/speckit-clarify/SKILL.md`; no se ha
+ejecutado la skill de Codex. No se han tomado decisiones nuevas: las filas PENDIENTE esperan al responsable.
