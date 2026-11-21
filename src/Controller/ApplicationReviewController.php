@@ -64,9 +64,9 @@ class ApplicationReviewController extends AbstractController
             $this->addFlash('success', 'Entrevista registrada correctamente.');
             return $this->redirectToRoute('admin_application_show', ['id' => $id], 303);
         } catch (ValidationError $error) {
-            return $this->show($id, $error->errors);
+            return $this->show($id, $error->errors, 422, $data);
         } catch (ApplicationRefused $refused) {
-            return $this->show($id, ['general' => $refused->getMessage()]);
+            return $this->show($id, ['general' => $refused->getMessage()], 409);
         }
     }
 
@@ -84,9 +84,9 @@ class ApplicationReviewController extends AbstractController
             $this->addFlash('success', 'Candidatura aprobada. El animal ha quedado reservado y las demás solicitudes han pasado a espera.');
             return $this->redirectToRoute('admin_application_show', ['id' => $id], 303);
         } catch (ValidationError $error) {
-            return $this->show($id, $error->errors);
+            return $this->show($id, $error->errors, 422, $data);
         } catch (ApplicationRefused $refused) {
-            return $this->show($id, ['general' => $refused->getMessage()]);
+            return $this->show($id, ['general' => $refused->getMessage()], 409);
         }
     }
 
@@ -104,9 +104,9 @@ class ApplicationReviewController extends AbstractController
             $this->addFlash('success', 'Candidatura rechazada con motivo registrado.');
             return $this->redirectToRoute('admin_application_show', ['id' => $id], 303);
         } catch (ValidationError $error) {
-            return $this->show($id, $error->errors);
+            return $this->show($id, $error->errors, 422, $data);
         } catch (ApplicationRefused $refused) {
-            return $this->show($id, ['general' => $refused->getMessage()]);
+            return $this->show($id, ['general' => $refused->getMessage()], 409);
         }
     }
 
@@ -124,7 +124,7 @@ class ApplicationReviewController extends AbstractController
             $this->addFlash('success', 'Reserva liberada. El animal vuelve a estar disponible y las solicitudes en espera han vuelto a pendientes.');
             return $this->redirectToRoute('admin_application_show', ['id' => $id], 303);
         } catch (ValidationError $error) {
-            return $this->show($id, $error->errors);
+            return $this->show($id, $error->errors, 422, $data);
         } catch (ApplicationRefused $refused) {
             return $this->show($id, ['general' => $refused->getMessage()], 409);
         }

@@ -7,7 +7,11 @@
 
 {% block body %}
 {% import _self as f %}
+{% if animal.status == 'available' %}
 <a class="back-link" href="{{ path('public_animal_show', {id: animal.id}) }}">← Volver a la ficha de {{ animal.code }}</a>
+{% else %}
+<a class="back-link" href="{{ path('public_catalog') }}">← Volver a los animales en adopción</a>
+{% endif %}
 
 <div class="page-heading">
   <div>

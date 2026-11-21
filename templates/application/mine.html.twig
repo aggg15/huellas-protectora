@@ -55,7 +55,7 @@
               {% elseif application.status == 'cancelled' %}
                 <span class="has-text-grey-dark">Motivo: {{ application.cancellationReason|default('Sin motivo registrado.') }}</span>
               {% elseif application.hasInterview %}
-                <span>Entrevista programada: {{ application.interviewAt|date('d/m/Y H:i', 'Europe/Madrid') }}</span>
+                <span>Entrevista {{ application.interviewAt <= date() ? 'realizada' : 'programada' }}: {{ application.interviewAt|date('d/m/Y H:i', 'Europe/Madrid') }}</span>
               {% else %}
                 <span class="has-text-grey">Pendiente de revisión por coordinación.</span>
               {% endif %}

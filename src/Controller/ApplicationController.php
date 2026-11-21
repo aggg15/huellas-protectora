@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace App\Controller;
 
-use App\Entity\{Adoption, AdoptionApplication, AnimalPhoto, User};
+use App\Entity\{Adoption, AdoptionApplication, Animal, AnimalPhoto, User};
 use App\Service\{AnimalService, ApplicationRefused, ApplicationService, ValidationError};
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,9 +19,30 @@ class ApplicationController extends AbstractController
     #[Route('/animales/{id}/solicitud', name: 'application_new', methods: ['GET', 'POST'])]
     public function create(string $id, Request $request): Response
     {
-        $animal = $this->animals->getPublicAnimal($id) ?? throw $this->createNotFoundException('El animal no está disponible para adopción.');
         $user = $this->applicant();
         $data = array_map(static fn($value) => is_string($value) ? $value : '', $request->request->all());
+        $animal = $this->animals->getPublicAnimal($id);
+        if ($animal === null) {
+            // Un animal que se reserva o se adopta mientras la persona rellena el formulario da un 409 claro, pero solo
+            // con un token CSRF válido (solo lo obtuvo quien abrió el formulario): sin él, o en cuarentena o inexistente, 404.
+            $closed = $request->isMethod('POST') ? $this->em->find(Animal::class, $id) : null;
+            if ($closed === null || !in_array($closed->status, ['reserved', 'adopted'], true)
+                || !$this->isCsrfTokenValid('application-'.$closed->id, $data['_token'] ?? null)) {
+                throw $this->createNotFoundException('El animal no está disponible para adopción.');
+            }
+            return $this->render('application/new.html.twig', [
+                'animal' => $closed,
+                'photo' => null,
+                'data' => $data,
+                'errors' => [],
+                'refusal' => $this->applications->refusalReason($user, $closed),
+                'openCount' => $this->applications->openCount($user),
+                'maxOpen' => ApplicationService::MAX_OPEN,
+                'housingTypes' => ApplicationService::HOUSING_TYPES,
+                'experienceTypes' => ApplicationService::EXPERIENCE_TYPES,
+                'dailyTimes' => ApplicationService::DAILY_TIMES,
+            ], new Response(status: 409));
+        }
         $errors = [];
         $refusal = null;
         $status = 200;
