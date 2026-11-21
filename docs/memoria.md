@@ -453,7 +453,7 @@ Ejecución del 21 de noviembre de 2026 sobre la rama `revision-entrega` con las 
 |---|---|---:|---:|---:|---|
 | Spec001Test | HU-01 | 11 | 69 | 7 | OK |
 | Spec002Test | HU-02 | 14 | 136 | 8 | OK |
-| Spec003Test | HU-03 | 18 (+1 de D45, véase abajo) | 215 | 11 | OK |
+| Spec003Test | HU-03 | 18 (19 con D45) | 215 | 11 | OK |
 | Spec004Test | HU-04 | 23 | 193 | 13 | OK |
 | Spec005Test | HU-05 | 19 | 179 | 19 | OK |
 | Spec006Test | HU-06 | 23 | 285 | 23 | OK |
@@ -464,7 +464,7 @@ Ejecución del 21 de noviembre de 2026 sobre la rama `revision-entrega` con las 
 
 La suma de aserciones por suite (1660) difiere en una de la ejecución completa (1659); probablemente se debe a pruebas cuyo número de aserciones depende del resultado de una carrera entre procesos (p. ej. las que aceptan dos desenlaces válidos). No hay ninguna prueba fallida en ninguna de las dos formas de ejecución. En el mismo entorno, `composer validate --strict`, `php -l`, `lint:container`, `lint:twig` (32 plantillas), `lint:yaml` (6 ficheros), las migraciones hasta `Version20261121100000` y `doctrine:schema:validate` terminaron correctamente. Cada historia conserva además su evidencia fechada ([`evidencias/spec-001-phpunit.txt`](evidencias/spec-001-phpunit.txt) a [`spec-008-phpunit.txt`](evidencias/spec-008-phpunit.txt)). Las líneas `[error] Uncaught PHP Exception…` de los registros corresponden a pruebas que comprueban respuestas 403, 404 o 409 y no son fallos.
 
-**Después de esta ejecución.** Se aplicó la decisión D45 (el personal no solicita adopciones; T312) con la prueba `Spec003Test::testStaffCannotApplyButFosterFamiliesCan`. El CI integrado conserva, por tanto, **144 pruebas**, y D45 añade **+1 prueba, verificada en la suite de Spec003** (19 pruebas OK; Spec002, Spec003 y Spec008 juntas, 49 pruebas OK). Hay 145 métodos de prueba en `tests/` ([matriz](trazabilidad.md)), pero la memoria no declara una ejecución completa de 145 mientras no conste en el repositorio el registro de la suite final (`evidencias/revision-entrega-2026-11-21/suite-final.txt`, aún no presente). Del «antes» de HU-01 y HU-02 no se conservó el registro; el de HU-03 y HU-04 ([21 pruebas nuevas sobre el código anterior: 1 error y 16 fallos](evidencias/revision-entrega-2026-11-21/hu03-hu04-pruebas-nuevas-sobre-codigo-anterior.txt)) y el de HU-05, HU-07 y HU-08 ([fallos de las pruebas nuevas](evidencias/revision-entrega-2026-11-21/hu05-hu07-hu08-pruebas-nuevas-sobre-codigo-anterior.txt)) sí.
+**Suite final.** Después se aplicó D45 (el personal no solicita adopciones; T312, `Spec003Test::testStaffCannotApplyButFosterFamiliesCan`). Al ejecutar de nuevo la suite completa, dos intentos fallaron en una prueba cada uno ([intento 1](evidencias/revision-entrega-2026-11-21/suite-final-intento-1.txt), [intento 2](evidencias/revision-entrega-2026-11-21/suite-final-intento-2.txt)). El segundo destapó un defecto real y reproducible: `testStartedShiftRejectsSignupLeaveAndChanges` daba 422 en lugar de 409 si se ejecutaba después de las 21:00, porque la validación de «mismo día» precedía a la comprobación de turno empezado. Se corrigió en `ShiftService::update` (T727) con su evidencia del antes y el después. El primero fue un fallo intermitente de un proceso auxiliar de carrera (`testConcurrentContinuityChoicesApplyOnlyOne`), que pasó en las demás ejecuciones y de forma aislada. La ejecución final sobre el código definitivo termina con **`OK (145 tests, 1680 assertions)`** y el esquema sincronizado ([suite-final.txt](evidencias/revision-entrega-2026-11-21/suite-final.txt)). Del «antes» de HU-01 y HU-02 no se conservó el registro; el de HU-03 y HU-04 ([21 pruebas nuevas sobre el código anterior: 1 error y 16 fallos](evidencias/revision-entrega-2026-11-21/hu03-hu04-pruebas-nuevas-sobre-codigo-anterior.txt)) y el de HU-05, HU-07 y HU-08 ([fallos de las pruebas nuevas](evidencias/revision-entrega-2026-11-21/hu05-hu07-hu08-pruebas-nuevas-sobre-codigo-anterior.txt)) sí.
 
 **Evolución del total de pruebas** (según las evidencias y los converge):
 
@@ -774,7 +774,7 @@ Cada fila une una historia y criterio con un hallazgo o decisión real tomado de
 - **CI reproducible.** [`ci.yml`](../.github/workflows/ci.yml) y la réplica en Docker de la rama integrada ejecutan los mismos pasos (instalación, validación de Composer, build, Spec Kit, `php -l`, lint de contenedor, Twig y YAML, migraciones, esquema y las ocho suites): 20 pasos con código de salida 0 y `OK (144 tests, 1659 assertions)`, con los registros por paso en [`evidencias/revision-entrega-2026-11-21/ci-rama-integrada/`](evidencias/revision-entrega-2026-11-21/ci-rama-integrada/). Esa réplica no es una ejecución de GitHub Actions.
 - **Honestidad documental.** Los documentos distinguen lo ejecutado de lo no ejecutado y lo revisado de lo pendiente (revisión cruzada 0/62, PR #10 y #12 sin revisión registrada, Constitution sin ratificar).
 - **Calidad en la interfaz.** Español, estados de éxito/error/vacío, 390 px y teclado comprobados con mediciones y capturas; hallazgos de maquetación corregidos con medida antes y después.
-- **Pruebas que crecen con el proyecto.** De 7 pruebas en HU-01 a 144 pruebas y 1659 aserciones en el CI integrado (más 1 prueba de D45 verificada en Spec003), con regresión de todas las historias en cada cambio.
+- **Pruebas que crecen con el proyecto.** De 7 pruebas en HU-01 a 145 pruebas y 1680 aserciones en la suite final ([evidencia](evidencias/revision-entrega-2026-11-21/suite-final.txt)), con regresión de todas las historias en cada cambio.
 
 ### 10.2 Problemas encontrados
 
@@ -825,7 +825,7 @@ La demo se entrega aparte en **`DemoSSD_G27.zip`**. Contiene:
 | 08-apadrinamiento | HU-08 | 9 | CA-08-01 a 07 y 10 |
 | 09 / 10 | R1 y R2 | 8 + 8 | Recorridos integrados (§7.4) |
 
-Los criterios de concurrencia (CA-03-06, CA-05-10, CA-06-09, CA-07-10, CA-08-09) y los que dependen del calendario (fin de mes, frontera exacta de 48 h, cambio de hora) no son reproducibles a mano en un vídeo: se demuestran con las pruebas automáticas de [§7.3](#73-pruebas-de-concurrencia-y-de-reglas-críticas).
+Los criterios de concurrencia (CA-03-06, CA-05-10, CA-06-09, CA-07-10, CA-08-09) y los que dependen del calendario (fin de mes, frontera exacta de 48 h, cambio de hora) no son reproducibles a mano en un vídeo: se demuestran con las pruebas automáticas de [§7.3](#73-concurrencia-y-reglas-críticas).
 
 Los vídeos se graban con **Playwright** sobre la aplicación real y con datos ficticios, con los guiones de [`../tools/demo/`](../tools/demo/): `seed.php` prepara cuentas, animales y estados; `grabador.mjs` y `guiones-*.mjs` realizan los recorridos y comprueban (`g.check(...)`) lo que realmente se observa; `record.mjs` graba y escribe un JSON de resultado por vídeo. Los recorridos incluyen los escenarios satisfactorios y los de error, permiso o estado de cada historia, y el recorrido integrado R1/R2 de [`evidencias/verificacion-integrada.md`](evidencias/verificacion-integrada.md).
 

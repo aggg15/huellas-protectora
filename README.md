@@ -96,8 +96,8 @@ php bin/console lint:container
 php bin/console lint:twig templates
 ```
 
-Con HU-01 a HU-08 la suite completa pasa **112 pruebas y 1301 aserciones** sobre `main` (a74f85f, 2026-11-21, en Docker
-con php:8.3 y postgres:16). La evidencia registrada en el repositorio es la del 2026-11-19, en bases `_test` recién
+Con HU-01 a HU-08 y la revisión previa a la entrega, la suite completa pasa **145 pruebas y 1680 aserciones** en la rama
+`revision-entrega` (2026-11-21, Docker con php:8.3 y postgres:16; [evidencia](docs/evidencias/revision-entrega-2026-11-21/suite-final.txt)); antes de la revisión, `main` (a74f85f) pasaba 112 pruebas y 1301 aserciones. La evidencia registrada en el repositorio es la del 2026-11-19, en bases `_test` recién
 migradas, sobre la rama `spec-008` ([evidencia](docs/evidencias/spec-008-phpunit.txt)). Si una base `_test` antigua
 conserva tablas de las implementaciones retiradas el 5 de noviembre, las migraciones fallan con
 «relation already exists»: crea otra base terminada en `_test` en lugar de limpiar la existente.

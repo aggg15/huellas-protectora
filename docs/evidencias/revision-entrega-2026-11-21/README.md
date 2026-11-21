@@ -12,8 +12,9 @@ Ejecuciones reales en Docker (`php:8.3-cli` con gd, pdo_pgsql, mbstring e intl; 
 | [ci-rama-integrada/](ci-rama-integrada/) | `revision-entrega` con las cinco ramas fusionadas (76223b2) | Todos los pasos OK; 144 pruebas, 1659 aserciones |
 
 Después de esa ejecución se aplicaron D45 (el personal no solicita adopciones; T312) y el texto «Animales liberados: N»;
-`Spec002`, `Spec003` y `Spec008` se volvieron a ejecutar (49 pruebas OK; Spec003: 19 pruebas OK). La ejecución completa
-final se registra en [suite-final.txt](suite-final.txt) si está presente.
+`Spec002`, `Spec003` y `Spec008` se volvieron a ejecutar (49 pruebas OK; Spec003: 19 pruebas OK). Suite completa final sobre el código definitivo: [suite-final.txt](suite-final.txt), **OK (145 tests, 1680 assertions)**.
+Los intentos previos ([1](suite-final-intento-1.txt), [2](suite-final-intento-2.txt)) fallaron en una prueba cada uno: el 2 destapó T727, un defecto real
+de HU-07 que solo se manifestaba después de las 21:00; el 1 fue un fallo intermitente de un proceso auxiliar de carrera.
 
 De la rama de HU-01/HU-02 (C1-05…C1-20) no se conservó el registro del «antes»; su resultado posterior está incluido en la
 ejecución integrada. Las líneas `[error] Uncaught PHP Exception…` de los registros corresponden a pruebas que comprueban
