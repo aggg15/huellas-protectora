@@ -56,25 +56,50 @@ pendientes de confirmar en clarify (Q4–Q6); duplicaciones 0; críticos 0.
 
 ### Registro de hallazgos
 
-La gravedad de los C1-0X es provisional: la fija `converge.md` de la rama `revision-entrega`.
+La gravedad de los C1-0X de la tabla es la provisional de la revisión; la fijada al corregir consta en la tabla de la «Pasada de revisión previa a la entrega» de `converge.md`. Estados: Corregido (con su tarea), Decidido (con su Dxx o Qn), Aceptado (con su justificación) y Abierto (nada hecho). Actualizado el 2026-11-21 contra `tasks.md`, `converge.md`, `clarify.md` y `docs/decisiones.md` de la rama `revision-entrega`.
 
 | ID | Historia / criterio | Gravedad | Evidencia | Decisión | Responsable | Estado |
 |---|---|---|---|---|---|---|
-| A1 | HU-02 / CA-02-01 a CA-02-04 | MEDIUM | `clarify.md` sin tabla de preguntas ni diferencias | Añadir ambas | `abcb5-ua` | Corregido en clarify.md el 2026-11-21 |
-| A2 | HU-02 / documentación | LOW | plan.md §3 frente a `tests/Spec002Test.php` | Aceptar la nota del plan y usar los nombres reales en la matriz | `abcb5-ua` | Aceptado y documentado |
-| A3 | HU-02 / CA-02-02, D05 | LOW | Pruebas con 6, 24 y 96 meses | Añadir fronteras 11/12 y 83/84 | `abcb5-ua` | Abierto |
-| A4 | HU-02 / CA-02-02 | LOW | `AnimalService::findAvailableAnimals` ignora valores no admitidos | Decidir y probar (Q5) | `abcb5-ua` | Abierto: decisión pendiente de confirmar |
-| A5 | HU-02 / CA-02-03 | MEDIUM | Escenario 3.2 sin prueba de fotos en `Spec002Test` | Ver C1-05 | `abcb5-ua` | En corrección en la rama `revision-entrega` (C1-05) |
-| A6 | HU-02 / Constitution V | LOW | tasks.md sin verificación manual | Registrar o citar el recorrido de HU-05 con su alcance | `abcb5-ua` | Abierto |
-| C1-05 | HU-02 / CA-02-03 (y CA-01-03) | MEDIUM (provisional) | Prueba de fotos privadas vacía (véase A5) | Revisión de código del 2026-11-21 | `abcb5-ua` (prueba de HU-01 de `aggg15`) | En corrección en la rama `revision-entrega` |
-| C1-06 | HU-02 / CA-02-03 | LOW (provisional) | La página 404 de una ficha no disponible, que ve el público, está en inglés | Revisión de código del 2026-11-21 | `abcb5-ua` | En corrección en la rama `revision-entrega` |
+| A1 | HU-02 / CA-02-01 a CA-02-04 | MEDIUM | `clarify.md` sin tabla de preguntas ni diferencias | Añadir ambas | `abcb5-ua` | Corregido en clarify.md el 2026-11-21; Q4–Q6 decididas el mismo día |
+| A2 | HU-02 / documentación | LOW | plan.md §3 frente a `tests/Spec002Test.php` | Aceptar la nota del plan y usar los nombres reales en la matriz | `abcb5-ua` | Aceptado y documentado: la nota del plan remite a converge y la matriz `docs/trazabilidad.md` usa los nombres reales de las pruebas |
+| A3 | HU-02 / CA-02-02, D05 | LOW | Pruebas con 6, 24 y 96 meses | Añadir fronteras 11/12 y 83/84 | `abcb5-ua` | Corregido: T212 (`testAgeBoundariesAt12And84Months`, C1-20b) |
+| A4 | HU-02 / CA-02-02 | LOW | `AnimalService::findAvailableAnimals` ignora valores no admitidos | Decidir y probar (Q5) | `abcb5-ua` | Decidido: Q5 (2026-11-21), ignorar el valor no previsto y no restringir; probado en T212 (`testInvalidFiltersAreIgnored`) |
+| A5 | HU-02 / CA-02-03 | MEDIUM | Escenario 3.2 sin prueba de fotos en `Spec002Test` | Ver C1-05 | `abcb5-ua` | Corregido: T108 (`Spec001Test::testPrivatePhotosAreOnlyServedForAvailableAnimalsOrStaff`: fotos reales de un animal reservado y de uno en cuarentena, 404 para el público y 200 para el personal; la prueba vive en `Spec001Test`) |
+| A6 | HU-02 / Constitution V | LOW | tasks.md sin verificación manual | Registrar o citar el recorrido de HU-05 con su alcance | `abcb5-ua` | Aceptado como limitación: no se registró un recorrido manual propio del catálogo; se cita el recorrido 1 de `docs/evidencias/spec-005-manual` (visita anónima a `/animales` a 1280 y 390 px), sin filtros ni ficha. Lo que sí cubren pruebas automáticas es el HTML de filtros, ficha y 404 |
+| C1-05 | HU-02 / CA-02-03 (y CA-01-03) | MEDIUM (provisional) | Prueba de fotos privadas vacía (véase A5) | Revisión de código del 2026-11-21 | `abcb5-ua` (prueba de HU-01 de `aggg15`) | Corregido: T108 |
+| C1-06 | HU-02 / CA-02-03 | LOW (provisional) | La página 404 de una ficha no disponible, que ve el público, está en inglés | Revisión de código del 2026-11-21 | `abcb5-ua` | Corregido: T210 (`testCustomErrorTemplatesRenderInSpanish`, `testErrorPagesAreServedInSpanishWithoutDebug`) |
 
-### Informe final
+### Informe final (2026-11-21)
 
-Este informe se cerrará después de integrar las correcciones de la rama `revision-entrega` y de repetir las
-pasadas sobre los documentos y pruebas corregidos. Hoy, 2026-11-21, el estado es: A1 corregido; A2 aceptado; A3,
-A4 y A6 abiertos; A5, C1-05 y C1-06 en corrección. No se declara cerrado: el cierre exige 0 contradicciones
-críticas o altas y ningún criterio sin tarea y prueba, con la revisión cruzada de `aggg15` (pendiente).
+Informe de cierre de esta pasada, redactado por Claude Code el 2026-11-21 después de integrar las correcciones de la
+rama `revision-entrega` (HEAD 114b74d) y de contrastar este registro con `tasks.md` (fase 2: T210–T213), `converge.md`
+(«Pasada de revisión previa a la entrega»), `clarify.md` (Q4–Q6, decididas el 2026-11-21) y `docs/decisiones.md`. El
+informe inicial de arriba se conserva sin cambios.
+
+| Métrica (rama `revision-entrega`) | Valor |
+|---|---|
+| Criterios de aceptación | 4 (0 derivados) |
+| Tareas | 13 (T201–T213) |
+| Pruebas de `tests/Spec002Test.php` | 14 (8 del informe inicial + 6 nuevas: T210 ×2, T211 y T212 ×3) |
+| Criterios sin tarea | 0 |
+| Criterios sin prueba | 0 |
+| Criterios con prueba parcial | 0 (CA-02-02 pasa a completa con T212; CA-02-03 con T108) |
+| Hallazgos CRITICAL / HIGH | 0 / 0 |
+
+Hallazgos por estado (8): **Corregido 5** (A1, A3, A5, C1-05, C1-06); **Decidido 1** (A4, Q5); **Aceptado 2** (A2 y A6);
+**Abierto 0**. Las preguntas Q4 (orden: más recientes primero) y Q6 (sin paginar) también se decidieron el 2026-11-21 y
+no generaron hallazgos propios.
+
+Verificación: el CI de la rama integrada (76223b2) dio `OK (14 tests, 136 assertions)` en esta clase y
+`OK (144 tests, 1659 assertions)` en la suite completa, con todos los pasos correctos
+([`summary.txt`](../../docs/evidencias/revision-entrega-2026-11-21/ci-rama-integrada/summary.txt), [Spec002](../../docs/evidencias/revision-entrega-2026-11-21/ci-rama-integrada/13-phpunit-Spec002Test.log)). Tras el CI se volvió a ejecutar Spec002 junto con Spec003 y
+Spec008 (49 pruebas OK, según el README de la carpeta de evidencias). Según `converge.md`, C1-06 falla sin las plantillas y pasa con ellas; C1-15 y C1-20 se
+añadieron como cobertura y no se ejecutaron sobre el código anterior.
+
+Lo que no se declara: la revisión cruzada de los cambios de la rama `revision-entrega` por `aggg15` no consta (la
+ejecución de T210–T213 figura a nombre de `aggg15` asistido por Claude Code, mientras que HU-02 es de `abcb5-ua`), y la
+matriz mantiene 0/62 revisiones anotadas. El resto del criterio de cierre (0 contradicciones críticas o altas y ningún
+criterio sin tarea y prueba) se cumple.
 
 Nota de método: ronda realizada con Claude Code siguiendo el procedimiento de
 `.agents/skills/speckit-analyze/SKILL.md`; no se ha ejecutado la skill de Codex.

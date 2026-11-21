@@ -29,7 +29,7 @@ Grupo **G27** · Autores: Antonio García Gómez (`aggg15`) y Ana Bernabeu Casti
 
 **Para quién.** Seis perfiles con permisos distintos (detalle en [§4.1](#41-actores-y-roles)): visitante anónimo, persona solicitante o padrino (cuenta pública), voluntario, veterinario, coordinadora y familia de acogida.
 
-**Resultado.** Las ocho historias de usuario (HU-01 a HU-08) están implementadas e integradas en `main` mediante las PR #1, #5, #6, #8, #9, #10, #11 y #12, sobre una única aplicación Symfony 7.4 con Twig, Hotwire (Turbo y Stimulus), Doctrine, PostgreSQL y Bulma. La suite completa de PHPUnit, ejecutada el 21 de noviembre de 2026 sobre el árbol de trabajo de la rama `revision-entrega`, termina con **`OK (144 tests, 1659 assertions)`**; en `main`, antes de la revisión final, eran 112 pruebas y 1301 aserciones ([§7.2](#72-resultados-de-las-pruebas-automáticas)). Los **62 criterios de aceptación** de las ocho historias tienen tarea y prueba asociadas ([matriz de trazabilidad](trazabilidad.md)). Las pruebas incluyen casos de **concurrencia con procesos PHP independientes** y bloqueos `FOR UPDATE` / `FOR NO KEY UPDATE` ([§7.3](#73-concurrencia-y-reglas-críticas)).
+**Resultado.** Las ocho historias de usuario (HU-01 a HU-08) están implementadas e integradas en `main` mediante las PR #1, #5, #6, #8, #9, #10, #11 y #12, sobre una única aplicación Symfony 7.4 con Twig, Hotwire (Turbo y Stimulus), Doctrine, PostgreSQL y Bulma. La suite completa de PHPUnit, ejecutada el 21 de noviembre de 2026 sobre el árbol de trabajo de la rama `revision-entrega`, termina con **`OK (144 tests, 1659 assertions)`** en todos los pasos del CI reproducido ([registros en el repositorio](evidencias/revision-entrega-2026-11-21/ci-rama-integrada/)), más 1 prueba de la decisión D45 verificada en la suite de Spec003; en `main`, antes de la revisión final, eran 112 pruebas y 1301 aserciones ([§7.2](#72-resultados-de-las-pruebas-automáticas)). Los **62 criterios de aceptación** de las ocho historias tienen tarea y prueba asociadas ([matriz de trazabilidad](trazabilidad.md)). Las pruebas incluyen casos de **concurrencia con procesos PHP independientes** y bloqueos `FOR UPDATE` / `FOR NO KEY UPDATE` ([§7.3](#73-concurrencia-y-reglas-críticas)).
 
 **Cómo se trabajó.** Con **Spec-Driven Development** (Spec Kit 1.0.11): cada historia recorre `specify → clarify → plan → tasks → analyze → implement → converge`, volviendo atrás cuando una fase descubre un fallo (**loop engineering**, [§9.3](#93-iteraciones-y-loop-engineering)). Las fases se aplicaron con asistencia de IA (Codex y Claude Code) siguiendo el procedimiento de las skills de Spec Kit, tal como documentan las propias specs ([§10.2](#102-problemas-encontrados)). Los documentos del ciclo están en [`../specs/`](../specs/).
 
@@ -142,7 +142,7 @@ Los requisitos de SI-30 se numeran aquí como RF-n (numeración propia de esta m
 
 Fuera de alcance (SI-30 y Constitution I): contabilidad y campañas de pienso. Sin verificación de email, recuperación de contraseña, pasarela de pago, firma electrónica ni envío de correos ([decisiones](decisiones.md)).
 
-**Valores de negocio destacados** (decisiones [D01–D41](decisiones.md)):
+**Valores de negocio destacados** (decisiones [D01–D45](decisiones.md)):
 
 | Valor | Cifra | Decisión |
 |---|---|---|
@@ -150,6 +150,7 @@ Fuera de alcance (SI-30 y Constitution I): contabilidad y campañas de pienso. S
 | Fotos por animal | 1 a 6, JPEG/PNG/WebP, máximo 5 MiB, comprobadas por contenido | D04 |
 | Edad en filtros | menos de 12 meses; 12 a 83; desde 84 | D05 |
 | Solicitudes abiertas por cuenta | 2 (pendiente, en espera y aprobada cuentan como abiertas) | D07 |
+| Quién solicita adopciones | cuentas públicas y familias de acogida; el personal de la protectora no (403) | D45 |
 | Cuota de adopción | mayor que 0 y hasta 9 999,99 €, con confirmación del abono | D14 |
 | Seguimientos | al mes y a los seis meses; último día del mes si el día no existe | D16 |
 | Casa de acogida | capacidad de 1 a 10 | D20 |
@@ -174,7 +175,7 @@ Fuera de alcance (SI-30 y Constitution I): contabilidad y campañas de pienso. S
 La parte delicada del análisis es qué hace cada historia sobre los datos de las demás. Las reglas acordadas (plan común, decisiones y specs) son:
 
 1. **HU-01 → HU-02.** La cuarentena vencida se promociona a «disponible» antes de consultar el catálogo (y por el comando `app:release-quarantine`); el catálogo solo muestra animales disponibles ([D01](decisiones.md)).
-2. **HU-03 → HU-04.** Una solicitud cuenta como abierta si está pendiente, en espera o aprobada ([D07](decisiones.md)). No se admiten solicitudes de un animal reservado ([D10](decisiones.md)).
+2. **HU-03 → HU-04.** Una solicitud cuenta como abierta si está pendiente, en espera o aprobada ([D07](decisiones.md)). No se admiten solicitudes de un animal reservado ([D10](decisiones.md)); si el animal se reserva mientras se rellena el formulario, el envío responde 409 ([D43](decisiones.md)). El personal de la protectora no presenta solicitudes con su cuenta de trabajo y las familias de acogida sí ([D45](decisiones.md)).
 3. **HU-04.** Aprobar exige una entrevista registrada no futura y, desde la revisión final, no anterior al envío ([D09](decisiones.md), [D42](decisiones.md)); reserva el animal y pasa las demás solicitudes pendientes a «en espera». Liberar la reserva exige motivo y devuelve el animal a «disponible» y las esperas a «pendiente» ([D11](decisiones.md)).
 4. **HU-05 sobre HU-03, HU-04 y HU-06.** Formalizar, en una sola transacción, marca la solicitud como «formalizada» (deja de contar como abierta), el animal como «adoptado» y fuera de acogida, cancela las demás solicitudes abiertas con el motivo «El animal ha sido adoptado», finaliza la acogida activa y crea la adopción con contrato inmutable y dos seguimientos ([D15](decisiones.md), [D25](decisiones.md), [D16](decisiones.md)). Ya no se puede liberar esa reserva ([D17](decisiones.md)).
 5. **HU-06 → HU-02.** La acogida no cambia el estado del animal ni su reserva; un animal disponible en acogida sigue en el catálogo con la indicación «En casa de acogida» ([D25](decisiones.md)). Las notas de acogida son internas y no llegan a los padrinos ([D24](decisiones.md), [D37](decisiones.md)).
@@ -340,7 +341,7 @@ Los permisos y el CSRF de cada ruta tienen su prueba (por ejemplo `testReviewAct
 
 ### 5.4 Decisiones técnicas y por qué se tomaron
 
-Las decisiones de producto y de diseño están numeradas D01–D44 en [`decisiones.md`](decisiones.md), cada una con motivo e historia. Las de mayor impacto técnico:
+Las decisiones de producto y de diseño están numeradas D01–D45 en [`decisiones.md`](decisiones.md), cada una con motivo e historia. Las de mayor impacto técnico:
 
 | Decisión | Por qué | Alternativa descartada |
 |---|---|---|
@@ -422,7 +423,7 @@ Recogidas en los `implement.md` y en los converge de cada spec:
 - **Migración renombrada** (HU-08): el diff la nombró `Version20261119174701`, anterior a la de HU-07; la comprobación down/up lo detectó y se renombró a `Version20261119190000` sin cambiar su SQL.
 - **EntityManager cerrado tras un rechazo** (HU-05/06/08): `wrapInTransaction` cierra el EntityManager al fallar; los rechazos se lanzan antes de modificar entidades y las pruebas de servicio usan un EntityManager nuevo.
 - **Una prueba de HU-02 falló en `main`** por leer una entidad cacheada (`testExpiredQuarantinePromotesAutomaticallyOnCatalogAccess`): se comunicó al responsable y en `main` (cdb0416) pasa 8/8.
-- **Revisión final** (2026-11-21): D42–D44 (entrevista no anterior al envío, 409 por conflictos de estado, normalización de textos) están **pendientes de confirmación** por la persona responsable de cada historia.
+- **Revisión final** (2026-11-21): D42–D45 (entrevista no anterior al envío, 409 por conflictos de estado, normalización de textos y solicitudes del personal) las propuso la revisión y, según [`decisiones.md`](decisiones.md), el grupo las confirmó el 2026-11-21 al cerrar las preguntas abiertas de `clarify`. Ese mismo día se cerraron las decisiones abiertas de HU-01 a HU-04, cada una con su explicación en el `clarify.md` de la spec: HU-01, Q5 (se admite una recepción anterior a hoy y el animal queda disponible al crearlo), Q6 (varias revisiones veterinarias, en cualquier momento) y Q7 (límites de edad de 0 a 600 meses y de procedencia de 1000 caracteres); HU-02, Q4 (más recientes primero), Q5 (un filtro no previsto se ignora) y Q6 (sin paginar); HU-03, Q8 (D45) y Q9 (sin retirada de solicitudes: solo la coordinadora las cierra); HU-04, Q6 (notas opcionales si la entrevista es futura), Q7 (D42), Q8 (la reprogramación sobrescribe) y Q9 (la persona ve estado, entrevista y motivos).
 
 ---
 
@@ -446,13 +447,13 @@ Siguiendo la Constitution V, una prueba nueva se ejecuta **antes sobre el códig
 
 ### 7.2 Resultados de las pruebas automáticas
 
-Ejecución del 21 de noviembre de 2026 sobre el árbol de trabajo de la rama `revision-entrega` (base `76223b2`), en contenedores Docker equivalentes al CI (PHP 8.3 y PostgreSQL 16). Cada suite se ejecutó con `vendor/bin/phpunit --filter Spec00NTest` y después la suite completa:
+Ejecución del 21 de noviembre de 2026 sobre la rama `revision-entrega` con las cinco ramas de corrección fusionadas (`76223b2`), en contenedores Docker equivalentes al CI (PHP 8.3 y PostgreSQL 16) y con los mismos pasos que [`ci.yml`](../.github/workflows/ci.yml). Los registros completos están en el repositorio: [`evidencias/revision-entrega-2026-11-21/ci-rama-integrada/`](evidencias/revision-entrega-2026-11-21/ci-rama-integrada/) (un fichero por paso y [`summary.txt`](evidencias/revision-entrega-2026-11-21/ci-rama-integrada/summary.txt)) y el [índice de evidencias](evidencias/revision-entrega-2026-11-21/README.md). Cada suite se ejecutó con `vendor/bin/phpunit --filter Spec00NTest` y después la suite completa:
 
 | Suite | Historia | Pruebas | Aserciones | En `main` antes de la revisión | Resultado |
 |---|---|---:|---:|---:|---|
 | Spec001Test | HU-01 | 11 | 69 | 7 | OK |
 | Spec002Test | HU-02 | 14 | 136 | 8 | OK |
-| Spec003Test | HU-03 | 18 | 215 | 11 | OK |
+| Spec003Test | HU-03 | 18 (+1 de D45, véase abajo) | 215 | 11 | OK |
 | Spec004Test | HU-04 | 23 | 193 | 13 | OK |
 | Spec005Test | HU-05 | 19 | 179 | 19 | OK |
 | Spec006Test | HU-06 | 23 | 285 | 23 | OK |
@@ -461,7 +462,9 @@ Ejecución del 21 de noviembre de 2026 sobre el árbol de trabajo de la rama `re
 | **Suma de las ocho suites** | | **144** | **1660** | **112** | |
 | **Suite completa (un solo `phpunit`)** | | **144** | **1659** | **112 pruebas / 1301 aserciones** | **`OK (144 tests, 1659 assertions)`** |
 
-La suma de aserciones por suite (1660) difiere en una de la ejecución completa (1659); probablemente se debe a pruebas cuyo número de aserciones depende del resultado de una carrera entre procesos (p. ej. las que aceptan dos desenlaces válidos). No hay ninguna prueba fallida en ninguna de las dos formas de ejecución. En el mismo entorno, `composer validate --strict`, `php -l`, `lint:container`, `lint:twig` (32 plantillas), `lint:yaml` (6 ficheros), las migraciones hasta `Version20261121100000` y `doctrine:schema:validate` terminaron correctamente. Los registros de esta ejecución están fuera del repositorio; en él, cada historia conserva su evidencia fechada ([`evidencias/spec-001-phpunit.txt`](evidencias/spec-001-phpunit.txt) a [`spec-008-phpunit.txt`](evidencias/spec-008-phpunit.txt)).
+La suma de aserciones por suite (1660) difiere en una de la ejecución completa (1659); probablemente se debe a pruebas cuyo número de aserciones depende del resultado de una carrera entre procesos (p. ej. las que aceptan dos desenlaces válidos). No hay ninguna prueba fallida en ninguna de las dos formas de ejecución. En el mismo entorno, `composer validate --strict`, `php -l`, `lint:container`, `lint:twig` (32 plantillas), `lint:yaml` (6 ficheros), las migraciones hasta `Version20261121100000` y `doctrine:schema:validate` terminaron correctamente. Cada historia conserva además su evidencia fechada ([`evidencias/spec-001-phpunit.txt`](evidencias/spec-001-phpunit.txt) a [`spec-008-phpunit.txt`](evidencias/spec-008-phpunit.txt)). Las líneas `[error] Uncaught PHP Exception…` de los registros corresponden a pruebas que comprueban respuestas 403, 404 o 409 y no son fallos.
+
+**Después de esta ejecución.** Se aplicó la decisión D45 (el personal no solicita adopciones; T312) con la prueba `Spec003Test::testStaffCannotApplyButFosterFamiliesCan`. El CI integrado conserva, por tanto, **144 pruebas**, y D45 añade **+1 prueba, verificada en la suite de Spec003** (19 pruebas OK; Spec002, Spec003 y Spec008 juntas, 49 pruebas OK). Hay 145 métodos de prueba en `tests/` ([matriz](trazabilidad.md)), pero la memoria no declara una ejecución completa de 145 mientras no conste en el repositorio el registro de la suite final (`evidencias/revision-entrega-2026-11-21/suite-final.txt`, aún no presente). Del «antes» de HU-01 y HU-02 no se conservó el registro; el de HU-03 y HU-04 ([21 pruebas nuevas sobre el código anterior: 1 error y 16 fallos](evidencias/revision-entrega-2026-11-21/hu03-hu04-pruebas-nuevas-sobre-codigo-anterior.txt)) y el de HU-05, HU-07 y HU-08 ([fallos de las pruebas nuevas](evidencias/revision-entrega-2026-11-21/hu05-hu07-hu08-pruebas-nuevas-sobre-codigo-anterior.txt)) sí.
 
 **Evolución del total de pruebas** (según las evidencias y los converge):
 
@@ -473,9 +476,10 @@ La suma de aserciones por suite (1660) difiere en una de la ejecución completa 
 | Tras HU-06 | 81 | [`../specs/spec-006/converge.md`](../specs/spec-006/converge.md) |
 | Tras HU-07 | 99 (1039 aserciones) | [`../specs/spec-007/converge.md`](../specs/spec-007/converge.md) |
 | Tras HU-08 (`main`, `a74f85f`) | **112** (1301 aserciones) | [`../README.md`](../README.md), [`spec-008-phpunit.txt`](evidencias/spec-008-phpunit.txt) |
-| Tras la revisión final (`revision-entrega`) | **144** (1659 aserciones) | esta ejecución |
+| Tras la revisión final (`revision-entrega`, `76223b2`) | **144** (1659 aserciones) | [`ci-rama-integrada/`](evidencias/revision-entrega-2026-11-21/ci-rama-integrada/) |
+| Con D45 (T312) | 144 + 1 prueba verificada en Spec003 | [README de evidencias](evidencias/revision-entrega-2026-11-21/README.md) |
 
-Las 32 pruebas añadidas por la revisión final se reparten así: +4 HU-01, +6 HU-02, +7 HU-03, +10 HU-04, +2 HU-07 y +3 HU-08 (HU-05 y HU-06 no cambian el número de pruebas; HU-05 amplía una). Las evidencias por historia registran además **mutaciones** (quitar un bloqueo o una comprobación) con las que las pruebas de concurrencia fallan, para demostrar que no pasan en vacío.
+Las 32 pruebas del CI integrado añadidas por la revisión final se reparten así: +4 HU-01, +6 HU-02, +7 HU-03, +10 HU-04, +2 HU-07 y +3 HU-08 (D45 añade una más a HU-03) (HU-05 y HU-06 no cambian el número de pruebas; HU-05 amplía una). Las evidencias por historia registran además **mutaciones** (quitar un bloqueo o una comprobación) con las que las pruebas de concurrencia fallan, para demostrar que no pasan en vacío.
 
 ### 7.3 Concurrencia y reglas críticas
 
@@ -591,7 +595,7 @@ Antes de ejecutar las pruebas hay que crear la base `_test` (`php bin/console do
 
 ### 8.4 Integración continua
 
-[`../.github/workflows/ci.yml`](../.github/workflows/ci.yml) se ejecuta en cada push a `main` y a las ramas `spec-001..008` y en cada PR hacia `main`. Levanta PostgreSQL 16 como servicio y ejecuta, en este orden: instalación de dependencias y `composer validate --strict`; `npm ci` y `npm run build`; **verificación de la integración de Spec Kit** (`specify integration status` y, por cada historia con `plan.md`, `tools/spec-context.sh` y `check-prerequisites.sh --require-spec --require-tasks`); `php -l` de todo el código; `lint:container`, `lint:twig` y `lint:yaml`; migraciones y `doctrine:schema:validate`; y las pruebas de cada historia por separado (`phpunit --filter Spec00NTest`). Según las evidencias de HU-08, el CI de la PR #11 y de `main` terminó correctamente. Una réplica local de estos pasos sobre la rama `revision-entrega` (21 de noviembre) terminó con código 0 en todos ellos (instalación, validación de Composer, build, comprobación de Spec Kit, `php -l`, lint, migraciones, esquema y las ocho suites), pero **no es una ejecución de GitHub Actions**: la de la rama `revision-entrega` queda para la PR correspondiente.
+[`../.github/workflows/ci.yml`](../.github/workflows/ci.yml) se ejecuta en cada push a `main` y a las ramas `spec-001..008` y en cada PR hacia `main`. Levanta PostgreSQL 16 como servicio y ejecuta, en este orden: instalación de dependencias y `composer validate --strict`; `npm ci` y `npm run build`; **verificación de la integración de Spec Kit** (`specify integration status` y, por cada historia con `plan.md`, `tools/spec-context.sh` y `check-prerequisites.sh --require-spec --require-tasks`); `php -l` de todo el código; `lint:container`, `lint:twig` y `lint:yaml`; migraciones y `doctrine:schema:validate`; y las pruebas de cada historia por separado (`phpunit --filter Spec00NTest`). Según las evidencias de HU-08, el CI de la PR #11 y de `main` terminó correctamente. Una réplica local de estos pasos sobre la rama `revision-entrega` (21 de noviembre) terminó con código 0 en todos ellos (instalación, validación de Composer, build, comprobación de Spec Kit, `php -l`, lint, migraciones, esquema y las ocho suites), pero **no es una ejecución de GitHub Actions**: la de la rama `revision-entrega` queda para la PR correspondiente. Los registros de esa réplica, paso a paso, están en [`evidencias/revision-entrega-2026-11-21/ci-rama-integrada/`](evidencias/revision-entrega-2026-11-21/ci-rama-integrada/) y se pueden reproducir con los mismos comandos.
 
 ### 8.5 Usuarios de ejemplo
 
@@ -631,15 +635,15 @@ Las tareas están en `tasks.md` de cada spec; todas figuran cerradas (`[x]`). El
 |---|---|---:|---|---|
 | [001](../specs/spec-001/tasks.md) | HU-01 | 15 | T101–T115 | Revisión final: T108–T115 |
 | [002](../specs/spec-002/tasks.md) | HU-02 | 13 | T201–T213 | Revisión final: T210–T213 |
-| [003](../specs/spec-003/tasks.md) | HU-03 | 11 | T301–T311 | Revisión final: T306–T311 |
+| [003](../specs/spec-003/tasks.md) | HU-03 | 12 | T301–T312 | Revisión final: T306–T312 |
 | [004](../specs/spec-004/tasks.md) | HU-04 | 21 | T401–T421 | Primera ejecución: T411–T413; revisión final: T414–T421 |
 | [005](../specs/spec-005/tasks.md) | HU-05 | 31 | T501–T531 | Converge: T528–T530; revisión final: T531 |
 | [006](../specs/spec-006/tasks.md) | HU-06 | 27 | T601–T627 | Converge: T626–T627 |
 | [007](../specs/spec-007/tasks.md) | HU-07 | 26 | T701–T726 | Converge: T721–T722; revisión final: T723–T726 |
 | [008](../specs/spec-008/tasks.md) | HU-08 | 27 | T801–T827 | Converge: T822–T823; revisión final: T824–T827 |
-| **Total** | | **171** | | **171 cerradas, 0 abiertas** |
+| **Total** | | **172** | | **172 cerradas, 0 abiertas** |
 
-De las 171 tareas, 12 son de convergencia tras una ejecución real o un converge (T411–T413, T528–T530, T626–T627, T721–T722, T822–T823) y 35 proceden de la revisión previa a la entrega del 21 de noviembre (T108–T115, T210–T213, T306–T311, T414–T421, T531, T723–T726, T824–T827).
+De las 172 tareas, 12 son de convergencia tras una ejecución real o un converge (T411–T413, T528–T530, T626–T627, T721–T722, T822–T823) y 36 proceden de la revisión previa a la entrega del 21 de noviembre (T108–T115, T210–T213, T306–T312, T414–T421, T531, T723–T726, T824–T827).
 
 ### 9.3 Iteraciones y loop engineering
 
@@ -647,9 +651,9 @@ El bucle no es lineal: cada fase puede devolver el trabajo a una anterior. La ta
 
 | Spec | Pasos del ciclo y pasadas | Tareas que añadió el bucle |
 |---|---|---|
-| 001 | specify → implement (5 nov) → alcance limitado a HU-01 por consulta al profesor → Spec Kit y CI (16 nov) → PR #1 → ronda `clarify`+`analyze` (A1–A6) → converge de la revisión final | T106–T107 (alcance y equipo); T108–T115 |
+| 001 | specify → implement (5 nov) → alcance limitado a HU-01 por consulta al profesor → Spec Kit y CI (16 nov) → PR #1 → ronda `clarify`+`analyze` (A1–A6) → converge de la revisión final → decisiones Q5–Q7 cerradas | T106–T107 (alcance y equipo); T108–T115 |
 | 002 | specify/clarify/plan/tasks → implement → converge (todos cumplidos) → ronda `clarify`+`analyze` (A1–A6) → converge de la revisión final | T210–T213 |
-| 003 | specify/clarify → implement → converge: la **suite detecta un fallo de HU-02** en `main` (se comunica y se resuelve en `cdb0416`) → ronda `clarify`+`analyze` (A1–A7) → converge de la revisión final | T306–T311 |
+| 003 | specify/clarify → implement → converge: la **suite detecta un fallo de HU-02** en `main` (se comunica y se resuelve en `cdb0416`) → ronda `clarify`+`analyze` (A1–A7) → converge de la revisión final → D45 tras cerrar Q8 (T312) | T306–T312 |
 | 004 | specify/clarify/plan/tasks → implement → **primera ejecución real**: 3 desviaciones (esquema, vista, servicio) → converge → ronda `clarify`+`analyze` (A1–A9) con la carrera A7 (HIGH) → converge de la revisión final | T411–T413; T414–T421 |
 | 005 | specify/clarify → plan → tasks → **analyze inicial** (A1–A5, se conserva el informe inicial en `0958eff`) → correcciones (`7e51740`) → implement → verificación manual R1/R2 → **converge 1ª pasada** (C1 medio, C2 y C3 bajos) → T528–T530 → **converge 2ª pasada** (sin hallazgos) → revisión final | T528–T530; T531 |
 | 006 | specify/clarify/plan/tasks → analyze inicial (A1–A5, `11c94ba`) → implement → verificación manual → converge 1ª pasada (C1 medio, C2 bajo) → T626–T627 → 2ª pasada (sin hallazgos) | T626–T627 |
@@ -670,11 +674,13 @@ Los tres se integraron en la rama `revision-entrega` con commits de merge (`8f82
 |---|---|
 | Criterios de aceptación con tarea | **62 / 62** |
 | Criterios de aceptación con prueba | **62 / 62** (112 pruebas citadas en la matriz a `a74f85f`; 144 tras la revisión final) |
-| Criterios con prueba parcial reconocida | 8 criterios (CA-01-01, 01-03, 01-04, 02-02, 02-03, 03-05, 04-01, 04-05); las pruebas añadidas por la revisión final cubren los huecos que la matriz lista |
+| Criterios con prueba parcial | De 8 criterios con prueba parcial en el informe inicial (CA-01-01, 01-03, 01-04, 02-02, 02-03, 03-05, 04-01, 04-05), **7 pasan a prueba completa** con las pruebas de la revisión final y **1 sigue parcial** (CA-01-01: la prueba de alta no asevera especie, edad ni tamaño; hallazgo A6 de HU-01, aceptado), según [`trazabilidad.md`](trazabilidad.md) |
 | Criterios con revisión cruzada registrada en la matriz | **0 / 62** (la columna «Revisado por» queda para los integrantes) |
-| Tareas cerradas | 171 / 171 |
+| Tareas cerradas | 172 / 172 |
 | Hallazgos de `analyze` inicial (HU-05 a HU-08, antes de implementar) | 17 (5 + 5 + 4 + 3); 16 corregidos en plan, tareas, spec o pruebas y 1 riesgo aceptado y documentado (A4 de HU-05) |
-| Hallazgos de la ronda `analyze` previa a la entrega (HU-01 a HU-04) | 28 de la serie A (6 + 6 + 7 + 9); 12 constan aún como «Abierto» en los registros (de gravedad baja o media y varios a la espera de una decisión del responsable) y el resto corregidos o en corrección |
+| Hallazgos de la ronda `analyze` previa a la entrega (HU-01 a HU-04), serie A | 28 (6 + 6 + 7 + 9): **16 corregidos**, **3 decididos** (A4 de HU-02 por Q5; A6 de HU-03 por Q8 → D45 y Q9; A8 de HU-04 por Q7 → D42), **8 aceptados con justificación** (A2 y A6 de HU-01, A2 y A6 de HU-02, A2 y A7 de HU-03, A2 y A9 de HU-04) y **1 abierto** (A3 de HU-04: recuperar los «Límites» de la ficha inicial en `spec.md`, de gravedad baja). Ninguno es CRITICAL y el HIGH (A7 de HU-04) está corregido |
+| Hallazgos del registro de `analyze` (serie A y C1), HU-01 a HU-04 | 46 filas (11 + 8 + 11 + 16): **33 corregidas** (9 + 5 + 8 + 11), **4 decididas** (0 + 1 + 1 + 2), **8 aceptadas** (2 por historia) y **1 abierta** (HU-04); un mismo defecto puede constar en más de una spec (C1-05 y C1-06) |
+| Métricas finales de `analyze` por historia (criterios / tareas / criterios sin tarea / criterios sin prueba) | HU-01: 5 / 15 / 0 / 0; HU-02: 4 / 13 / 0 / 0; HU-03: 6 / 12 / 0 / 0; HU-04: 5 / 21 / 0 / 0 (informe final de cada `analyze.md`) |
 | Hallazgos de `converge` 1ª pasada (HU-05 a HU-08) | 9 (1 medio + 2 bajos; 1 medio + 1 bajo; 1 medio + 1 bajo; 2 bajos); **9 resueltos** en la 2ª pasada, que no encontró hallazgos nuevos |
 | Filas corregidas en las pasadas de la revisión final | 34 filas de converge (un hallazgo puede constar en más de una spec); **20 con una prueba que falla antes de la corrección y pasa después**; el resto es cobertura nueva, texto o cambios que no pueden fallar antes, y así se indica |
 | Gravedad de lo corregido en la revisión final | La carrera aprobar/rechazar consta como HIGH en `analyze` (A7) y como «Media» en `converge` (C1-01 / C2-02); entre las demás hay hallazgos de gravedad media (C1-02, C1-03, C1-04, C1-05, C1-06 y C2-01 de HU-07 y HU-08) y el resto es de gravedad baja |
@@ -694,7 +700,7 @@ No se añadieron tareas «para aparentar iteración»: las segundas pasadas de H
 | 2026-11-18 | `e961e92` (HU-04), `cdb0416` (PR #8), `b001d3f`…`358b48f`, `366ba6e`, `af378a7`, `0958eff`, `7e51740` | HU-04 integrada; specify, clarify, plan, tasks y analyze de HU-05 |
 | 2026-11-19 | `ca68017` (HU-05), `af2c36b`, `4203aee` (converge), `87a78a0` (PR #9); `9987125`, `edc7941` (PR #10); `04604e4`, `5e379e6` (PR #11); `3570ba3`, `aea4d80` | HU-05, HU-06, HU-07 integradas; HU-08 implementada |
 | 2026-11-20 | `a74f85f` (PR #12) | HU-08 integrada en `main` |
-| 2026-11-21 | `2291091`, `2c4d91c`, `f635cb6`, `78c2b79`, `8b14e0c`, `61154ef` y los merges `3ae5029`, `e69e476`, `8f8237c`, `b97a0bb`, `76223b2` | Revisión previa a la entrega |
+| 2026-11-21 | `2291091`, `2c4d91c`, `f635cb6`, `78c2b79`, `8b14e0c`, `61154ef` y los merges `3ae5029`, `e69e476`, `8f8237c`, `b97a0bb`, `76223b2`; `114b74d` (D45, cierre de decisiones y evidencias) | Revisión previa a la entrega |
 
 Patrón por historia: commit de **documentación** (`docs(spec-00N): especificar, aclarar, planificar y analizar…`) → commit **`feat(spec-00N)`** con código, pruebas y evidencias → commit de registro de la PR → merge. Los mensajes siguen en su mayoría Conventional Commits en español. Cada merge de PR identifica la historia en el título, y los commits de HU-02, HU-04, HU-06 y HU-08 los firma «Ana» y los de HU-01, HU-03, HU-05 y HU-07, «Antonio» (el autor git no se usa como nombre académico, según [`agrupamiento.md`](agrupamiento.md)).
 
@@ -726,12 +732,13 @@ Cada fila une una historia y criterio con un hallazgo o decisión real tomado de
 | HU-02 · CA-02-02 | A3 / C1-20b: sin pruebas de las fronteras de edad 11/12 y 83/84 meses (D05) y de filtros no previstos | procedimiento de `analyze`; `phpunit --filter Spec002Test` | `tests/Spec002Test.php` | T212 · `f635cb6` | `testAgeBoundariesAt12And84Months`, `testInvalidFiltersAreIgnored`: cobertura nueva, pasan | `abcb5-ua` (ejecuta `aggg15`) | pendiente | Corregido; la decisión sobre valores no previstos (Q5) queda por confirmar |
 | HU-03 · CA-03-05 | A4 / C1-04: la spec y `clarify` dicen 409 al enviar sobre un animal reservado entre abrir y enviar, pero el controlador respondía 404 (D43) | procedimiento de `analyze`; `phpunit --filter Spec003Test` | `src/Controller/ApplicationController.php`, `src/Service/ApplicationService.php` | T306 · `8b14e0c` | `testAnimalReservedOrAdoptedWhileTheFormIsOpenAnswersConflict`: falla (404) / pasa | `aggg15` | pendiente (previsto `abcb5-ua`) | Corregido |
 | HU-03 · CA-03-03, CA-03-05 | A5 / C1-10: sin índice único que impida dos solicitudes abiertas de la misma cuenta para el mismo animal | procedimiento de `analyze`; `doctrine:schema:validate`; `phpunit --filter Spec003Test` | `migrations/Version20261121100000.php`, `src/Entity/AdoptionApplication.php` | T308 · `8b14e0c` | `testDatabaseRejectsTwoOpenApplicationsOfTheSameApplicantForTheSameAnimal`: falla sin la migración / pasa; esquema en sincronía | `aggg15` | pendiente | Corregido |
+| HU-03 · CA-03-01 | A6 / Q8: la spec no decía si el personal puede solicitar adopciones; la coordinadora decidiría sobre su propia candidatura. Decisión D45, confirmada por el grupo el 2026-11-21 | clarify (decisión cerrada); `phpunit --filter Spec003Test` | `docs/decisiones.md`, `src/Controller/ApplicationController.php`, `templates/public/show.html.twig` | T312 · `114b74d` | `testStaffCannotApplyButFosterFamiliesCan`: verificada en la suite de Spec003 (19 pruebas OK); no consta una ejecución sobre el código anterior | `aggg15` | pendiente (previsto `abcb5-ua`) | Corregido; decisión D45 confirmada |
 | HU-03 · CA-03-06 | C2-03: el `FOR UPDATE` de la cuenta esperaba hasta `lock timeout` a una inserción con clave foránea (formalización) | revisión de código; `phpunit --filter Spec003Test` | `src/Service/ApplicationService.php` (`submit`) | T310 · `8b14e0c` | `testSubmissionDoesNotWaitForForeignKeyInsertsOnTheSameAccount`: falla (`lock timeout`) / pasa; `testConcurrentSubmissionsNeverExceedTwoOpenApplications` sigue pasando | `aggg15` | pendiente | Corregido |
 | HU-03 · CA-03-02 | C1-09: textos del cuestionario sin recorte Unicode; NUL y UTF-8 inválido daban 500 (D44) | revisión de código; `phpunit --filter Spec003Test` | `src/Service/TextNormalizer.php`, `ApplicationService.php` | T307 · `8b14e0c` | `testQuestionnaireTextsAreNormalizedAndRejectNulAndInvalidUtf8`: falla / pasa | `aggg15` | pendiente | Corregido |
 | HU-04 · CA-04-02, CA-04-03, CA-04-05 | A7 (HIGH) / C1-01 / C2-02: `approve` y `reject` fuera de transacción; una aprobación y un rechazo simultáneos podían dejar `approve:ok` y `reject:ok` | procedimiento de `analyze`; revisión de código; `phpunit --filter Spec004Test` | `src/Service/ApplicationService.php`, `ApplicationReviewController.php`, `tests/Support/application-race.php` | T414 · `8b14e0c` | `testSimultaneousApproveAndRejectOfTheSameApplicationNeverMix`, `testDecisionsReReadTheStateUnderLock`, `testStateConflictsAnswerConflict`: fallan antes / pasan (nunca se mezcla el estado) | `abcb5-ua` (ejecuta `aggg15`) | pendiente (previsto `aggg15`) | Corregido |
 | HU-04 · CA-04-05 | A5 / C1-02: el mensaje decía «estado actual: reserved» (código interno en inglés) | procedimiento de `analyze`; `phpunit --filter Spec004Test` | `src/Service/ApplicationService.php` | T415 · `8b14e0c` | `testApprovalRefusalNamesTheAnimalStateInSpanish`: falla / pasa | `abcb5-ua` (ejecuta `aggg15`) | pendiente | Corregido |
 | HU-04 · CA-04-01 | A6 / C1-03: los formularios de entrevista y de liberar reserva estaban en `<details>` cerrados; un 422 ocultaba el error y se perdía el texto | procedimiento de `analyze`; `phpunit --filter Spec004Test` | `templates/application/admin_show.html.twig`, `ApplicationReviewController.php` | T416 · `8b14e0c` | `testInterviewFormStaysOpenWithTypedValuesAfterValidationError`, `testRejectionAndReleaseFormsKeepTypedValuesAfterValidationError`: fallan / pasan | `abcb5-ua` (ejecuta `aggg15`) | pendiente | Corregido |
-| HU-04 · CA-04-01, CA-04-03 | A8 / C1-12: una entrevista anterior al envío bastaba para aprobar. Decisión D42 (Q7), **pendiente de confirmar** por el responsable | procedimiento de `analyze`; `phpunit --filter Spec004Test` | `src/Service/ApplicationService.php` (`recordInterview`), `docs/decisiones.md` | T417 · `8b14e0c` | `testInterviewCannotPrecedeTheSubmission`: falla / pasa | `abcb5-ua` | pendiente (previsto `aggg15`) | Aplicado; decisión por confirmar |
+| HU-04 · CA-04-01, CA-04-03 | A8 / C1-12: una entrevista anterior al envío bastaba para aprobar. Decisión D42 (Q7), confirmada por el grupo el 2026-11-21 según `decisiones.md` | procedimiento de `analyze`; `phpunit --filter Spec004Test` | `src/Service/ApplicationService.php` (`recordInterview`), `docs/decisiones.md` | T417 · `8b14e0c` | `testInterviewCannotPrecedeTheSubmission`: falla / pasa | `abcb5-ua` | pendiente (previsto `aggg15`) | Corregido; decisión D42 confirmada |
 | HU-04 · CA-04-05 | Primera ejecución real (2026-11-17): `doctrine:schema:validate` fallaba porque el índice parcial solo estaba en la migración; la ficha ofrecía decidir sobre solicitudes ya resueltas | `vendor/bin/phpunit --testdox`; `doctrine:schema:validate` | `src/Entity/AdoptionApplication.php`, `ApplicationService.php`, `admin_show.html.twig` | T411–T413 · `e961e92` | `OK (39 tests, 329 assertions)`; Spec004 13/13 | `abcb5-ua` | `aggg15` (aprobó la PR #8) | Cerrado |
 | HU-05 · CA-05-08 | converge C1 (medio): «Mis solicitudes» no era legible a 390 px (estado cortado, motivo y enlace fuera de la vista) | recorrido manual en Chrome (`recorrido-t528.mjs`); `phpunit --filter Spec005Test` | `templates/application/mine.html.twig`, `public/assets/app.css` | T528 · `4203aee` | Captura [07](evidencias/spec-005-manual/07-movil-mis-solicitudes-apiladas.png), 6/6 a 390 px; Spec003 y Spec004 siguen pasando; suite 58/58 | `aggg15` | `abcb5-ua` (aprobó la PR #9) | Cerrado |
 | HU-05 · R3 / D13 | converge C2 (bajo): el contrato inmutable no tenía prueba | `phpunit --filter Spec005Test` | `tests/Spec005Test.php` | T529 · `4203aee` | `testContractKeepsDeliveryDataAfterLaterChanges` (9 aserciones): pasa | `aggg15` | `abcb5-ua` (aprobó la PR #9) | Cerrado |
@@ -756,13 +763,16 @@ Cada fila une una historia y criterio con un hallazgo o decisión real tomado de
 
 ### 10.1 Qué se consiguió
 
-- **Cobertura completa.** Las ocho historias están implementadas, integradas en `main` y cubiertas: 62 criterios, todos con tarea y prueba, y 171 tareas cerradas.
-- **Una aplicación, un modelo.** Plan y modelo de datos únicos, diez migraciones acumulativas y `doctrine:schema:validate` en sincronía; las historias se encadenan sin duplicar reglas (la formalización de HU-05 cierra solicitudes de HU-03/04, finaliza acogidas de HU-06 y deja el dato que usa HU-08).
-- **Concurrencia demostrada, no supuesta.** Seis procesos auxiliares reproducen carreras reales contra PostgreSQL; los bloqueos siguen un orden fijo documentado y las restricciones únicas parciales son la última defensa. Las evidencias registran mutaciones con las que las pruebas de carrera fallan.
-- **Un bucle SDD real.** Los informes de `analyze` y `converge` produjeron tareas concretas con «antes → después», no solo declaraciones; la revisión final corrigió una carrera de gravedad alta y varios defectos de bajo coste (500 por campos ausentes, textos en inglés, interbloqueo con claves foráneas).
-- **Trazabilidad y honestidad documental.** Matriz criterio → decisión → tarea → prueba con 62/62; decisiones D01–D44 con motivo; los documentos distinguen lo ejecutado de lo no ejecutado y lo revisado de lo pendiente.
+- **Ocho historias completas.** HU-01 a HU-08 están implementadas, integradas en `main` (PR #1, #5, #6, #8, #9, #10, #11 y #12) y recorren el ciclo completo de la protectora, desde el alta del animal hasta el apadrinamiento; la formalización de HU-05 cierra solicitudes de HU-03/04, finaliza acogidas de HU-06 y deja el dato que usa HU-08, sin duplicar reglas entre historias.
+- **62 criterios de aceptación, los 62 con tarea y con prueba.** La [matriz de trazabilidad](trazabilidad.md) enlaza criterio, decisión, tarea y prueba (38 criterios de las fichas iniciales y 24 derivados en `clarify`), con 172 tareas cerradas y 145 métodos de prueba, todos citados y comprobados con `grep` contra `tests/`. De los ocho criterios que tenían prueba parcial antes de la revisión final, siete pasan a completa; el octavo (CA-01-01) se deja declarado como limitación.
+- **Concurrencia demostrada con procesos reales.** Seis procesos auxiliares en `tests/Support/` abren su propia conexión a PostgreSQL y compiten por el mismo instante (máximo de dos solicitudes, una reserva y una adopción por animal, capacidad de acogida, aforo de turno, un apadrinamiento activo); los bloqueos siguen un orden fijo documentado y las restricciones únicas parciales son la última defensa. Las evidencias registran mutaciones con las que las pruebas de carrera fallan.
+- **45 decisiones justificadas.** [`decisiones.md`](decisiones.md) recoge D01–D45, cada una con motivo e historia; D42–D45 nacieron de la revisión final y el grupo las confirmó el 2026-11-21 al cerrar las preguntas abiertas de `clarify` de HU-01 a HU-04.
+- **Un ciclo iterativo real, con varias pasadas de `converge`.** HU-04 detectó tres desviaciones en su primera ejecución real (T411–T413); HU-05 a HU-08 tienen una primera pasada con 9 hallazgos y una segunda sin hallazgos nuevos; y HU-01 a HU-04 recibieron una pasada de `clarify`, `analyze` y `converge` previa a la entrega que corrigió 33 de las 46 filas de sus registros de `analyze`, decidió 4, aceptó 8 con su justificación y dejó 1 abierta de gravedad baja ([§9.3](#93-iteraciones-y-loop-engineering)).
+- **Revisión final con la prueba del antes y el después.** Una carrera de gravedad alta entre aprobar y rechazar una solicitud se reprodujo con procesos independientes (`approve:ok` y `reject:ok` a la vez), se corrigió (T414) y la prueba nueva pasa; las 21 pruebas nuevas de HU-03 y HU-04 ejecutadas sobre el código anterior dieron 1 error y 16 fallos, y la suite tras la corrección da 129 pruebas OK ([registros](evidencias/revision-entrega-2026-11-21/README.md)). De las 34 filas de `converge` de la revisión final, 20 llevan una prueba que falla antes y pasa después; el resto es cobertura nueva o texto, y se indica como tal.
+- **CI reproducible.** [`ci.yml`](../.github/workflows/ci.yml) y la réplica en Docker de la rama integrada ejecutan los mismos pasos (instalación, validación de Composer, build, Spec Kit, `php -l`, lint de contenedor, Twig y YAML, migraciones, esquema y las ocho suites): 20 pasos con código de salida 0 y `OK (144 tests, 1659 assertions)`, con los registros por paso en [`evidencias/revision-entrega-2026-11-21/ci-rama-integrada/`](evidencias/revision-entrega-2026-11-21/ci-rama-integrada/). Esa réplica no es una ejecución de GitHub Actions.
+- **Honestidad documental.** Los documentos distinguen lo ejecutado de lo no ejecutado y lo revisado de lo pendiente (revisión cruzada 0/62, PR #10 y #12 sin revisión registrada, Constitution sin ratificar).
 - **Calidad en la interfaz.** Español, estados de éxito/error/vacío, 390 px y teclado comprobados con mediciones y capturas; hallazgos de maquetación corregidos con medida antes y después.
-- **Pruebas que crecen con el proyecto.** De 7 pruebas en HU-01 a 144 pruebas y 1659 aserciones, con regresión de todas las historias en cada cambio.
+- **Pruebas que crecen con el proyecto.** De 7 pruebas en HU-01 a 144 pruebas y 1659 aserciones en el CI integrado (más 1 prueba de D45 verificada en Spec003), con regresión de todas las historias en cada cambio.
 
 ### 10.2 Problemas encontrados
 
@@ -774,7 +784,7 @@ Honestos, y todos con su resolución o su estado:
 - **Defectos de maquetación en móvil** que la comprobación automática no detectaba (`scrollWidth`); solo aparecieron al medir la posición real de los elementos en un recorrido manual (HU-05, HU-06, HU-07).
 - **Entidades en memoria desfasadas** (Doctrine no escribe un valor que coincide con su copia): afectó al indicador `fostered`, a cambios de turno y a una prueba de HU-02; se resolvió escribiendo por SQL en los puntos críticos.
 - **Fase de clarify, analyze y converge con asistencia de IA.** Se aplicaron siguiendo el procedimiento de las skills de Spec Kit, con Codex y Claude Code, y no como comandos slash ejecutados por los integrantes; las specs lo registran. Por eso la memoria no atribuye ninguna ejecución de comando que no conste.
-- **Revisión humana incompleta.** Las PR #10 (HU-06) y #12 (HU-08) no tienen revisión registrada; la matriz de trazabilidad tiene 0/62 revisiones cruzadas anotadas; las correcciones de `revision-entrega` están pendientes de revisión; y D42–D44 y varias preguntas de `clarify` («PENDIENTE») esperan la confirmación del responsable de cada historia.
+- **Revisión humana incompleta.** Las PR #10 (HU-06) y #12 (HU-08) no tienen revisión registrada; la matriz de trazabilidad tiene 0/62 revisiones cruzadas anotadas; las correcciones de `revision-entrega` están pendientes de revisión; y los textos de `clarify` y `decisiones.md` atribuyen al grupo la confirmación de D42–D45 y de las decisiones abiertas del 2026-11-21, sin que conste una revisión cruzada individual de esos cambios.
 - **Constitution sin ratificar.** El propio documento registra la ratificación como pendiente de revisión conjunta.
 - **Alcance y documentación de partida.** El enunciado v1 contiene referencias incompatibles a dos y cuatro integrantes; se resolvió según la guía específica y quedó registrado en `decisiones.md`. Los textos de varias specs se quedaron desfasados respecto a las PR y se actualizaron al final (analyze A3 en HU-01 y HU-03).
 - **Cobertura manual desigual.** HU-01 a HU-04 no tienen un recorrido manual propio previo a la PR; lo cubre en parte el de HU-05 y el de la verificación integrada.
@@ -784,7 +794,7 @@ Honestos, y todos con su resolución o su estado:
 Pendiente de lo ya especificado y registrado:
 
 1. Registrar la revisión de las PR #10 y #12 y de la PR de `revision-entrega`, completar la columna «Revisado por» y la tabla de [`revision-cruzada.md`](revision-cruzada.md), y ratificar la Constitution entre los dos integrantes.
-2. Que los responsables confirmen D42–D44 y las preguntas de `clarify` marcadas como pendientes, y cerrar los hallazgos de `analyze` que constan como «Abierto» (A3/A6 de HU-01, A3/A4/A6 de HU-02, A3/A6/A7 de HU-03, A2/A3/A8/A9 de HU-04).
+2. Cerrar el único hallazgo de `analyze` que consta como «Abierto» (A3 de HU-04) y revisar los ocho aceptados (A2 y A6 de HU-01, A2 y A6 de HU-02, A2 y A7 de HU-03, A2 y A9 de HU-04), entre ellos las comprobaciones manuales de HU-01 a HU-04 que no se registraron.
 3. Añadir una prueba específica del interbloqueo de claves foráneas para HU-07 y HU-08.
 4. Registrar un recorrido manual propio de HU-01 a HU-04.
 5. Medir rendimiento si se fija un requisito.
@@ -820,7 +830,7 @@ URL: <https://github.com/aggg15/huellas-protectora> ([apartado 2](#2-url-del-rep
 | Plan común | [`../plan.md`](../plan.md) |
 | Modelo de datos compartido | [`../data-model.md`](../data-model.md) |
 | Agrupamiento y responsabilidad | [`agrupamiento.md`](agrupamiento.md) |
-| Decisiones D01–D44 | [`decisiones.md`](decisiones.md) |
+| Decisiones D01–D45 | [`decisiones.md`](decisiones.md) |
 | Matriz de trazabilidad (62 criterios) | [`trazabilidad.md`](trazabilidad.md) |
 | Revisión cruzada | [`revision-cruzada.md`](revision-cruzada.md) |
 | Revisión del enunciado general | [`revision_enunciado_general.md`](revision_enunciado_general.md) |
@@ -844,7 +854,7 @@ Documentos de cada spec: `spec.md`, `clarify.md`, `plan.md`, `tasks.md`, `analyz
 | Término | Significado |
 |---|---|
 | HU-0N / CA-0N-0M | Historia de usuario N / criterio de aceptación M de esa historia. Los «derivados» son los que `clarify` añadió a los de la ficha inicial. |
-| D01…D44 | Decisión numerada de [`decisiones.md`](decisiones.md), con motivo e historia. |
+| D01…D45 | Decisión numerada de [`decisiones.md`](decisiones.md), con motivo e historia. |
 | SDD (Spec-Driven Development) | Desarrollo guiado por especificaciones: la spec precede al código y manda sobre él. |
 | Spec Kit | Conjunto de herramientas (plantillas, scripts y skills) del ciclo `specify → clarify → plan → tasks → analyze → implement → converge`. |
 | Loop engineering | Bucle de trabajo en el que `analyze` y `converge` devuelven el trabajo a fases anteriores y las correcciones se verifican con pruebas «antes → después». |

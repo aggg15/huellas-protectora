@@ -67,34 +67,60 @@ corrección).
 
 ### Registro de hallazgos
 
-La gravedad de los C1-0X es provisional: la fija `converge.md` de la rama `revision-entrega`.
+La gravedad de los C1-0X de la tabla es la provisional de la revisión; la fijada al corregir consta en la tabla de la «Pasada de revisión previa a la entrega» de `converge.md`. Estados: Corregido (con su tarea), Decidido (con su Dxx o Qn), Aceptado (con su justificación) y Abierto (nada hecho). Actualizado el 2026-11-21 contra `tasks.md`, `converge.md`, `clarify.md` y `docs/decisiones.md` de la rama `revision-entrega`.
 
 | ID | Historia / criterio | Gravedad | Evidencia | Decisión | Responsable | Estado |
 |---|---|---|---|---|---|---|
-| A1 | HU-04 / CA-04-01 a CA-04-05 | MEDIUM | `clarify.md` sin tabla de preguntas ni diferencias | Añadir ambas | `abcb5-ua` | Corregido en clarify.md el 2026-11-21 |
-| A2 | HU-04 / D11 y permisos | MEDIUM | Pruebas y tareas T412–T413 sin criterio en spec.md | Proponer criterios derivados | `abcb5-ua` (revisa `aggg15`) | Abierto: `spec.md` no se edita en esta pasada |
-| A3 | HU-04 / spec.md | LOW | `historia.md` con «Límites»; spec.md sin ellos | Recuperar los límites | `abcb5-ua` | Abierto |
-| A4 | HU-04 / permisos | MEDIUM | `Spec004Test.php::testRoleAccessControl` solo con GET | Ver C1-08 | `abcb5-ua` | En corrección en la rama `revision-entrega` (C1-08) |
-| A5 | HU-04 / CA-04-05 | MEDIUM | `ApplicationService::approve`: «estado actual: reserved» | Ver C1-02 | `abcb5-ua` | En corrección en la rama `revision-entrega` (C1-02) |
-| A6 | HU-04 / CA-04-01 | MEDIUM | `admin_show.html.twig`: formularios dentro de `<details>` | Ver C1-03 | `abcb5-ua` | En corrección en la rama `revision-entrega` (C1-03) |
-| A7 | HU-04 / CA-04-02, CA-04-03, CA-04-05 | HIGH | `assertUndecided` fuera de la transacción; `reject` sin bloqueo | Ver C1-01 | `abcb5-ua` | En corrección en la rama `revision-entrega` (C1-01) |
-| A8 | HU-04 / CA-04-01, CA-04-03 | LOW | `recordInterview` solo valida el formato de la fecha | Decidir (Q7) y ver C1-12 | `abcb5-ua` | Abierto: decisión pendiente de confirmar |
-| A9 | HU-04 / Constitution V | LOW | tasks.md sin verificación manual propia | Citar o registrar un recorrido | `abcb5-ua` | Abierto |
-| C1-01 | HU-04 / CA-04-02, CA-04-03, CA-04-05 | HIGH (provisional) | Carrera entre aprobar y rechazar (véase A7) | Revisión de código del 2026-11-21 | `abcb5-ua` | En corrección en la rama `revision-entrega` |
-| C1-02 | HU-04 / CA-04-05 | LOW (provisional) | Mensaje con «reserved» en inglés (véase A5) | Revisión de código del 2026-11-21 | `abcb5-ua` | En corrección en la rama `revision-entrega` |
-| C1-03 | HU-04 / CA-04-01 | MEDIUM (provisional) | Errores ocultos en `<details>` (véase A6) | Revisión de código del 2026-11-21 | `abcb5-ua` | En corrección en la rama `revision-entrega` |
-| C1-06 | HU-04 / permisos | LOW (provisional) | Las páginas de error 403 y 404 que ven las personas están en inglés | Revisión de código del 2026-11-21 | `abcb5-ua` | En corrección en la rama `revision-entrega` |
-| C1-08 | HU-04 / permisos | MEDIUM (provisional) | Rutas POST sin pruebas de CSRF y rol (véase A4) | Revisión de código del 2026-11-21 | `abcb5-ua` | En corrección en la rama `revision-entrega` |
-| C1-09 | HU-04 / CA-04-01, CA-04-02 | MEDIUM (provisional) | `recordInterview`, `reject` y `cancelReservation` validan con `trim()` de PHP, que no recorta espacios Unicode ni valida NUL | Revisión de código del 2026-11-21 | `abcb5-ua` | En corrección en la rama `revision-entrega` |
-| C1-12 | HU-04 / CA-04-01, CA-04-03 | LOW (provisional) | Entrevista anterior a la solicitud (véase A8) | Revisión de código del 2026-11-21 | `abcb5-ua` | En corrección en la rama `revision-entrega` |
+| A1 | HU-04 / CA-04-01 a CA-04-05 | MEDIUM | `clarify.md` sin tabla de preguntas ni diferencias | Añadir ambas | `abcb5-ua` | Corregido en clarify.md el 2026-11-21; Q6–Q9 decididas el mismo día |
+| A2 | HU-04 / D11 y permisos | MEDIUM | Pruebas y tareas T412–T413 sin criterio en spec.md | Proponer criterios derivados | `abcb5-ua` (revisa `aggg15`) | Aceptado con mitigación: `spec.md` no se editó y no hay criterios derivados; los tres comportamientos (liberación D11, solicitud decidida, permisos) constan con tarea y prueba en la sección «Comportamientos con tarea y prueba sin criterio propio» de `docs/trazabilidad.md`. Limitación: la Constitution II pide identificadores de criterio |
+| A3 | HU-04 / spec.md | LOW | `historia.md` con «Límites»; spec.md sin ellos | Recuperar los límites | `abcb5-ua` | Abierto: no se recuperaron los «Límites» de la ficha inicial en `spec.md`. Gravedad baja, sin efecto en criterios, tareas ni pruebas |
+| A4 | HU-04 / permisos | MEDIUM | `Spec004Test.php::testRoleAccessControl` solo con GET | Ver C1-08 | `abcb5-ua` | Corregido: T420 (`testReviewActionsRequireValidCsrfTokenAndCoordinatorRole`) |
+| A5 | HU-04 / CA-04-05 | MEDIUM | `ApplicationService::approve`: «estado actual: reserved» | Ver C1-02 | `abcb5-ua` | Corregido: T415 (`testApprovalRefusalNamesTheAnimalStateInSpanish`) |
+| A6 | HU-04 / CA-04-01 | MEDIUM | `admin_show.html.twig`: formularios dentro de `<details>` | Ver C1-03 | `abcb5-ua` | Corregido: T416 (`testInterviewFormStaysOpenWithTypedValuesAfterValidationError`, `testRejectionAndReleaseFormsKeepTypedValuesAfterValidationError`) |
+| A7 | HU-04 / CA-04-02, CA-04-03, CA-04-05 | HIGH | `assertUndecided` fuera de la transacción; `reject` sin bloqueo | Ver C1-01 | `abcb5-ua` | Corregido: T414 (`testSimultaneousApproveAndRejectOfTheSameApplicationNeverMix`, con procesos reales; `testDecisionsReReadTheStateUnderLock`, `testStateConflictsAnswerConflict`; D43) |
+| A8 | HU-04 / CA-04-01, CA-04-03 | LOW | `recordInterview` solo valida el formato de la fecha | Decidir (Q7) y ver C1-12 | `abcb5-ua` | Decidido: Q7 → D42 (la entrevista no es anterior al envío), aplicada en T417 (`testInterviewCannotPrecedeTheSubmission`) |
+| A9 | HU-04 / Constitution V | LOW | tasks.md sin verificación manual propia | Citar o registrar un recorrido | `abcb5-ua` | Aceptado como limitación: no se registró un recorrido manual propio de HU-04; se cita `docs/evidencias/spec-005-manual` (recorridos 1 y 2: entrevista y aprobación a 1280 y 390 px), sin los errores de validación, que sí cubren pruebas automáticas (T416) |
+| C1-01 | HU-04 / CA-04-02, CA-04-03, CA-04-05 | HIGH (provisional) | Carrera entre aprobar y rechazar (véase A7) | Revisión de código del 2026-11-21 | `abcb5-ua` | Corregido: T414 (D43) |
+| C1-02 | HU-04 / CA-04-05 | LOW (provisional) | Mensaje con «reserved» en inglés (véase A5) | Revisión de código del 2026-11-21 | `abcb5-ua` | Corregido: T415 |
+| C1-03 | HU-04 / CA-04-01 | MEDIUM (provisional) | Errores ocultos en `<details>` (véase A6) | Revisión de código del 2026-11-21 | `abcb5-ua` | Corregido: T416 |
+| C1-06 | HU-04 / permisos | LOW (provisional) | Las páginas de error 403 y 404 que ven las personas están en inglés | Revisión de código del 2026-11-21 | `abcb5-ua` | Corregido: T210 (páginas de error en español, transversal; registrada en spec-002) |
+| C1-08 | HU-04 / permisos | MEDIUM (provisional) | Rutas POST sin pruebas de CSRF y rol (véase A4) | Revisión de código del 2026-11-21 | `abcb5-ua` | Corregido: T420 (solo pruebas: pasan antes y después) |
+| C1-09 | HU-04 / CA-04-01, CA-04-02 | MEDIUM (provisional) | `recordInterview`, `reject` y `cancelReservation` validan con `trim()` de PHP, que no recorta espacios Unicode ni valida NUL | Revisión de código del 2026-11-21 | `abcb5-ua` | Corregido: T421 (`TextNormalizer`; D44) |
+| C1-12 | HU-04 / CA-04-01, CA-04-03 | LOW (provisional) | Entrevista anterior a la solicitud (véase A8) | Revisión de código del 2026-11-21 | `abcb5-ua` | Decidido: D42 (Q7) y corregido en T417 |
 
-### Informe final
+### Informe final (2026-11-21)
 
-Este informe se cerrará después de integrar las correcciones de la rama `revision-entrega` y de repetir las
-pasadas sobre los documentos y pruebas corregidos. Hoy, 2026-11-21, el estado es: A1 corregido; A2, A3 y A9
-abiertos; A4 a A8 y C1-01, C1-02, C1-03, C1-06, C1-08, C1-09 y C1-12 en corrección. No se declara cerrado: el cierre
-exige 0 contradicciones críticas o altas (hoy A7 sigue abierto como HIGH) y ningún criterio sin tarea y prueba, con
-la revisión cruzada de `aggg15` (pendiente).
+Informe de cierre de esta pasada, redactado por Claude Code el 2026-11-21 después de integrar las correcciones de la
+rama `revision-entrega` (HEAD 114b74d) y de contrastar este registro con `tasks.md` (fase 5: T414–T421), `converge.md`
+(«Pasada de revisión previa a la entrega»), `clarify.md` (Q6–Q9, decididas el 2026-11-21) y `docs/decisiones.md`
+(D42 a D44). El informe inicial de arriba se conserva sin cambios.
+
+| Métrica (rama `revision-entrega`) | Valor |
+|---|---|
+| Criterios de aceptación | 5 (0 derivados; 3 comportamientos con tarea y prueba sin criterio, A2) |
+| Tareas | 21 (T401–T421) |
+| Pruebas de `tests/Spec004Test.php` | 23 (13 del informe inicial + 10 nuevas: T414 ×3, T415, T416 ×2, T417, T419, T420 y T421) |
+| Criterios sin tarea | 0 |
+| Criterios sin prueba | 0 |
+| Criterios con prueba parcial | 0 (CA-04-01 pasa a completa con T416 y CA-04-05 con T414 y T415) |
+| Hallazgos CRITICAL / HIGH abiertos | 0 / 0 (el HIGH A7 está corregido en T414) |
+
+Hallazgos por estado (16): **Corregido 11** (A1, A4, A5, A6, A7, C1-01, C1-02, C1-03, C1-06, C1-08, C1-09); **Decidido 2**
+(A8 y C1-12, ambos por Q7 / D42 y T417); **Aceptado 2** (A2 y A9); **Abierto 1** (A3, de gravedad baja).
+
+Verificación: el CI de la rama integrada (76223b2) dio `OK (23 tests, 193 assertions)` en esta clase y
+`OK (144 tests, 1659 assertions)` en la suite completa, con todos los pasos correctos
+([`summary.txt`](../../docs/evidencias/revision-entrega-2026-11-21/ci-rama-integrada/summary.txt), [Spec004](../../docs/evidencias/revision-entrega-2026-11-21/ci-rama-integrada/13-phpunit-Spec004Test.log)). El «antes» de HU-03 y HU-04 está en
+[`hu03-hu04-pruebas-nuevas-sobre-codigo-anterior.txt`](../../docs/evidencias/revision-entrega-2026-11-21/hu03-hu04-pruebas-nuevas-sobre-codigo-anterior.txt)
+(21 pruebas nuevas sobre el código anterior: 1 error y 16 fallos) y su «después» en
+[`hu03-hu04-suite-tras-correccion.txt`](../../docs/evidencias/revision-entrega-2026-11-21/hu03-hu04-suite-tras-correccion.txt)
+(129 pruebas, 1487 aserciones, OK). La carrera aprobar/rechazar dejaba `approve:ok` y `reject:ok` a la vez antes de la
+corrección; después el resultado es siempre una solicitud aprobada con animal reservado o rechazada con animal disponible.
+
+Lo que no se declara: la revisión cruzada de los cambios de la rama `revision-entrega` por `aggg15` no consta (la
+ejecución de T414–T421 figura a nombre de `aggg15` asistido por Claude Code, mientras que HU-04 es de `abcb5-ua`), y la
+matriz mantiene 0/62 revisiones anotadas. El criterio de cierre (0 contradicciones críticas o altas y ningún criterio
+sin tarea y prueba) se cumple; A3 sigue abierto por ser de gravedad baja y no afectar a ningún criterio.
 
 Nota de método: ronda realizada con Claude Code siguiendo el procedimiento de
 `.agents/skills/speckit-analyze/SKILL.md`; no se ha ejecutado la skill de Codex.
