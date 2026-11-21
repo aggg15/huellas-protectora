@@ -46,7 +46,7 @@
   hacia `main` que siga `.github/PULL_REQUEST_TEMPLATE.md`. No hacer push directo a main ni
   fusionar sin revisión humana. El CI (`.github/workflows/ci.yml`) detecta solo las ramas
   `spec-00*`, las historias con `plan.md` y los ficheros `tests/Spec00NTest.php`; respetar esos nombres.
-- Los usuarios GitHub son `aggg15` y `abcb5-ua`. No inventar sus nombres académicos, reparto de las
+- Los usuarios GitHub son `aggg15` y `abcb5-ua`. Nombres académicos: Antonio García Gómez (`aggg15`) y Ana Bernabeu Castillo (`abcb5-ua`). No inventar reparto de las
   historias, ratificación de la Constitution ni aprobaciones del compañero.
 
 Consultar `CONTRIBUTING.md` para clonar, seleccionar contexto y revisar los cambios.

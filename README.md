@@ -104,7 +104,7 @@ conserva tablas de las implementaciones retiradas el 5 de noviembre, las migraci
 Las respuestas 403/404/409/422 esperadas se registran como errores HTTP comprobados; no son fallos de PHPUnit.
 
 El CI ejecuta las pruebas de cada historia (`tests/Spec00NTest.php`) en las ramas `spec-00*` y en
-las PR hacia `main`. La ratificación de la Constitution y los nombres académicos siguen pendientes.
+las PR hacia `main`. Integrantes (G27): Antonio García Gómez (`aggg15`) y Ana Bernabeu Castillo (`abcb5-ua`). La ratificación de la Constitution sigue pendiente.
 
 ## Notas por historia
 

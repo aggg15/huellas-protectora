@@ -93,7 +93,7 @@ PR hacia `main`. No utiliza secretos del ordenador de un
 integrante, no despliega la aplicación y no aplica migraciones a una base compartida.
 
 La plantilla de PR recoge historia, criterios, pruebas y revisión pendiente. El reparto observado de las ocho
-historias consta en agrupamiento; los nombres académicos y la ratificación de la Constitution se completarán por ambos integrantes
+historias y los nombres de los integrantes (Antonio García Gómez y Ana Bernabeu Castillo) constan en agrupamiento; la ratificación de la Constitution se completará por ambos
 (véase [agrupamiento](docs/agrupamiento.md)); los permisos GitHub no acreditan esos acuerdos docentes.
 
 ## Archivos compartidos y archivos locales

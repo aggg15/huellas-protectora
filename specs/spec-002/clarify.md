@@ -107,20 +107,24 @@ la tabla de preguntas, respuestas y criterios ni las diferencias con la ficha in
 
 ### 2. Ambigüedades detectadas
 
-Las filas «PENDIENTE» llevan una recomendación como propuesta, no como decisión: la toma y la explica el
-responsable.
+Las decisiones abiertas llevaban una recomendación como propuesta; el grupo las adoptó el 2026-11-21 y la explicación de cada responsable figura más abajo.
 
 | # | Pregunta | Opciones | Recomendación | Justificación | CA afectado | Estado |
 |---|---|---|---|---|---|---|
 | Q1 | ¿Qué categorías de tamaño y qué rangos de edad hay, y cómo se combinan los filtros? | Categorías libres o fijas; unión (OR) o conjunción (AND). | Perro o gato; pequeño, mediano o grande; menos de 12 meses, de 12 a 83 y desde 84; filtros combinados con AND. | SI-30 pide filtrar por especie, tamaño y edad sin definir categorías; la conjunción es la lectura natural de «filtrar». | CA-02-02 | decidida previamente (D05 y D03 de docs/decisiones.md) |
 | Q2 | ¿Qué información y fotografías de la ficha se muestran públicamente? | Todo lo de la ficha interna; solo datos de la oferta. | Foto principal en el listado, galería en la ficha, código, especie, edad, tamaño y procedencia; ni notas veterinarias ni datos de gestión. | Constitution V: lo público no hace públicas las operaciones internas; fotos protegidas por estado (D04). | CA-02-01, CA-02-03 | decidida previamente (D04 y secciones 2 y 4 de este clarify, 2026-11-16) |
 | Q3 | ¿Se muestran como «reservado» los animales reservados o se ocultan? | Ocultarlos; mostrarlos con una etiqueta. | Ocultar los reservados, adoptados y en cuarentena (404 en su ficha). | SI-30: «solo aparecen los que están realmente en adopción»; D10 impide nuevas solicitudes sobre un animal reservado. | CA-02-03 | decidida previamente (D10; texto de CA-02-03) |
-| Q4 | ¿En qué orden se listan los animales? | Más recientes primero (plan actual: `receivedAt DESC`); por código; por edad; sin orden fijo. | Más recientes primero, hasta que el equipo diga otra cosa. | SI-30 no dice nada del orden; el plan lo fija sin una decisión registrada. | CA-02-01 | PENDIENTE de confirmación por el responsable (`abcb5-ua`) |
-| Q5 | ¿Qué ocurre con un valor de filtro no previsto (por ejemplo `species=bird` o `age=abc`)? | (a) Ignorarlo y no restringir (comportamiento actual); (b) mostrar el catálogo vacío con aviso; (c) responder 400. | (a), con el formulario mostrando «Todas». | La spec solo define el filtro vacío o no enviado; la URL se puede escribir a mano. | CA-02-02 | PENDIENTE de confirmación por el responsable (`abcb5-ua`) |
-| Q6 | ¿Hace falta paginar el catálogo? | Sin paginar (actual); paginar por tamaño fijo. | Sin paginar mientras el refugio ronde los cien animales, de los que solo una parte está disponible. | SI-30 estima unos 60 perros y 40 gatos; la spec no define paginación. | CA-02-01 | PENDIENTE de confirmación por el responsable (`abcb5-ua`) |
+| Q4 | ¿En qué orden se listan los animales? | Más recientes primero (plan actual: `receivedAt DESC`); por código; por edad; sin orden fijo. | Más recientes primero, hasta que el equipo diga otra cosa. | SI-30 no dice nada del orden; el plan lo fija sin una decisión registrada. | CA-02-01 | Decidida el 2026-11-21 por el grupo: más recientes primero (`receivedAt DESC`). |
+| Q5 | ¿Qué ocurre con un valor de filtro no previsto (por ejemplo `species=bird` o `age=abc`)? | (a) Ignorarlo y no restringir (comportamiento actual); (b) mostrar el catálogo vacío con aviso; (c) responder 400. | (a), con el formulario mostrando «Todas». | La spec solo define el filtro vacío o no enviado; la URL se puede escribir a mano. | CA-02-02 | Decidida el 2026-11-21 por el grupo: (a) ignorar el valor no previsto y no restringir, mostrando «Todas». |
+| Q6 | ¿Hace falta paginar el catálogo? | Sin paginar (actual); paginar por tamaño fijo. | Sin paginar mientras el refugio ronde los cien animales, de los que solo una parte está disponible. | SI-30 estima unos 60 perros y 40 gatos; la spec no define paginación. | CA-02-01 | Decidida el 2026-11-21 por el grupo: sin paginar. |
 
-Cada decisión «PENDIENTE» necesita, además, una explicación breve del responsable (enunciado §5.1): *pendiente de
-redactar por `abcb5-ua`*.
+### Explicación de las decisiones por sus responsables
+
+**Q4 · Orden del catálogo.** Hemos decidido mostrar primero los animales más recientes, tal como ya fija el plan (`receivedAt DESC`). SI-30 no dice nada sobre el orden y el plan lo fijaba sin una decisión registrada, así que dejamos ahora constancia; la lógica es sencilla: lo más reciente aparece primero, y lo cambiaremos si el equipo lo pide. — Ana Bernabeu Castillo (`abcb5-ua`)
+
+**Q5 · Valores de filtro no previstos.** Hemos decidido que un valor no previsto, como `species=bird` o `age=abc`, se ignore y no restrinja los resultados, y que el formulario muestre «Todas». La especificación solo define el filtro vacío o no enviado, pero la dirección se puede escribir a mano, y ignorar el valor es la respuesta más simple. — Ana Bernabeu Castillo (`abcb5-ua`)
+
+**Q6 · Paginación.** Hemos decidido no paginar el catálogo. SI-30 estima unos 60 perros y 40 gatos, y solo una parte de esos animales está disponible a la vez, así que una rejilla única basta; la especificación no define paginación. Lo volveremos a valorar si el refugio crece. — Ana Bernabeu Castillo (`abcb5-ua`)
 
 ### 3. Diferencias con la especificación inicial
 
@@ -156,4 +160,4 @@ Comparación de `spec-002/historia.md` (ficha inicial de la raíz) con `specs/sp
 ### 4. Nota de método
 
 Ronda realizada con Claude Code siguiendo el procedimiento de `.agents/skills/speckit-clarify/SKILL.md`; no se ha
-ejecutado la skill de Codex. No se han tomado decisiones nuevas: las filas PENDIENTE esperan al responsable.
+ejecutado la skill de Codex. Las decisiones abiertas se cerraron el 2026-11-21 (ver la tabla y las explicaciones).

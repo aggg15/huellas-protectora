@@ -112,8 +112,7 @@ preguntas, respuestas y criterios ni las diferencias con la ficha inicial: se a�
 
 ### 2. Ambigüedades detectadas
 
-Las filas «PENDIENTE» llevan una recomendación como propuesta, no como decisión: la toma y la explica el
-responsable.
+Las decisiones abiertas llevaban una recomendación como propuesta; el grupo las adoptó el 2026-11-21 y la explicación de cada responsable figura más abajo.
 
 | # | Pregunta | Opciones | Recomendación | Justificación | CA afectado | Estado |
 |---|---|---|---|---|---|---|
@@ -124,11 +123,14 @@ responsable.
 | Q5 | ¿Se reciben solicitudes de animales no disponibles? | Sí, en espera; no. | No: solo los disponibles; el resto no tiene formulario. | La web ofrece solo animales realmente disponibles. | CA-03-05 | decidida previamente (D10) |
 | Q6 | ¿Cómo se crea la cuenta si D06 la exige y SI-30 habla de web «sin registrarse»? | Alta pública mínima; cuentas creadas por la protectora. | Alta pública de nombre, email y contraseña de al menos 12 caracteres, solo `ROLE_USER`, sin verificación ni recuperación. | D06 exige cuenta; consultar sigue sin registro. | CA-03-01 | decidida previamente (D06 y actualización del 2026-11-17 de decisiones.md) |
 | Q7 | ¿Qué código HTTP recibe quien envía una solicitud de un animal que se reservó mientras tenía abierto el formulario? | 404 (animal no disponible) o 409 (rechazo por estado). | 409, como fija la «Concreción del 2026-11-17». | Es un rechazo por estado de una petición válida, no un recurso inexistente. | CA-03-05 | decidida previamente (clarify de spec-003, sección 4); el código responde 404, véase analyze A4 y C1-04 |
-| Q8 | ¿Puede el personal (coordinadora, voluntarios, veterinario) enviar solicitudes con su cuenta de trabajo? | (a) Sí (hoy toda cuenta tiene `ROLE_USER`); (b) no, solo cuentas públicas, como en D26 y D34; (c) sí, pero quien decide la solicitud no puede ser su autora. | (b) | La coordinadora decidiría sobre su propia candidatura; D26 y D34 ya excluyen al personal de turnos y apadrinamientos, pero D06 no dice nada. | CA-03-01, CA-03-04 (y CA-04-03) | PENDIENTE de confirmación por el responsable (`aggg15`) |
-| Q9 | ¿Puede la persona retirar una solicitud abierta para liberar una de sus dos plazas? | (a) No: solo la coordinadora la cierra (hoy); (b) sí, con un estado nuevo que no cuente como abierta. | (a), sin ampliar el alcance, salvo que el equipo lo pida. | SI-30 limita las solicitudes abiertas y atribuye las decisiones a la coordinadora; no menciona la retirada. | CA-03-03 | PENDIENTE de confirmación por el responsable (`aggg15`) |
+| Q8 | ¿Puede el personal (coordinadora, voluntarios, veterinario) enviar solicitudes con su cuenta de trabajo? | (a) Sí (hoy toda cuenta tiene `ROLE_USER`); (b) no, solo cuentas públicas, como en D26 y D34; (c) sí, pero quien decide la solicitud no puede ser su autora. | (b) | La coordinadora decidiría sobre su propia candidatura; D26 y D34 ya excluyen al personal de turnos y apadrinamientos, pero D06 no dice nada. | CA-03-01, CA-03-04 (y CA-04-03) | Decidida el 2026-11-21 por el grupo: (b) el personal no solicita adopciones con su cuenta de trabajo; las cuentas públicas y las familias de acogida sí (se aplica en el código: D45). |
+| Q9 | ¿Puede la persona retirar una solicitud abierta para liberar una de sus dos plazas? | (a) No: solo la coordinadora la cierra (hoy); (b) sí, con un estado nuevo que no cuente como abierta. | (a), sin ampliar el alcance, salvo que el equipo lo pida. | SI-30 limita las solicitudes abiertas y atribuye las decisiones a la coordinadora; no menciona la retirada. | CA-03-03 | Decidida el 2026-11-21 por el grupo: (a) no hay retirada; solo la coordinadora cierra la solicitud, salvo que el equipo lo pida. |
 
-Cada decisión «PENDIENTE» necesita, además, una explicación breve del responsable (enunciado §5.1): *pendiente de
-redactar por `aggg15`*.
+### Explicación de las decisiones por sus responsables
+
+**Q8 · Solicitudes del personal.** Hemos decidido que el personal de la protectora (coordinadora, voluntarios y veterinario) no pueda enviar solicitudes de adopción con su cuenta de trabajo: la coordinadora no debe decidir sobre su propia solicitud y una cuenta de trabajo no representa a una familia adoptante. Las familias de acogida sí pueden solicitar la adopción, porque es habitual que quieran quedarse con el animal que acogen; su solicitud sigue el mismo procedimiento que la de cualquier persona. Se aplica en el código como D45. — Antonio García Gómez (`aggg15`)
+
+**Q9 · Retirada de una solicitud.** Hemos decidido no permitir que la persona retire una solicitud abierta para liberar una de sus plazas: de momento solo la coordinadora cierra solicitudes. SI-30 limita las solicitudes abiertas y atribuye las decisiones a la coordinadora, pero no menciona la retirada, así que no ampliamos el alcance salvo que el equipo lo pida. — Antonio García Gómez (`aggg15`)
 
 ### 3. Diferencias con la especificación inicial
 
@@ -155,4 +157,4 @@ Comparación de `spec-003/historia.md` (ficha inicial de la raíz) con `specs/sp
 ### 4. Nota de método
 
 Ronda realizada con Claude Code siguiendo el procedimiento de `.agents/skills/speckit-clarify/SKILL.md`; no se ha
-ejecutado la skill de Codex. No se han tomado decisiones nuevas: las filas PENDIENTE esperan al responsable.
+ejecutado la skill de Codex. Las decisiones abiertas se cerraron el 2026-11-21 (ver la tabla y las explicaciones).

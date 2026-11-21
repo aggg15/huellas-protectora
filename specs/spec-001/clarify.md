@@ -52,8 +52,7 @@ ficha inicial, pero este archivo no las registraba como pregunta, respuesta y cr
 
 ### 2. Ambigüedades detectadas
 
-Se contrastan `spec.md` y SI-30. Las filas «PENDIENTE» llevan una recomendación como propuesta, no como
-decisión: la toma y la explica el responsable.
+Se contrastan `spec.md` y SI-30. Las decisiones abiertas llevaban una recomendación como propuesta; el grupo las adoptó el 2026-11-21 y la explicación de cada responsable figura más abajo.
 
 | # | Pregunta | Opciones | Recomendación | Justificación | CA afectado | Estado |
 |---|---|---|---|---|---|---|
@@ -61,12 +60,17 @@ decisión: la toma y la explica el responsable.
 | Q2 | ¿Qué se registra de la revisión veterinaria y qué pasa si falta el día diez? | (a) La falta bloquea la liberación; (b) no bloquea. | (b): veterinario, fecha real y notas. | SI-30 solo exige que se revise durante la cuarentena y que después quede disponible. | CA-01-04, CA-01-05 | decidida previamente (D02) |
 | Q3 | ¿Cómo se genera el código y cómo se recoge el tamaño que filtra HU-02? | Código libre o generado; tamaño libre o en categorías. | Código `HUE-` generado; especie perro o gato; edad en meses; tamaño pequeño, mediano o grande. | Identidad y filtros sin datos personales. | CA-01-01 | decidida previamente (D03) |
 | Q4 | ¿Cuántas fotografías, de qué tipo y tamaño, y quién las ve? | Sin límite o con límite; públicas o protegidas. | De una a seis, JPEG, PNG o WebP, 5 MiB como máximo, comprobadas por contenido y servidas con permiso. | Hacer verificables las fotografías sin publicar la cuarentena. | CA-01-01, CA-01-03 | decidida previamente (D04) |
-| Q5 | ¿Se admite registrar un animal con recepción anterior a hoy y qué ocurre si ya han pasado 240 horas? | (a) Admitirla y dejarlo disponible al crearlo (comportamiento actual de `AnimalService::create`); (b) admitirla pero exigir diez días desde el registro; (c) limitar cuántos días hacia atrás. | (a), acotando el retroceso si el equipo lo estima. | SI-30 dice que «ningún animal recién llegado» se ofrece de inmediato; una ficha tardía de un animal que lleva semanas en el refugio no es «recién llegado», pero la narrativa no lo cubre. | CA-01-02, CA-01-05 | PENDIENTE de confirmación por el responsable (`aggg15`) |
-| Q6 | ¿Se admite registrar la revisión de un animal que ya no está en cuarentena, y más de una por animal? | (a) Una sola, solo en cuarentena; (b) varias, en cualquier momento (comportamiento actual); (c) una, en cualquier momento. | (b), porque D02 hace la revisión informativa y no bloqueante. | CA-01-04 se redacta para un animal en cuarentena, pero ni la spec ni D02 limitan el estado ni el número de revisiones. | CA-01-04 | PENDIENTE de confirmación por el responsable (`aggg15`) |
-| Q7 | ¿Qué límites tienen la edad (0 a 600 meses) y la procedencia (1000 caracteres)? | Sin límite; límites generosos; límites estrictos. | Los actuales, documentados como protección frente a errores de tecleo. | D03 fija la unidad (meses) pero no los límites; otras decisiones análogas (D14, D20, D27, D36) sí los registran. | CA-01-01 | PENDIENTE de confirmación por el responsable (`aggg15`) |
+| Q5 | ¿Se admite registrar un animal con recepción anterior a hoy y qué ocurre si ya han pasado 240 horas? | (a) Admitirla y dejarlo disponible al crearlo (comportamiento actual de `AnimalService::create`); (b) admitirla pero exigir diez días desde el registro; (c) limitar cuántos días hacia atrás. | (a), acotando el retroceso si el equipo lo estima. | SI-30 dice que «ningún animal recién llegado» se ofrece de inmediato; una ficha tardía de un animal que lleva semanas en el refugio no es «recién llegado», pero la narrativa no lo cubre. | CA-01-02, CA-01-05 | Decidida el 2026-11-21 por el grupo: (a) admitirla y dejar disponible al crearlo; retroceso acotable si el equipo lo estima. |
+| Q6 | ¿Se admite registrar la revisión de un animal que ya no está en cuarentena, y más de una por animal? | (a) Una sola, solo en cuarentena; (b) varias, en cualquier momento (comportamiento actual); (c) una, en cualquier momento. | (b), porque D02 hace la revisión informativa y no bloqueante. | CA-01-04 se redacta para un animal en cuarentena, pero ni la spec ni D02 limitan el estado ni el número de revisiones. | CA-01-04 | Decidida el 2026-11-21 por el grupo: (b) varias revisiones, en cualquier momento. |
+| Q7 | ¿Qué límites tienen la edad (0 a 600 meses) y la procedencia (1000 caracteres)? | Sin límite; límites generosos; límites estrictos. | Los actuales, documentados como protección frente a errores de tecleo. | D03 fija la unidad (meses) pero no los límites; otras decisiones análogas (D14, D20, D27, D36) sí los registran. | CA-01-01 | Decidida el 2026-11-21 por el grupo: los límites actuales (edad de 0 a 600 meses; procedencia de 1000 caracteres). |
 
-Cada decisión «PENDIENTE» necesita, además, una explicación breve del responsable (enunciado §5.1): *pendiente de
-redactar por `aggg15`*.
+### Explicación de las decisiones por sus responsables
+
+**Q5 · Recepción anterior a hoy.** Hemos decidido admitir el registro de un animal con fecha de recepción anterior a hoy y dejarlo disponible al crearlo si ya han pasado 240 horas. SI-30 dice que «ningún animal recién llegado» se ofrece de inmediato, pero una ficha tardía de un animal que lleva semanas en el refugio no es un animal recién llegado y la narrativa no lo cubre; por eso acotaremos el retroceso si el equipo lo estima. — Antonio García Gómez (`aggg15`)
+
+**Q6 · Revisiones veterinarias.** Hemos decidido admitir varias revisiones por animal, en cualquier momento. El CA-01-04 se redacta pensando en un animal en cuarentena, pero ni la especificación ni D02 limitan el estado ni el número de revisiones, y como D02 hace la revisión informativa y no bloqueante, no vemos motivo para restringirla más. — Antonio García Gómez (`aggg15`)
+
+**Q7 · Límites de edad y procedencia.** Hemos decidido mantener los límites actuales (de 0 a 600 meses de edad y 1000 caracteres de procedencia) y documentarlos como protección frente a errores de tecleo. D03 fija la unidad de la edad, pero no sus límites, mientras que otras decisiones análogas (D14, D20, D27 y D36) sí los registran; por coherencia, hacemos lo mismo aquí. — Antonio García Gómez (`aggg15`)
 
 ### 3. Diferencias con la especificación inicial
 
@@ -91,4 +95,4 @@ Comparación de `spec-001/historia.md` (ficha inicial de la raíz) con `specs/sp
 ### 4. Nota de método
 
 Ronda realizada con Claude Code siguiendo el procedimiento de `.agents/skills/speckit-clarify/SKILL.md`; no se ha
-ejecutado la skill de Codex. No se han tomado decisiones nuevas: las filas PENDIENTE esperan al responsable.
+ejecutado la skill de Codex. Las decisiones abiertas se cerraron el 2026-11-21 (ver la tabla y las explicaciones).

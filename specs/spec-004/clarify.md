@@ -115,8 +115,7 @@ inicial: se añaden aquí.
 
 ### 2. Ambigüedades detectadas
 
-Las filas «PENDIENTE» llevan una recomendación como propuesta, no como decisión: la toma y la explica el
-responsable.
+Las decisiones abiertas llevaban una recomendación como propuesta; el grupo las adoptó el 2026-11-21 y la explicación de cada responsable figura más abajo.
 
 | # | Pregunta | Opciones | Recomendación | Justificación | CA afectado | Estado |
 |---|---|---|---|---|---|---|
@@ -125,13 +124,20 @@ responsable.
 | Q3 | ¿Se reciben solicitudes nuevas con el animal reservado y qué pasa con las en espera al formalizar? | Sí o no; esperas rechazadas o canceladas. | No se reciben; las otras pendientes pasan a espera y las rechazadas no se reabren; al formalizar se cancelan. | El catálogo ofrece solo animales realmente disponibles. | CA-04-03, CA-04-04 | decidida previamente (D10 y D15) |
 | Q4 | ¿Se puede rechazar antes de la entrevista? | Solo después; en cualquier momento. | En cualquier momento, siempre con motivo. | SI-30 exige motivo escrito, no entrevista previa. | CA-04-02 | decidida previamente (D09) |
 | Q5 | ¿Cómo se evita una doble reserva por aprobaciones simultáneas? | Solo comprobación de aplicación; bloqueo de fila y restricción en base de datos. | Transacción con `SELECT … FOR UPDATE` del animal e índice único parcial de solicitud aprobada por animal. | La ficha dejaba «la forma de resolver el intento» para clarify; el plan común pide releer tras el bloqueo. | CA-04-05 | decidida previamente (clarify de spec-004, sección 4, y D10; D17 para la formalización) |
-| Q6 | ¿Qué notas exige una entrevista que todavía no se ha celebrado? | (a) Notas obligatorias en cualquier caso (hoy); (b) notas opcionales si la fecha es futura y obligatorias para aprobar. | (b), porque «concertar» una entrevista futura no puede tener aún una valoración. | CA-04-01 pide «registrar una entrevista con fecha, hora y notas» y D09 exige la entrevista realizada para aprobar, pero una entrevista futura con notas obligatorias obliga a inventar la valoración. | CA-04-01, CA-04-03 | PENDIENTE de confirmación por el responsable (`abcb5-ua`) |
-| Q7 | ¿Puede registrarse una entrevista con fecha anterior a la de la solicitud? | (a) Admitirla (hoy); (b) exigir fecha igual o posterior a la solicitud. | (b) | Una entrevista anterior a la candidatura no puede referirse a ella; la spec solo exige que no sea futura. Surgió en la revisión de código (C1-12). | CA-04-01, CA-04-03 | PENDIENTE de confirmación por el responsable (`abcb5-ua`) |
-| Q8 | ¿Reprogramar la entrevista sobrescribe la anterior o se conserva el historial? | (a) Sobrescribir mientras la solicitud no esté decidida (hoy); (b) conservar todas las entrevistas. | (a), porque la historia habla de «una entrevista» por solicitud. | La spec dice «registrar y actualizar» sin precisar el historial. | CA-04-01 | PENDIENTE de confirmación por el responsable (`abcb5-ua`) |
-| Q9 | ¿Qué ve la persona solicitante de la decisión? | (a) Estado, fecha de la entrevista y motivos de rechazo o de liberación (hoy en «Mis solicitudes»); (b) solo el estado. | (a) | SI-30 exige dejar escrito el motivo del rechazo, sin decir quién lo lee; los motivos pueden contener valoraciones. | CA-04-02 (y D11) | PENDIENTE de confirmación por el responsable (`abcb5-ua`) |
+| Q6 | ¿Qué notas exige una entrevista que todavía no se ha celebrado? | (a) Notas obligatorias en cualquier caso (hoy); (b) notas opcionales si la fecha es futura y obligatorias para aprobar. | (b), porque «concertar» una entrevista futura no puede tener aún una valoración. | CA-04-01 pide «registrar una entrevista con fecha, hora y notas» y D09 exige la entrevista realizada para aprobar, pero una entrevista futura con notas obligatorias obliga a inventar la valoración. | CA-04-01, CA-04-03 | Decidida el 2026-11-21 por el grupo: (b) notas opcionales si la fecha es futura; obligatorias para aprobar. |
+| Q7 | ¿Puede registrarse una entrevista con fecha anterior a la de la solicitud? | (a) Admitirla (hoy); (b) exigir fecha igual o posterior a la solicitud. | (b) | Una entrevista anterior a la candidatura no puede referirse a ella; la spec solo exige que no sea futura. Surgió en la revisión de código (C1-12). | CA-04-01, CA-04-03 | Decidida el 2026-11-21 por el grupo: (b) fecha igual o posterior a la solicitud (aplicada: D42). |
+| Q8 | ¿Reprogramar la entrevista sobrescribe la anterior o se conserva el historial? | (a) Sobrescribir mientras la solicitud no esté decidida (hoy); (b) conservar todas las entrevistas. | (a), porque la historia habla de «una entrevista» por solicitud. | La spec dice «registrar y actualizar» sin precisar el historial. | CA-04-01 | Decidida el 2026-11-21 por el grupo: (a) sobrescribir mientras la solicitud no esté decidida; sin historial. |
+| Q9 | ¿Qué ve la persona solicitante de la decisión? | (a) Estado, fecha de la entrevista y motivos de rechazo o de liberación (hoy en «Mis solicitudes»); (b) solo el estado. | (a) | SI-30 exige dejar escrito el motivo del rechazo, sin decir quién lo lee; los motivos pueden contener valoraciones. | CA-04-02 (y D11) | Decidida el 2026-11-21 por el grupo: (a) la persona ve estado, fecha de entrevista y motivos de rechazo o liberación. |
 
-Cada decisión «PENDIENTE» necesita, además, una explicación breve del responsable (enunciado §5.1): *pendiente de
-redactar por `abcb5-ua`*.
+### Explicación de las decisiones por sus responsables
+
+**Q6 · Notas de una entrevista futura.** Hemos decidido que las notas sean opcionales si la entrevista tiene fecha futura, y obligatorias para aprobar. «Concertar» una entrevista futura no puede tener todavía una valoración, y exigir notas obligaría a inventarla. Para aprobar sigue haciendo falta una entrevista registrada con fecha no futura, como fija D09. — Ana Bernabeu Castillo (`abcb5-ua`)
+
+**Q7 · Fecha anterior a la solicitud.** Hemos decidido exigir que la fecha de la entrevista no sea anterior a la de la solicitud. Una entrevista anterior a la candidatura no puede referirse a ella, y la especificación solo exige que no sea futura; la incidencia surgió en la revisión de código (C1-12). Lo aplicamos en el código como D42. — Ana Bernabeu Castillo (`abcb5-ua`)
+
+**Q8 · Reprogramación de la entrevista.** Hemos decidido que reprogramar la entrevista sobrescriba la anterior mientras la solicitud no esté decidida, como ocurre hoy, sin conservar historial. La historia habla de «una entrevista» por solicitud, y la especificación dice «registrar y actualizar» sin precisar un historial. — Ana Bernabeu Castillo (`abcb5-ua`)
+
+**Q9 · Qué ve la persona solicitante.** Hemos decidido que la persona vea el estado de su solicitud, la fecha de la entrevista y los motivos de rechazo o de liberación, como ocurre hoy en «Mis solicitudes». SI-30 exige dejar escrito el motivo del rechazo, pero no dice quién lo lee; como los motivos pueden contener valoraciones, pedimos cuidado al redactarlos. — Ana Bernabeu Castillo (`abcb5-ua`)
 
 ### 3. Diferencias con la especificación inicial
 
@@ -168,4 +174,4 @@ Comparación de `spec-004/historia.md` (ficha inicial de la raíz) con `specs/sp
 ### 4. Nota de método
 
 Ronda realizada con Claude Code siguiendo el procedimiento de `.agents/skills/speckit-clarify/SKILL.md`; no se ha
-ejecutado la skill de Codex. No se han tomado decisiones nuevas: las filas PENDIENTE esperan al responsable.
+ejecutado la skill de Codex. Las decisiones abiertas se cerraron el 2026-11-21 (ver la tabla y las explicaciones).

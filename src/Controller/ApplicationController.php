@@ -20,6 +20,10 @@ class ApplicationController extends AbstractController
     public function create(string $id, Request $request): Response
     {
         $user = $this->applicant();
+        // D45: el personal no solicita adopciones con su cuenta de trabajo; las familias de acogida sí pueden.
+        if ($this->isGranted('ROLE_STAFF')) {
+            throw $this->createAccessDeniedException('Las cuentas del personal de la protectora no pueden solicitar adopciones.');
+        }
         $data = array_map(static fn($value) => is_string($value) ? $value : '', $request->request->all());
         $animal = $this->animals->getPublicAnimal($id);
         if ($animal === null) {

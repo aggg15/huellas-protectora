@@ -37,3 +37,4 @@ Responsable de la ejecución: `aggg15` (asistido por Claude Code); revisión: pe
 - [x] T112 Usar `var/uploads_test` como almacén en `when@test` y vaciarlo en `WebTestBase::tearDown` sin tocar `var/uploads` (C1-19)
 - [x] T113 Añadir `testReleaseDueAnimalsSqlBoundaryAt240Hours` para el límite de 240 h de la consulta SQL (C1-20a)
 - [x] T114 Documentar en el README los límites de subida y sus efectos (C1-16, solo documentación)
+- [x] T115 Registrar en HU-01 los cambios de `AnimalService` hechos al corregir HU-03 (T311 de spec-003): la procedencia y las observaciones veterinarias se normalizan con `TextNormalizer` (NUL y UTF-8 inválido dan 422) y la ficha repuebla el formulario de revisión tras un 422; pruebas `testAnimalOriginIsNormalizedAndRejectsNulAndInvalidUtf8` y `testVeterinaryReviewKeepsTypedValuesAndRejectsNulAndInvalidUtf8` en `tests/Spec003Test.php` (C1-09, C1-18)

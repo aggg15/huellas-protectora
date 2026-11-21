@@ -1,0 +1,46 @@
+No syntax errors detected in src/Service/ApplicationService.php
+No syntax errors detected in src/Service/AnimalService.php
+No syntax errors detected in src/Service/TextNormalizer.php
+No syntax errors detected in src/Controller/ApplicationController.php
+No syntax errors detected in src/Controller/ApplicationReviewController.php
+No syntax errors detected in src/Entity/AdoptionApplication.php
+No syntax errors detected in migrations/Version20261121100000.php
+No syntax errors detected in tests/Spec003Test.php
+No syntax errors detected in tests/Spec004Test.php
+No syntax errors detected in tests/Support/application-race.php
+
+ [OK] The container was linted successfully: all services are injected with     
+      values that are compatible with their type declarations.                  
+
+
+ [OK] All 29 Twig files contain valid syntax.                                   
+
+
+ [OK] All 6 YAML files contain valid syntax.                                    
+
+ [OK] Successfully migrated to version: DoctrineMigrations\Version20261121100000
+
+
+
+Mapping
+-------
+
+ [OK] The mapping files are correct.                                            
+
+Database
+--------
+
+ [OK] The database schema is in sync with the mapping files.                    
+
+PHPUnit 11.5.57 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.3.37
+Configuration: /app/phpunit.xml.dist
+
+.  63 / 129 ( 48%)
+.. 126 / 129 ( 97%)
+.                                                             129 / 129 (100%)
+
+Time: 14:03.299, Memory: 44.50 MB
+
+OK (129 tests, 1487 assertions)

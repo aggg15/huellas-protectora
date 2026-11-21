@@ -2,19 +2,19 @@
 
 ## Reparto final
 
-| HU | Responsable (usuario GitHub) | Autor de git observado | PR | Revisión registrada | Nombre (a completar por el grupo) |
+| HU | Responsable (usuario GitHub) | Autor de git observado | PR | Revisión registrada | Nombre |
 |---|---|---|---|---|---|
-| HU-01 | `aggg15` | Antonio | #1 | Aprobada por `abcb5-ua` | |
-| HU-02 | `abcb5-ua` | Ana | #5 | Aprobada por `aggg15` | |
-| HU-03 | `aggg15` | Antonio | #6 | Aprobada por `abcb5-ua` | |
-| HU-04 | `abcb5-ua` | Ana | #8 | Aprobada por `aggg15` | |
-| HU-05 | `aggg15` | Antonio | #9 | Aprobada e integrada por `abcb5-ua` | |
-| HU-06 | `abcb5-ua` | Ana | #10 | No consta: integrada por `aggg15` sin revisión registrada | |
-| HU-07 | `aggg15` | Antonio | #11 | Aprobada e integrada por `abcb5-ua` | |
-| HU-08 | `abcb5-ua` | Ana | #12 | No consta en el repositorio | |
+| HU-01 | `aggg15` | Antonio | #1 | Aprobada por `abcb5-ua` | Antonio García Gómez |
+| HU-02 | `abcb5-ua` | Ana | #5 | Aprobada por `aggg15` | Ana Bernabeu Castillo |
+| HU-03 | `aggg15` | Antonio | #6 | Aprobada por `abcb5-ua` | Antonio García Gómez |
+| HU-04 | `abcb5-ua` | Ana | #8 | Aprobada por `aggg15` | Ana Bernabeu Castillo |
+| HU-05 | `aggg15` | Antonio | #9 | Aprobada e integrada por `abcb5-ua` | Antonio García Gómez |
+| HU-06 | `abcb5-ua` | Ana | #10 | No consta: integrada por `aggg15` sin revisión registrada | Ana Bernabeu Castillo |
+| HU-07 | `aggg15` | Antonio | #11 | Aprobada e integrada por `abcb5-ua` | Antonio García Gómez |
+| HU-08 | `abcb5-ua` | Ana | #12 | No consta en el repositorio | Ana Bernabeu Castillo |
 
-El autor de git es el nombre configurado en cada commit; no se usa como nombre académico. Los nombres académicos
-del grupo no constan y se completarán en la última columna.
+Grupo G27: Antonio García Gómez (`aggg15`, HU-01, HU-03, HU-05 y HU-07) y Ana Bernabeu Castillo (`abcb5-ua`,
+HU-02, HU-04, HU-06 y HU-08). El autor de git es el nombre configurado en cada commit.
 
 ## Cronología
 

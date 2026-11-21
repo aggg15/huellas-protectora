@@ -490,4 +490,28 @@ class Spec003Test extends WebTestBase
         self::assertResponseRedirects(null, 303);
         self::assertSame('Todo bien', $this->refreshEm()->getRepository(VeterinaryReview::class)->findOneBy([])->notes);
     }
+
+    /** D45 (clarify Q8): el personal no presenta solicitudes y la ficha no le ofrece el botón; una familia de acogida sí puede. */
+    public function testStaffCannotApplyButFosterFamiliesCan(): void
+    {
+        $animal = $this->animal(0, 'available');
+        foreach (['ROLE_VOLUNTEER', 'ROLE_VET', 'ROLE_COORDINATOR'] as $role) {
+            $this->client->loginUser($this->user($role, strtolower($role).'_'.bin2hex(random_bytes(4)).'@example.test'));
+            $this->client->request('GET', '/animales/'.$animal->id.'/solicitud');
+            self::assertResponseStatusCodeSame(403, $role);
+            $this->client->request('POST', '/animales/'.$animal->id.'/solicitud', ['_token' => 'x']);
+            self::assertResponseStatusCodeSame(403, $role);
+            $this->client->request('GET', '/animales/'.$animal->id);
+            self::assertResponseIsSuccessful();
+            self::assertSelectorNotExists('a[href$="/solicitud"]');
+            self::assertSelectorTextContains('aside', 'personal de la protectora no presentan solicitudes');
+        }
+        self::assertSame(0, $this->refreshEm()->getRepository(\App\Entity\AdoptionApplication::class)->count([]));
+
+        foreach (['ROLE_USER', 'ROLE_FOSTER'] as $role) {
+            $this->client->loginUser($this->user($role, strtolower($role).'_'.bin2hex(random_bytes(4)).'@example.test'));
+            $this->client->request('GET', '/animales/'.$animal->id.'/solicitud');
+            self::assertResponseIsSuccessful($role);
+        }
+    }
 }
