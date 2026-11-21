@@ -1,0 +1,14 @@
+CI de GitHub Actions de la PR de revision-entrega (ejecutado el 2026-11-21 a las 21:32 UTC = 22:32 Madrid), extracto:
+
+Spec007
+ ✘ Coordinator changes limits within rules
+   422 «La hora de fin debe ser posterior a la de inicio, el mismo día.» (turno de 22:32 a 00:32)
+   tests/Spec007Test.php:276
+ ✘ Concurrent maximum change and signup stay within limit
+   PHP Fatal error: Uncaught App\Service\ValidationError: La hora de fin debe ser posterior a la de inicio, el mismo día.
+   src/Service/ShiftService.php:236 ← tests/Support/shift-race.php:43
+FAILURES! Tests: 20, Assertions: 277, Failures: 2.
+
+Causa: el helper at('+N days') de Spec007Test creaba turnos a la hora actual; de noche el turno de 2 h cruzaba la medianoche
+y la regla D27 (mismo día) lo rechazaba al editarlo. Corrección T728: anclar «+N days» a las 10:00 de Madrid.
+Después (local, Docker php:8.3 + postgres:16, 2026-11-21 21:37 UTC = 22:37 Madrid): Spec007 OK (20 tests, 302 assertions).

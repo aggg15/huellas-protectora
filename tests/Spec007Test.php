@@ -25,6 +25,14 @@ class Spec007Test extends WebTestBase
     /** Instante UTC relativo a ahora, p. ej. '+30 hours'. */
     private function at(string $modifier): \DateTimeImmutable
     {
+        // «+N days [M hours]» se ancla a las 10:00 de Madrid de ese día: un turno de dos horas no cruza la medianoche
+        // aunque la suite se ejecute de noche (D27 exige inicio y fin el mismo día). Con N ≥ 3 sigue a más de 48 h.
+        if (preg_match('/^\+(\d+) days?(?: (\d+) hours?)?$/', $modifier, $m) === 1) {
+            $madrid = new \DateTimeZone(ShiftService::ZONE);
+            return (new \DateTimeImmutable('today 10:00', $madrid))
+                ->modify(sprintf('+%d days +%d hours', (int) $m[1], (int) ($m[2] ?? 0)))
+                ->setTimezone(new \DateTimeZone('UTC'));
+        }
         return new \DateTimeImmutable($modifier, new \DateTimeZone('UTC'));
     }
 
