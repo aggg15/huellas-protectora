@@ -130,5 +130,4 @@ implementación actual. La revisión actual deja de usar Práctica 1 como fuente
 
 El enunciado v1 requiere specs/ y docs/agrupamiento.md y docs/memoria.md, además de dos ZIP finales
 (proyecto y vídeo, máximo conjunto 100 MB). Esta iteración prepara la aplicación y documentación
-de las historias integradas. HU-08 se integró en `main` con la PR #12 (2026-11-20; la revisión de la PR #12 no consta
-en el repositorio). No se declara terminada la memoria ni la demo final.
+de las historias integradas. HU-08 se integró en `main` con la PR #12 (2026-11-20; aprobada por `aggg15`, actualización 2026-11-21). No se declara terminada la memoria ni la demo final.

@@ -102,7 +102,7 @@ sustituye la evidencia: el cierre se acredita con `docs/evidencias/spec-006-phpu
 
 ## Ejecución del 2026-11-19
 
-Implementación de T605–T623 asistida por Claude Code a petición de `abcb5-ua`; revisión de `aggg15` pendiente. Actualización 2026-11-21: integrada en `main` con la PR #10, sin revisión registrada (según `docs/agrupamiento.md`).
+Implementación de T605–T623 asistida por Claude Code a petición de `abcb5-ua`; revisión de `aggg15` (histórico: pendiente). Actualización 2026-11-21: integrada en `main` con la PR #10, revisada e integrada por `aggg15`; GitHub no registra una aprobación formal.
 Detalle de componentes en [implement](implement.md).
 
 - T605–T606 → entidades `FosterHome`, `FosterAvailability`, `FosterPlacement`, `FosterNote` y migración
@@ -121,7 +121,7 @@ Detalle de componentes en [implement](implement.md).
 - T624 → [implement](implement.md) y [converge](converge.md): 2 hallazgos (C1 MEDIUM, C2 LOW), añadidos debajo como T626–T627.
 
 - T625 → [PR #10](https://github.com/aggg15/huellas-protectora/pull/10), con revisión pedida a `aggg15` (pendiente).
-  Actualización 2026-11-21: integrada en `main` con la PR #10 sin revisión registrada (según `docs/agrupamiento.md`).
+  Actualización 2026-11-21: integrada en `main` con la PR #10, revisada e integrada por `aggg15`; GitHub no registra una aprobación formal.
 
 ## Phase 8: Convergence
 

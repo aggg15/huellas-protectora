@@ -117,9 +117,7 @@ Verificación: el CI de la rama integrada (76223b2) dio `OK (23 tests, 193 asser
 (129 pruebas, 1487 aserciones, OK). La carrera aprobar/rechazar dejaba `approve:ok` y `reject:ok` a la vez antes de la
 corrección; después el resultado es siempre una solicitud aprobada con animal reservado o rechazada con animal disponible.
 
-Lo que no se declara: la revisión cruzada de los cambios de la rama `revision-entrega` por `aggg15` no consta (la
-ejecución de T414–T421 figura a nombre de `aggg15` asistido por Claude Code, mientras que HU-04 es de `abcb5-ua`), y la
-matriz mantiene 0/62 revisiones anotadas. El criterio de cierre (0 contradicciones críticas o altas y ningún criterio
+Lo que no se declara: la revisión cruzada de los cambios de la rama `revision-entrega` se hará en la PR de esa rama. La revisión de la historia original consta en su PR (#8, revisada por `aggg15`). El criterio de cierre (0 contradicciones críticas o altas y ningún criterio
 sin tarea y prueba) se cumple; A3 sigue abierto por ser de gravedad baja y no afectar a ningún criterio.
 
 Nota de método: ronda realizada con Claude Code siguiendo el procedimiento de

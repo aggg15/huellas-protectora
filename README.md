@@ -1,8 +1,8 @@
 # Huellas · gestión de adopciones
 
 Estado a 21 de noviembre de 2026: `main` integra **HU-01 a HU-08** (PR #1, #5, #6, #8, #9, #10, #11 y #12). Las
-PR #1 a #9 y #11 constan aprobadas en GitHub por el otro integrante; la PR #10 se integró sin revisión registrada
-y la PR #12 (HU-08) no tiene revisión registrada en el repositorio.
+PR #1, #5, #6, #8, #9, #11 y #12 tienen aprobación formal en GitHub del otro integrante; la PR #10 (HU-06) fue revisada
+e integrada por `aggg15` y GitHub no registra una aprobación formal (véase [revisión cruzada](docs/revision-cruzada.md)).
 
 | Historia | Contenido implementado | PR | Autoría observada en GitHub |
 |---|---|---|---|
@@ -104,7 +104,7 @@ conserva tablas de las implementaciones retiradas el 5 de noviembre, las migraci
 Las respuestas 403/404/409/422 esperadas se registran como errores HTTP comprobados; no son fallos de PHPUnit.
 
 El CI ejecuta las pruebas de cada historia (`tests/Spec00NTest.php`) en las ramas `spec-00*` y en
-las PR hacia `main`. Integrantes (G27): Antonio García Gómez (`aggg15`) y Ana Bernabeu Castillo (`abcb5-ua`). La ratificación de la Constitution sigue pendiente.
+las PR hacia `main`. Integrantes (G27): Antonio García Gómez (`aggg15`) y Ana Bernabeu Castillo (`abcb5-ua`). La Constitution quedó ratificada por ambos el 2026-11-21.
 
 ## Notas por historia
 
@@ -120,7 +120,7 @@ las PR hacia `main`. Integrantes (G27): Antonio García Gómez (`aggg15`) y Ana 
 - HU-07: la coordinadora crea los turnos de paseo y limpieza y los
   voluntarios se apuntan o se dan de baja en `/admin/turnos`, que destaca los turnos sin el mínimo cuando faltan
   48 horas o menos. Detalle en [spec-007](specs/spec-007/spec.md).
-- HU-08 (PR #12, integrada en `main`; revisión no consta en el repositorio): las personas con cuenta pública apadrinan un animal disponible
+- HU-08 (PR #12, integrada en `main`; aprobada por `aggg15`): las personas con cuenta pública apadrinan un animal disponible
   desde su ficha (aportación mensual desde 10 €) y ven sus novedades y la decisión tras la adopción en
   `/mis-apadrinamientos`; la coordinadora publica las novedades en `/admin/apadrinamientos`. Detalle en
   [spec-008](specs/spec-008/spec.md).

@@ -92,8 +92,8 @@ contra PostgreSQL efímero. Se ejecuta al publicar `main` o una rama `spec-001` 
 PR hacia `main`. No utiliza secretos del ordenador de un
 integrante, no despliega la aplicación y no aplica migraciones a una base compartida.
 
-La plantilla de PR recoge historia, criterios, pruebas y revisión pendiente. El reparto observado de las ocho
-historias y los nombres de los integrantes (Antonio García Gómez y Ana Bernabeu Castillo) constan en agrupamiento; la ratificación de la Constitution se completará por ambos
+La plantilla de PR recoge historia, criterios, pruebas y revisión del otro integrante. El reparto observado de las ocho
+historias y los nombres de los integrantes (Antonio García Gómez y Ana Bernabeu Castillo) constan en agrupamiento; la Constitution fue ratificada por ambos el 2026-11-21
 (véase [agrupamiento](docs/agrupamiento.md)); los permisos GitHub no acreditan esos acuerdos docentes.
 
 ## Archivos compartidos y archivos locales

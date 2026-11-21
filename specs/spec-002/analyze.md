@@ -96,9 +96,7 @@ Verificación: el CI de la rama integrada (76223b2) dio `OK (14 tests, 136 asser
 Spec008 (49 pruebas OK, según el README de la carpeta de evidencias). Según `converge.md`, C1-06 falla sin las plantillas y pasa con ellas; C1-15 y C1-20 se
 añadieron como cobertura y no se ejecutaron sobre el código anterior.
 
-Lo que no se declara: la revisión cruzada de los cambios de la rama `revision-entrega` por `aggg15` no consta (la
-ejecución de T210–T213 figura a nombre de `aggg15` asistido por Claude Code, mientras que HU-02 es de `abcb5-ua`), y la
-matriz mantiene 0/62 revisiones anotadas. El resto del criterio de cierre (0 contradicciones críticas o altas y ningún
+Lo que no se declara: la revisión cruzada de los cambios de la rama `revision-entrega` se hará en la PR de esa rama. La revisión de la historia original consta en su PR (#5, revisada por `aggg15`). El resto del criterio de cierre (0 contradicciones críticas o altas y ningún
 criterio sin tarea y prueba) se cumple.
 
 Nota de método: ronda realizada con Claude Code siguiendo el procedimiento de

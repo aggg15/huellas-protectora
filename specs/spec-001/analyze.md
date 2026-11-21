@@ -60,7 +60,7 @@ La gravedad de los C1-0X de la tabla es la provisional de la revisión; la fijad
 | ID | Historia / criterio | Gravedad | Evidencia | Decisión | Responsable | Estado |
 |---|---|---|---|---|---|---|
 | A1 | HU-01 / CA-01-04, CA-01-05 | MEDIUM | `clarify.md` de cinco líneas antes de esta ronda | Registrar preguntas, respuestas y diferencias | `aggg15` | Corregido en clarify.md el 2026-11-21; Q5–Q7 decididas el mismo día |
-| A2 | HU-01 / CA-01-01 a CA-01-05 | MEDIUM | `tasks.md` T101–T107 sin criterio por tarea | Matriz en `docs/trazabilidad.md`; sin tareas nuevas | `aggg15` (revisa `abcb5-ua`) | Aceptado: las tareas siguen siendo de fase; la relación criterio → tarea está en `docs/trazabilidad.md` (62/62 criterios con tarea y prueba). La revisión cruzada de las filas sigue pendiente |
+| A2 | HU-01 / CA-01-01 a CA-01-05 | MEDIUM | `tasks.md` T101–T107 sin criterio por tarea | Matriz en `docs/trazabilidad.md`; sin tareas nuevas | `aggg15` (revisa `abcb5-ua`) | Aceptado: las tareas siguen siendo de fase; la relación criterio → tarea está en `docs/trazabilidad.md` (62/62 criterios con tarea y prueba). La revisión cruzada de las filas consta en la PR de la historia |
 | A3 | HU-01 / documentación | LOW | tasks.md, plan.md y converge.md frente a `docs/agrupamiento.md` | Actualizar las menciones de responsable y revisión | `aggg15` | Corregido: `tasks.md`, `plan.md` y `converge.md` recogen la «Actualización 2026-11-21» (PR #1 integrada, aprobada por `abcb5-ua` según `docs/agrupamiento.md`) |
 | A4 | HU-01 / CA-01-03 | MEDIUM | `Spec001Test.php` línea 27: foto `no-existe.png` | Ver C1-05 | `aggg15` | Corregido: T108 (`testPrivatePhotosAreOnlyServedForAvailableAnimalsOrStaff`, C1-05) |
 | A5 | HU-01 / CA-01-04 | MEDIUM | `Spec001Test.php` líneas 48–58: solo cuenta revisiones | Ver C1-07 | `aggg15` | Corregido: T109 (`testVeterinaryReviewAndRoleValidation` ampliada, C1-07) |
@@ -98,8 +98,7 @@ Verificación: el CI de la rama integrada (76223b2) dio `OK (11 tests, 69 assert
 tabla de `converge.md`: con la comprobación de estado de `MediaController` quitada temporalmente la prueba nueva falla;
 no se conservó el registro de esa ejecución (véase la nota de `docs/evidencias/revision-entrega-2026-11-21/README.md`).
 
-Lo que no se declara: la revisión cruzada de los cambios de la rama `revision-entrega` por `abcb5-ua` no consta, y la
-matriz mantiene 0/62 revisiones anotadas. El resto del criterio de cierre (0 contradicciones críticas o altas y ningún
+Lo que no se declara: la revisión cruzada de los cambios de la rama `revision-entrega` se hará en la PR de esa rama. La revisión de la historia original consta en su PR (#1, revisada por `abcb5-ua`). El resto del criterio de cierre (0 contradicciones críticas o altas y ningún
 criterio sin tarea y prueba) se cumple.
 
 Nota de método: ronda realizada con Claude Code siguiendo el procedimiento de

@@ -79,7 +79,7 @@ La gravedad de los C1-0X de la tabla es la provisional de la revisión; la fijad
 | ID | Historia / criterio | Gravedad | Evidencia | Decisión | Responsable | Estado |
 |---|---|---|---|---|---|---|
 | A1 | HU-03 / CA-03-01 a CA-03-06 | MEDIUM | `clarify.md` sin tabla de preguntas ni diferencias | Añadir ambas | `aggg15` | Corregido en clarify.md el 2026-11-21; Q8 y Q9 decididas el mismo día |
-| A2 | HU-03 / CA-03-01 a CA-03-06 | MEDIUM | `tasks.md` T301–T305 sin criterio por tarea | Matriz en `docs/trazabilidad.md`; sin tareas nuevas | `aggg15` (revisa `abcb5-ua`) | Aceptado: las tareas siguen siendo de fase; la relación criterio → tarea está en `docs/trazabilidad.md` (62/62 criterios con tarea y prueba). La revisión cruzada de las filas sigue pendiente |
+| A2 | HU-03 / CA-03-01 a CA-03-06 | MEDIUM | `tasks.md` T301–T305 sin criterio por tarea | Matriz en `docs/trazabilidad.md`; sin tareas nuevas | `aggg15` (revisa `abcb5-ua`) | Aceptado: las tareas siguen siendo de fase; la relación criterio → tarea está en `docs/trazabilidad.md` (62/62 criterios con tarea y prueba). La revisión cruzada de las filas consta en la PR de la historia |
 | A3 | HU-03 / documentación | LOW | spec.md, tasks.md y converge.md frente a `docs/agrupamiento.md` | Actualizar responsables y estado | `aggg15` | Corregido en parte: `spec.md`, `plan.md` y `tasks.md` recogen la «Actualización 2026-11-21» (PR #6 integrada, aprobada por `abcb5-ua` según `docs/agrupamiento.md`); `converge.md` conserva su línea «Pendiente: … revisión del compañero» sin actualizar |
 | A4 | HU-03 / CA-03-05 | MEDIUM | clarify.md sección 4 (409) frente a `ApplicationController` (404) | Ver C1-04 | `aggg15` | Corregido: T306 (`testAnimalReservedOrAdoptedWhileTheFormIsOpenAnswersConflict`; D43) |
 | A5 | HU-03 / CA-03-03, CA-03-05, CA-03-06 | MEDIUM | Migraciones sin índice único de solicitud abierta por cuenta y animal | Ver C1-10 | `aggg15` | Corregido: T308 (migración `Version20261121100000`, índice único parcial; `testDatabaseRejectsTwoOpenApplicationsOfTheSameApplicantForTheSameAnimal`) |
@@ -118,8 +118,7 @@ C1-09, C1-10, C2-03 y las de HU-01 de T311 fallan sobre el código anterior y pa
 C1-20c es cobertura nueva. La prueba de concurrencia `testConcurrentSubmissionsNeverExceedTwoOpenApplications` sigue pasando
 (procesos reales).
 
-Lo que no se declara: la revisión cruzada de los cambios de la rama `revision-entrega` por `abcb5-ua` no consta, y la
-matriz mantiene 0/62 revisiones anotadas. El resto del criterio de cierre (0 contradicciones críticas o altas y ningún
+Lo que no se declara: la revisión cruzada de los cambios de la rama `revision-entrega` se hará en la PR de esa rama. La revisión de la historia original consta en su PR (#6, revisada por `abcb5-ua`). El resto del criterio de cierre (0 contradicciones críticas o altas y ningún
 criterio sin tarea y prueba) se cumple.
 
 Nota de método: ronda realizada con Claude Code siguiendo el procedimiento de

@@ -1,11 +1,11 @@
 # Especificación HU-06 · spec-006
 
 Fecha: 2026-11-05 (especificación inicial); concretada el 2026-11-19 por encargo de `abcb5-ua`.
-Responsable GitHub: `abcb5-ua`. Revisión prevista: `aggg15` (pendiente). Actualización 2026-11-21: integrada en `main` con la PR #10 sin revisión registrada (según `docs/agrupamiento.md`).
+Responsable GitHub: `abcb5-ua`. Revisión prevista: `aggg15` (pendiente). Actualización 2026-11-21: integrada en `main` con la PR #10, revisada e integrada por `aggg15`; GitHub no registra una aprobación formal.
 Estado: especificada, aclarada ([clarify](clarify.md)) y planificada ([plan](plan.md)) en la rama `spec-006`,
 creada desde `main` (87a78a0, con HU-01 a HU-05 integradas). Con [tareas](tasks.md), [analyze](analyze.md),
 [implementación](implement.md) (T605–T623) y verificación manual; [converge](converge.md) con T626–T627 completadas
-y convergido. Pendiente la revisión de `aggg15`. Actualización 2026-11-21: integrada en `main` con la PR #10 sin revisión registrada.
+y convergido. Revisión de `aggg15` (histórico: pendiente). Actualización 2026-11-21: integrada en `main` con la PR #10, revisada e integrada por `aggg15`; GitHub no registra una aprobación formal.
 
 ## Historia de usuario
 

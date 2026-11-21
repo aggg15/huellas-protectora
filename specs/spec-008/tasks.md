@@ -102,7 +102,7 @@ Detalle de componentes en [implement](implement.md).
 - T819 → suite completa en una base `_test` nueva; [evidencia](../../docs/evidencias/spec-008-phpunit.txt).
 - T820 → [implement](implement.md) y [converge](converge.md): dos hallazgos (C1 y C2, LOW), añadidos debajo como T822–T823.
 - T821 → [PR #12](https://github.com/aggg15/huellas-protectora/pull/12), con revisión pedida a `aggg15` (pendiente).
-  Estado final: integrada en `main` (2026-11-20); la revisión de la PR #12 no consta en el repositorio (actualización 2026-11-21).
+  Estado final: integrada en `main` (2026-11-20); aprobada por `aggg15` en GitHub el 2026-11-20 (actualización 2026-11-21: antes constaba como no registrada).
 
 ## Phase 9: Convergence
 

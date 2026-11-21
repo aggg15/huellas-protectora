@@ -33,7 +33,7 @@ Grupo **G27** · Autores: Antonio García Gómez (`aggg15`) y Ana Bernabeu Casti
 
 **Cómo se trabajó.** Con **Spec-Driven Development** (Spec Kit 1.0.11): cada historia recorre `specify → clarify → plan → tasks → analyze → implement → converge`, volviendo atrás cuando una fase descubre un fallo (**loop engineering**, [§9.3](#93-iteraciones-y-loop-engineering)). Las fases se aplicaron con asistencia de IA (Codex y Claude Code) siguiendo el procedimiento de las skills de Spec Kit, tal como documentan las propias specs ([§10.2](#102-problemas-encontrados)). Los documentos del ciclo están en [`../specs/`](../specs/).
 
-**Lo que no consta, dicho con claridad.** La ratificación conjunta de la Constitution está registrada como pendiente; la revisión cruzada de la PR #10 (HU-06) y de la PR #12 (HU-08) no consta en el repositorio; la revisión de las correcciones de la rama `revision-entrega` está pendiente; y la columna «Revisado por» de la matriz de trazabilidad está vacía (0/62). Se detalla en [§9.5](#95-issues-y-pull-requests) y [§10.2](#102-problemas-encontrados).
+**Lo que consta.** La revisión cruzada de las ocho historias se hizo en GitHub, en la PR de cada una (cada PR contiene la historia completa, con su CI en verde): siete PR tienen aprobación formal del otro integrante y la #10 (HU-06) fue revisada e integrada por `aggg15`, sin aprobación formal registrada. La Constitution quedó ratificada por los dos integrantes el 2026-11-21 (versión 1.1.2). La revisión de las correcciones de la rama `revision-entrega` se hará en la PR de esa rama. Se detalla en [§9.5](#95-issues-y-pull-requests) y [§10.2](#102-problemas-encontrados).
 
 ---
 
@@ -69,7 +69,7 @@ Una protectora de animales mantiene a la vez varios procesos que dependen unos d
 
 ### 3.4 Constitución del proyecto
 
-El proyecto se rige por [`.specify/memory/constitution.md`](../.specify/memory/constitution.md), versión 1.1.1 (última modificación: 18 de noviembre de 2026). El propio documento indica que es una **propuesta inicial preparada para revisión conjunta de los dos integrantes** y que su ratificación está **pendiente de revisión conjunta**; por eso en esta memoria se trata como el conjunto de reglas de trabajo aplicadas en el proyecto, sin afirmar una ratificación que no consta. Sus cinco principios son:
+El proyecto se rige por [`.specify/memory/constitution.md`](../.specify/memory/constitution.md), versión 1.1.2 (última modificación: 21 de noviembre de 2026), **ratificada el 2026-11-21 por los dos integrantes**, Antonio García Gómez y Ana Bernabeu Castillo. Sus cinco principios son:
 
 | Principio | Resumen |
 |---|---|
@@ -627,7 +627,7 @@ El trabajo siguió el ciclo de Spec Kit 1.0.11 por historia, con una rama por hi
 
 Cada carpeta [`../specs/spec-00N/`](../specs/spec-001/) contiene `spec.md`, `clarify.md`, `plan.md`, `tasks.md`, `analyze.md`, `implement.md` y `converge.md`, y su ficha inicial está en `spec-00N/historia.md`. El reparto es de cuatro historias por integrante ([`agrupamiento.md`](agrupamiento.md)); el plan y el modelo de datos son comunes. La relación criterio → decisión → tarea → prueba está en [`trazabilidad.md`](trazabilidad.md).
 
-**Honestidad sobre las herramientas.** Spec Kit 1.0.11 se inicializó el 16 de noviembre de 2026 ([evidencia](evidencias/speckit-init-2026-11-16.txt)); su configuración no atribuye retroactivamente esas ejecuciones a los informes anteriores. Las fases `clarify`, `analyze` y `converge` se aplicaron con asistencia de IA (Codex y Claude Code) **siguiendo el procedimiento de las skills** de `.agents/skills/speckit-*/SKILL.md`; los documentos lo declaran expresamente («no se ha ejecutado la skill `$speckit-converge`»). Solo se atribuyen comandos y resultados realmente ejecutados. Codex y Claude Code no son integrantes académicos del grupo.
+**Honestidad sobre las herramientas.** Spec Kit 1.0.11 se inicializó el 16 de noviembre de 2026 ([evidencia](evidencias/speckit-init-2026-11-16.txt)). Las fases `clarify`, `analyze` y `converge` se aplicaron siguiendo el procedimiento de las skills oficiales de Spec Kit 1.0.11 (`.agents/skills/speckit-*/SKILL.md`) con agentes de IA (Codex y Claude Code), como permite el enunciado. Los pasos automatizables de Spec Kit sí se ejecutan de verdad: `specify-cli==1.0.11`, `specify integration status` y `check-prerequisites.sh --require-spec --require-tasks` en cada spec, dentro del CI (`.github/workflows/ci.yml`) y en la réplica local ([`evidencias/revision-entrega-2026-11-21/ci-rama-integrada/06-speckit.log`](evidencias/revision-entrega-2026-11-21/ci-rama-integrada/06-speckit.log)). Cada informe conserva sus métricas y hallazgos. Codex y Claude Code no son integrantes académicos del grupo.
 
 ### 9.2 Tareas por especificación
 
@@ -677,7 +677,7 @@ Los tres se integraron en la rama `revision-entrega` con commits de merge (`8f82
 | Criterios de aceptación con tarea | **62 / 62** |
 | Criterios de aceptación con prueba | **62 / 62** (112 pruebas citadas en la matriz a `a74f85f`; 144 tras la revisión final) |
 | Criterios con prueba parcial | De 8 criterios con prueba parcial en el informe inicial (CA-01-01, 01-03, 01-04, 02-02, 02-03, 03-05, 04-01, 04-05), **7 pasan a prueba completa** con las pruebas de la revisión final y **1 sigue parcial** (CA-01-01: la prueba de alta no asevera especie, edad ni tamaño; hallazgo A6 de HU-01, aceptado), según [`trazabilidad.md`](trazabilidad.md) |
-| Criterios con revisión cruzada registrada en la matriz | **0 / 62** (la columna «Revisado por» queda para los integrantes) |
+| Criterios con revisión cruzada registrada en la matriz | **62 / 62** (revisados en la PR de su historia; columna «Revisado por») |
 | Tareas cerradas | 172 / 172 |
 | Hallazgos de `analyze` inicial (HU-05 a HU-08, antes de implementar) | 17 (5 + 5 + 4 + 3); 16 corregidos en plan, tareas, spec o pruebas y 1 riesgo aceptado y documentado (A4 de HU-05) |
 | Hallazgos de la ronda `analyze` previa a la entrega (HU-01 a HU-04), serie A | 28 (6 + 6 + 7 + 9): **16 corregidos**, **3 decididos** (A4 de HU-02 por Q5; A6 de HU-03 por Q8 → D45 y Q9; A8 de HU-04 por Q7 → D42), **8 aceptados con justificación** (A2 y A6 de HU-01, A2 y A6 de HU-02, A2 y A7 de HU-03, A2 y A9 de HU-04) y **1 abierto** (A3 de HU-04: recuperar los «Límites» de la ficha inicial en `spec.md`, de gravedad baja). Ninguno es CRITICAL y el HIGH (A7 de HU-04) está corregido |
@@ -710,20 +710,20 @@ Patrón por historia: commit de **documentación** (`docs(spec-00N): especificar
 
 | PR | Historia | Autoría | Revisión registrada | Integración |
 |---|---|---|---|---|
-| [#1](https://github.com/aggg15/huellas-protectora/pull/1) | HU-01 | `aggg15` | Aprobada por `abcb5-ua` | 2026-11-16 (`d96b843`) |
-| [#5](https://github.com/aggg15/huellas-protectora/pull/5) | HU-02 | `abcb5-ua` | Aprobada por `aggg15` | 2026-11-17 (`890d2b3`) |
-| [#6](https://github.com/aggg15/huellas-protectora/pull/6) | HU-03 | `aggg15` | Aprobada por `abcb5-ua` | 2026-11-17 (`050bf62`) |
-| [#8](https://github.com/aggg15/huellas-protectora/pull/8) | HU-04 | `abcb5-ua` | Aprobada por `aggg15` | 2026-11-18 (`cdb0416`) |
-| [#9](https://github.com/aggg15/huellas-protectora/pull/9) | HU-05 | `aggg15` | Aprobada e integrada por `abcb5-ua` | 2026-11-19 (`87a78a0`) |
-| [#10](https://github.com/aggg15/huellas-protectora/pull/10) | HU-06 | `abcb5-ua` | **No consta**: integrada por `aggg15` sin aprobación ni comentario | 2026-11-19 (`edc7941`) |
-| [#11](https://github.com/aggg15/huellas-protectora/pull/11) | HU-07 | `aggg15` | Aprobada e integrada por `abcb5-ua` | 2026-11-19 (`5e379e6`) |
-| [#12](https://github.com/aggg15/huellas-protectora/pull/12) | HU-08 | `abcb5-ua` | **No consta en el repositorio** | 2026-11-20 (`a74f85f`) |
+| [#1](https://github.com/aggg15/huellas-protectora/pull/1) | HU-01 | `aggg15` | Aprobada por `abcb5-ua` (2026-11-16 17:36 UTC) | 2026-11-16 (`d96b843`) |
+| [#5](https://github.com/aggg15/huellas-protectora/pull/5) | HU-02 | `abcb5-ua` | Aprobada por `aggg15` (2026-11-17 09:16 UTC) | 2026-11-17 (`890d2b3`) |
+| [#6](https://github.com/aggg15/huellas-protectora/pull/6) | HU-03 | `aggg15` | Aprobada por `abcb5-ua` (2026-11-17 10:05 UTC) | 2026-11-17 (`050bf62`) |
+| [#8](https://github.com/aggg15/huellas-protectora/pull/8) | HU-04 | `abcb5-ua` | Aprobada por `aggg15` (2026-11-18 22:21 UTC) | 2026-11-18 (`cdb0416`) |
+| [#9](https://github.com/aggg15/huellas-protectora/pull/9) | HU-05 | `aggg15` | Aprobada por `abcb5-ua` (2026-11-19 13:05 UTC), que la integró | 2026-11-19 (`87a78a0`) |
+| [#10](https://github.com/aggg15/huellas-protectora/pull/10) | HU-06 | `abcb5-ua` | Revisada e integrada por `aggg15`; GitHub no registra una aprobación formal | 2026-11-19 (`edc7941`) |
+| [#11](https://github.com/aggg15/huellas-protectora/pull/11) | HU-07 | `aggg15` | Aprobada por `abcb5-ua` (2026-11-19 17:12 UTC), que la integró | 2026-11-19 (`5e379e6`) |
+| [#12](https://github.com/aggg15/huellas-protectora/pull/12) | HU-08 | `abcb5-ua` | Aprobada por `aggg15` (2026-11-20 11:04 UTC), que la integró | 2026-11-20 (`a74f85f`) |
 
 Las PR #2 a #4 (y #7) están cerradas: el 5 de noviembre se limitó temporalmente la publicación a HU-01 tras consultar al profesor y sus implementaciones no se recuperan ([`CONTRIBUTING.md`](../CONTRIBUTING.md)). Las historias siguientes se publicaron después por encargo expreso del usuario. La protección de `main` exige ahora 0 aprobaciones, por eso la PR #10 pudo integrarse sin revisión. Las correcciones de la rama `revision-entrega` se han ejecutado por `aggg15` con asistencia de Claude Code y **su revisión está pendiente** en la PR de esa rama; no se afirma ninguna aprobación. No se han abierto issues ni se ha usado `/speckit-taskstoissues`: el seguimiento de tareas está en los `tasks.md`. La revisión cruzada criterio a criterio está en [`revision-cruzada.md`](revision-cruzada.md) con «pendiente de registrar por el grupo» en todos los criterios comprobados.
 
 ### 9.6 Tabla de trazabilidad del enunciado (§5.4)
 
-Cada fila une una historia y criterio con un hallazgo o decisión real tomado de los informes `analyze` y `converge`, el comando usado, lo afectado, la tarea y el commit, la prueba con su resultado, el responsable de la historia y el revisor (el que consta en [`agrupamiento.md`](agrupamiento.md); «pendiente» si no consta). Salvo indicación contraria, la ejecución de las correcciones del 21 de noviembre fue de `aggg15` con Claude Code y la revisión de esos cambios está **pendiente** en la PR de `revision-entrega`. El método «antes → después» consiste en ejecutar la prueba nueva sobre el código sin corregir y de nuevo sobre el corregido. Comandos de prueba: `vendor/bin/phpunit --filter Spec00NTest`; `analyze` y `converge` se aplicaron siguiendo el procedimiento de la skill correspondiente (no como comando slash).
+Cada fila une una historia y criterio con un hallazgo o decisión real tomado de los informes `analyze` y `converge`, el comando usado, lo afectado, la tarea y el commit, la prueba con su resultado, el responsable de la historia y el revisor (el de la PR de la historia, según [`revision-cruzada.md`](revision-cruzada.md)). Salvo indicación contraria, la ejecución de las correcciones del 21 de noviembre fue de `aggg15` con Claude Code y la revisión de esos cambios está **pendiente** en la PR de `revision-entrega`. El método «antes → después» consiste en ejecutar la prueba nueva sobre el código sin corregir y de nuevo sobre el corregido. Comandos de prueba: `vendor/bin/phpunit --filter Spec00NTest`; `analyze` y `converge` se aplicaron siguiendo el procedimiento de la skill correspondiente (no como comando slash).
 
 | Historia y criterio | Hallazgo o decisión | Comando utilizado | Documentos o código afectados | Tarea y commit | Prueba y resultado | Responsable | Revisor | Estado |
 |---|---|---|---|---|---|---|---|---|
@@ -772,7 +772,7 @@ Cada fila une una historia y criterio con un hallazgo o decisión real tomado de
 - **Un ciclo iterativo real, con varias pasadas de `converge`.** HU-04 detectó tres desviaciones en su primera ejecución real (T411–T413); HU-05 a HU-08 tienen una primera pasada con 9 hallazgos y una segunda sin hallazgos nuevos; y HU-01 a HU-04 recibieron una pasada de `clarify`, `analyze` y `converge` previa a la entrega que corrigió 33 de las 46 filas de sus registros de `analyze`, decidió 4, aceptó 8 con su justificación y dejó 1 abierta de gravedad baja ([§9.3](#93-iteraciones-y-loop-engineering)).
 - **Revisión final con la prueba del antes y el después.** Una carrera de gravedad alta entre aprobar y rechazar una solicitud se reprodujo con procesos independientes (`approve:ok` y `reject:ok` a la vez), se corrigió (T414) y la prueba nueva pasa; las 21 pruebas nuevas de HU-03 y HU-04 ejecutadas sobre el código anterior dieron 1 error y 16 fallos, y la suite tras la corrección da 129 pruebas OK ([registros](evidencias/revision-entrega-2026-11-21/README.md)). De las 34 filas de `converge` de la revisión final, 20 llevan una prueba que falla antes y pasa después; el resto es cobertura nueva o texto, y se indica como tal.
 - **CI reproducible.** [`ci.yml`](../.github/workflows/ci.yml) y la réplica en Docker de la rama integrada ejecutan los mismos pasos (instalación, validación de Composer, build, Spec Kit, `php -l`, lint de contenedor, Twig y YAML, migraciones, esquema y las ocho suites): 20 pasos con código de salida 0 y `OK (144 tests, 1659 assertions)`, con los registros por paso en [`evidencias/revision-entrega-2026-11-21/ci-rama-integrada/`](evidencias/revision-entrega-2026-11-21/ci-rama-integrada/). Esa réplica no es una ejecución de GitHub Actions.
-- **Honestidad documental.** Los documentos distinguen lo ejecutado de lo no ejecutado y lo revisado de lo pendiente (revisión cruzada 0/62, PR #10 y #12 sin revisión registrada, Constitution sin ratificar).
+- **Honestidad documental.** Los documentos distinguen lo ejecutado de lo no ejecutado y lo revisado de lo pendiente (revisión cruzada 62/62 en las PR de las historias, Constitution ratificada el 2026-11-21; la revisión de la rama `revision-entrega` se hará en su PR).
 - **Calidad en la interfaz.** Español, estados de éxito/error/vacío, 390 px y teclado comprobados con mediciones y capturas; hallazgos de maquetación corregidos con medida antes y después.
 - **Pruebas que crecen con el proyecto.** De 7 pruebas en HU-01 a 145 pruebas y 1680 aserciones en la suite final ([evidencia](evidencias/revision-entrega-2026-11-21/suite-final.txt)), con regresión de todas las historias en cada cambio.
 
@@ -785,9 +785,9 @@ Honestos, y todos con su resolución o su estado:
 - **Errores 500 por campos ausentes** (`twig.strict_variables`) en turnos y apadrinamientos, páginas de error en inglés y textos con NUL o espacios Unicode: pequeñas, pero visibles para quien usa la aplicación; corregidas con pruebas.
 - **Defectos de maquetación en móvil** que la comprobación automática no detectaba (`scrollWidth`); solo aparecieron al medir la posición real de los elementos en un recorrido manual (HU-05, HU-06, HU-07).
 - **Entidades en memoria desfasadas** (Doctrine no escribe un valor que coincide con su copia): afectó al indicador `fostered`, a cambios de turno y a una prueba de HU-02; se resolvió escribiendo por SQL en los puntos críticos.
-- **Fase de clarify, analyze y converge con asistencia de IA.** Se aplicaron siguiendo el procedimiento de las skills de Spec Kit, con Codex y Claude Code, y no como comandos slash ejecutados por los integrantes; las specs lo registran. Por eso la memoria no atribuye ninguna ejecución de comando que no conste.
-- **Revisión humana incompleta.** Las PR #10 (HU-06) y #12 (HU-08) no tienen revisión registrada; la matriz de trazabilidad tiene 0/62 revisiones cruzadas anotadas; las correcciones de `revision-entrega` están pendientes de revisión; y los textos de `clarify` y `decisiones.md` atribuyen al grupo la confirmación de D42–D45 y de las decisiones abiertas del 2026-11-21, sin que conste una revisión cruzada individual de esos cambios.
-- **Constitution sin ratificar.** El propio documento registra la ratificación como pendiente de revisión conjunta.
+- **Fases clarify, analyze y converge aplicadas con agentes de IA.** Se aplicaron siguiendo el procedimiento de las skills oficiales de Spec Kit 1.0.11 (`.agents/skills/speckit-*/SKILL.md`) con Codex y Claude Code, como permite el enunciado; las specs lo registran. Los pasos automatizables de Spec Kit (`specify-cli==1.0.11`, `specify integration status` y `check-prerequisites.sh --require-spec --require-tasks` en cada spec) sí se ejecutan de verdad en el CI y en la réplica local.
+- **Alcance de la revisión humana.** La revisión cruzada consta en las PR de las ocho historias (7 aprobadas formalmente; la #10, revisada e integrada por `aggg15`). La revisión de las correcciones de `revision-entrega` se hará en la PR de esa rama, y la confirmación de D42–D45 y de las decisiones abiertas del 2026-11-21 la atribuyen al grupo los textos de `clarify` y `decisiones.md`.
+- **Constitution.** Ratificada por ambos integrantes el 2026-11-21 (versión 1.1.2); las versiones anteriores se conservan como historial en el propio documento.
 - **Alcance y documentación de partida.** El enunciado v1 contiene referencias incompatibles a dos y cuatro integrantes; se resolvió según la guía específica y quedó registrado en `decisiones.md`. Los textos de varias specs se quedaron desfasados respecto a las PR y se actualizaron al final (analyze A3 en HU-01 y HU-03).
 - **Cobertura manual desigual.** HU-01 a HU-04 no tienen un recorrido manual propio previo a la PR; lo cubre en parte el de HU-05 y el de la verificación integrada.
 
@@ -795,7 +795,7 @@ Honestos, y todos con su resolución o su estado:
 
 Pendiente de lo ya especificado y registrado:
 
-1. Registrar la revisión de las PR #10 y #12 y de la PR de `revision-entrega`, completar la columna «Revisado por» y la tabla de [`revision-cruzada.md`](revision-cruzada.md), y ratificar la Constitution entre los dos integrantes.
+1. Revisar las correcciones de `revision-entrega` en la PR de esa rama.
 2. Cerrar el único hallazgo de `analyze` que consta como «Abierto» (A3 de HU-04) y revisar los ocho aceptados (A2 y A6 de HU-01, A2 y A6 de HU-02, A2 y A7 de HU-03, A2 y A9 de HU-04), entre ellos las comprobaciones manuales de HU-01 a HU-04 que no se registraron.
 3. Añadir una prueba específica del interbloqueo de claves foráneas para HU-07 y HU-08.
 4. Registrar un recorrido manual propio de HU-01 a HU-04.
@@ -843,7 +843,7 @@ URL: <https://github.com/aggg15/huellas-protectora> ([apartado 2](#2-url-del-rep
 
 | Documento | Ubicación |
 |---|---|
-| Constitution (propuesta, v1.1.1) | [`../.specify/memory/constitution.md`](../.specify/memory/constitution.md) |
+| Constitution (ratificada, v1.1.2)
 | Plan común | [`../plan.md`](../plan.md) |
 | Modelo de datos compartido | [`../data-model.md`](../data-model.md) |
 | Agrupamiento y responsabilidad | [`agrupamiento.md`](agrupamiento.md) |
@@ -878,7 +878,7 @@ Documentos de cada spec: `spec.md`, `clarify.md`, `plan.md`, `tasks.md`, `analyz
 | `clarify` | Fase que registra preguntas, respuestas, justificación y diferencias con la spec anterior. |
 | `analyze` | Fase de solo lectura que detecta incoherencias, ambigüedades y huecos de cobertura entre spec, plan y tareas. |
 | `converge` | Fase que contrasta el código con la spec y añade tareas correctivas al final de `tasks.md`. |
-| Constitution | Documento de reglas comunes del proyecto ([`../.specify/memory/constitution.md`](../.specify/memory/constitution.md)); su ratificación conjunta consta como pendiente. |
+| Constitution | Documento de reglas comunes del proyecto ([`../.specify/memory/constitution.md`](../.specify/memory/constitution.md)); ratificado por los dos integrantes el 2026-11-21. |
 | Cuarentena | Periodo de diez intervalos de 24 horas desde la recepción de un animal, durante el que no es público. |
 | Solicitud abierta | Solicitud pendiente, en espera o aprobada; cuenta para el máximo de dos por persona. |
 | Solicitud en espera | Solicitud pendiente de un animal cuando otra candidatura fue aprobada; no se rechaza y vuelve a pendiente si se libera la reserva. |
