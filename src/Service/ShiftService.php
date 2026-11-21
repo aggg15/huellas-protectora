@@ -38,6 +38,13 @@ class ShiftService
     /** Modifica un turno que no ha empezado (D28). */
     public function update(Shift $shift, array $data): void
     {
+        // Un turno empezado es un rechazo de estado (409) aunque los datos enviados ya no sean válidos (analyze A4);
+        // se vuelve a comprobar bajo bloqueo.
+        $startsAt = $this->em->getConnection()->fetchOne('SELECT startsAt FROM shift WHERE id = ?', [$shift->id]);
+        if ($startsAt === false) { throw new ShiftRefused('El turno ya no existe.'); }
+        if (ShiftCoverage::hasStarted(self::utc($startsAt), $this->now())) {
+            throw new ShiftRefused('El turno ya ha empezado; no se puede modificar.');
+        }
         $values = $this->validate($data, $shift);
         $this->em->wrapInTransaction(function () use ($shift, $values): void {
             $connection = $this->em->getConnection();
